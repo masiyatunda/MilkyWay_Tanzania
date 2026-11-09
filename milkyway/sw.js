@@ -1,5 +1,5 @@
-const CACHE='milkyway-v114-live-history-v1';
-const ASSETS=['./','./index.html','./mobile-galaxy.css?v=1','./live-room.css?v=4','./tiktok-live.css?v=2','./live-room.js?v=5','./galaxy.css?v=2','./galaxy-live.css','./galaxy-nebula.svg','./galaxy-starfield.svg','./premium.css','./theme.css','./engage.css','./engage.js','./video-compress.js','./suggested.css','./suggested.js','./chat-settings.css','./chat-settings.js','./compact-buttons.css?v=2','./brand/milkyway-emblem-96.png','./brand/milkyway-watermark.png','./brand/milkyway-logo-web.png','./favicon.ico','./premium.js','./translations.js','./dm-files.js','./dm-calls.js','./ui-language.js','./locale-loader.js?v=1','./manifest.json','./icon-192.png','./icon-512.png'];
+const CACHE='milkyway-v115-css-bundles-v1';
+const ASSETS=[ './mw-bundle-core.css?v=1','./mw-bundle-live.css?v=1','./mw-bundle-overlays.css?v=1','./mw-bundle-theme-final.css?v=1','./','./index.html','./mobile-galaxy.css?v=1','./live-room.css?v=4','./tiktok-live.css?v=2','./live-room.js?v=5','./galaxy.css?v=2','./galaxy-live.css','./galaxy-nebula.svg','./galaxy-starfield.svg','./premium.css','./theme.css','./engage.css','./engage.js','./video-compress.js','./suggested.css','./suggested.js','./chat-settings.css','./chat-settings.js','./compact-buttons.css?v=2','./brand/milkyway-emblem-96.png','./brand/milkyway-watermark.png','./brand/milkyway-logo-web.png','./favicon.ico','./premium.js','./translations.js','./dm-files.js','./dm-calls.js','./ui-language.js','./locale-loader.js?v=1','./manifest.json','./icon-192.png','./icon-512.png'];
 ASSETS.push('./language-dropdown.js','./language-dropdown.css');
 ASSETS.push('./mw-dialog.js','./mw-dialog.css','./studio.css');
 ASSETS.push('./live-globe.css','./cosmos.css','./brand/earth-texture.jpg','./shared-theme.js?v=2','./release.css','./release-shell.js','./icon-maskable-192.png','./icon-maskable-512.png');
@@ -10,9 +10,11 @@ ASSETS.push('./account-hub.js','./account-hub.css','./media-playback.js');
 ASSETS.push('./chat.js','./chat.css','./chat-doodle.svg','./group-settings.js','./group-settings.css');
 ASSETS.push('./android-app.js','./android-app.css','./profile-galaxy-watermark.svg');
 ASSETS.push('./settings-ui.js','./settings-ui.css','./account-header.css','./edge-layout.css');
-ASSETS.push('./live-globe.js','./performance.css','./themes.css?v=2');
+ASSETS.push('./live-globe.js','./performance.css','./themes.css?v=2');
+
 ASSETS.push('./live-in-feed.js','./live-in-feed.css');
-ASSETS.push('./calls.css','./chat-search.js','./account-country.js','./account-details.js');
+ASSETS.push('./calls.css','./chat-search.js','./account-country.js','./account-details.js');
+
 
 ASSETS.push('./gallery.js','./gallery.css','./live-broadcast.js');
 ASSETS.push('./post-tools.js','./post-tools.css','./final-layout.js','./final-layout.css');

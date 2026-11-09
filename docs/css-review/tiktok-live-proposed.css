@@ -1,0 +1,75 @@
+/* ============================================
+   MILKYWAY TIKTOK LIVE + AUDIO LIVE CSS
+   Complete replacement for old live CSS
+   ============================================ */
+
+:root {
+  --tt-bg: #000000;
+  --tt-pink: #fe2c55;
+  --tt-white: #ffffff;
+  --tt-gray: rgba(255,255,255,.7);
+  --tt-glass: rgba(255,255,255,.12);
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; background: var(--tt-bg); color: var(--tt-white); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; overflow: hidden; }
+
+/* ========== SHARED ========== */
+.tt-stage { position: fixed; inset: 0; background: #111; }
+.tt-top { position: absolute; top: 0; left: 0; right: 0; z-index: 20; display: flex; align-items: center; gap: 10px; padding: calc(12px + var(--safe-top)) 14px 12px; background: linear-gradient(180deg, rgba(0,0,0,.8), transparent); }
+.tt-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #fe2c55, #ec4899); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; flex-shrink: 0; }
+.tt-host { flex: 1; min-width: 0; }
+.tt-host strong { display: block; font-size: 15px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tt-host span { font-size: 12px; color: var(--tt-gray); }
+.tt-viewers { background: rgba(0,0,0,.55); padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; }
+.tt-close { background: rgba(255,255,255,.15); border: 0; color: #fff; width: 34px; height: 34px; border-radius: 50%; font-size: 20px; cursor: pointer; }
+.tt-live-badge { position: absolute; top: calc(60px + var(--safe-top)); left: 14px; background: var(--tt-pink); padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 800; z-index: 15; }
+.tt-bottom { position: absolute; bottom: 0; left: 0; right: 0; z-index: 20; padding: 16px 16px calc(16px + var(--safe-bottom)); background: linear-gradient(0deg, rgba(0,0,0,.9), transparent); }
+.tt-btn { padding: 14px 24px; border: 0; border-radius: 24px; font-size: 15px; font-weight: 700; cursor: pointer; }
+.tt-btn-pink { background: var(--tt-pink); color: #fff; }
+.tt-btn-glass { background: var(--tt-glass); color: #fff; }
+.tt-btn-red { background: #ef4444; color: #fff; }
+
+/* ========== VIDEO LIVE ========== */
+.tt-video-stage { display: flex; flex-direction: column; }
+.tt-video-area { flex: 1; display: flex; gap: 4px; padding: 4px; }
+.tt-host-window { flex: 2; position: relative; background: #1a1a1a; border-radius: 12px; overflow: hidden; }
+.tt-guests { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.tt-guest-window { flex: 1; position: relative; background: #222; border-radius: 10px; overflow: hidden; min-height: 100px; }
+.tt-guest-window.empty { background: rgba(255,255,255,.05); display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.tt-guest-window.empty::after { content: "+"; font-size: 28px; color: rgba(255,255,255,.3); }
+.tt-host-window video, .tt-guest-window video { width: 100%; height: 100%; object-fit: cover; }
+.tt-guest-controls { position: absolute; top: 6px; right: 6px; display: flex; gap: 4px; }
+.tt-guest-btn { width: 26px; height: 26px; border-radius: 50%; background: rgba(0,0,0,.6); border: 0; color: #fff; font-size: 12px; cursor: pointer; }
+.tt-guest-name { position: absolute; bottom: 6px; left: 8px; font-size: 11px; font-weight: 600; text-shadow: 0 1px 2px #000; }
+.tt-auto-badge { position: absolute; top: 6px; left: 6px; background: #22c55e; color: #fff; font-size: 9px; padding: 2px 5px; border-radius: 3px; font-weight: 700; }
+.tt-side { position: absolute; right: 12px; bottom: 140px; display: flex; flex-direction: column; gap: 14px; z-index: 15; }
+.tt-action { text-align: center; cursor: pointer; }
+.tt-action svg { width: 34px; height: 34px; fill: #fff; }
+.tt-action span { display: block; font-size: 10px; margin-top: 3px; font-weight: 600; }
+.tt-title { width: 100%; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2); border-radius: 24px; padding: 12px 16px; color: #fff; font-size: 15px; margin-bottom: 10px; outline: none; }
+.tt-title::placeholder { color: rgba(255,255,255,.5); }
+.tt-setup { position: absolute; bottom: 90px; left: 16px; right: 16px; background: rgba(0,0,0,.85); border-radius: 16px; padding: 14px; z-index: 15; }
+.tt-setup label { display: block; font-size: 12px; margin-bottom: 8px; color: var(--tt-gray); }
+.tt-seat-selector { display: flex; gap: 8px; }
+.tt-seat-btn { width: 40px; height: 40px; border-radius: 10px; background: var(--tt-glass); border: 2px solid transparent; color: #fff; font-weight: 700; cursor: pointer; }
+.tt-seat-btn.active { border-color: var(--tt-pink); background: rgba(254,44,85,.25); }
+.tt-comments { position: absolute; left: 12px; bottom: 180px; max-width: 60%; max-height: 160px; overflow: hidden; z-index: 10; }
+.tt-comment { background: rgba(0,0,0,.5); padding: 5px 10px; border-radius: 14px; margin-bottom: 5px; font-size: 12px; }
+.tt-comment strong { color: var(--tt-pink); margin-right: 4px; }
+
+/* ========== AUDIO LIVE ========== */
+.tt-audio-stage { background: linear-gradient(180deg, #0f0f1a, #1a1a2e, #0a0a12); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.tt-audio-room { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; padding: 20px; max-width: 380px; }
+.tt-audio-seat { width: 85px; text-align: center; }
+.tt-audio-avatar { width: 68px; height: 68px; border-radius: 50%; background: linear-gradient(135deg, #fe2c55, #ec4899); display: flex; align-items: center; justify-content: center; margin: 0 auto 6px; font-size: 26px; font-weight: 700; position: relative; }
+.tt-audio-avatar.speaking { border: 3px solid #22c55e; animation: speak 1s infinite; }
+.tt-audio-avatar.host::after { content: "HOST"; position: absolute; bottom: -2px; left: 50%; transform: translateX(-50%); background: #fe2c55; font-size: 7px; padding: 1px 5px; border-radius: 3px; font-weight: 800; }
+.tt-audio-avatar.empty { background: rgba(255,255,255,.08); border: 2px dashed rgba(255,255,255,.2); cursor: pointer; }
+.tt-audio-avatar.empty::before { content: "+"; font-size: 28px; color: rgba(255,255,255,.3); }
+.tt-audio-name { font-size: 11px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tt-audio-mute { position: absolute; bottom: 0; right: 0; width: 20px; height: 20px; background: rgba(0,0,0,.7); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; }
+@keyframes speak { 0%, 100% { box-shadow: 0 0 0 0 rgba(34,197,94,.4); } 50% { box-shadow: 0 0 0 6px rgba(34,197,94,0); } }
+.tt-audio-bottom { position: absolute; bottom: 0; left: 0; right: 0; padding: 14px 16px calc(14px + var(--safe-bottom)); background: linear-gradient(0deg, rgba(0,0,0,.9), transparent); display: flex; gap: 10px; justify-content: center; }
