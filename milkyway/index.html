@@ -8,7 +8,7 @@
 <link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon-180.png"><link rel="icon" href="favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="32x32" href="brand/favicon-32.png"><link rel="icon" type="image/png" sizes="16x16" href="brand/favicon-16.png">
 <link rel="preconnect" href="https://masiyatunda-milkyway-live-mgh6b1np.livekit.cloud" crossorigin>
 <link rel="preconnect" href="https://wpclkhgizbvxuvbhbwzs.supabase.co" crossorigin><link rel="preconnect" href="https://cdn.jsdelivr.net"><link rel="preload" as="script" href="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
-<script src="/milkyway/media-images.js"></script>
+<script src="media-images.js"></script>
 <script>/* LiveKit is only needed for Live and calls, so it loads on first use instead of blocking every page load. */window.MilkyWayLoadLiveKit=(()=>{let loading=null;const sources=['https://cdn.jsdelivr.net/npm/livekit-client@2/dist/livekit-client.umd.min.js','https://unpkg.com/livekit-client@2/dist/livekit-client.umd.min.js'];const ready=()=>window.LivekitClient||window.LiveKitClient;const load=index=>new Promise((resolve,reject)=>{const script=document.createElement('script');script.src=sources[index];script.async=true;script.onload=()=>ready()?resolve(ready()):reject(new Error('LiveKit did not load.'));script.onerror=()=>{script.remove();reject(new Error('LiveKit did not load.'))};document.head.append(script)}).catch(error=>index+1<sources.length?load(index+1):Promise.reject(error));return()=>ready()?Promise.resolve(ready()):loading||(loading=load(0).catch(error=>{loading=null;throw error}))})();addEventListener('pointerdown',event=>{if(event.target.closest?.('#composeBtn,.mw-live-session,[data-mw-call]'))window.MilkyWayLoadLiveKit().catch(()=>{})},{passive:true,capture:true});</script>
 <style>
 :root{--bg:#030712;--panel:#08152a;--card:#0d1b31;--line:#1d3a61;--text:#edf4ff;--muted:#8fa7ca;--gold:#f4c64e;--blue:#3d9cff;--cyan:#5eead4;--danger:#fb7185;--ok:#34d399;--safe:env(safe-area-inset-bottom,0px)}
@@ -125,8 +125,8 @@
 <link rel="stylesheet" href="language-dropdown.css">
 <link rel="stylesheet" href="engage.css"><link rel="stylesheet" href="suggested.css"><link rel="stylesheet" href="gallery.css">
 <link rel="stylesheet" href="galaxy-live.css">
-<link rel="stylesheet" href="/milkyway/theme.css"><link rel="stylesheet" href="/milkyway/release.css"><link rel="stylesheet" href="account-hub.css"><link rel="stylesheet" href="android-app.css"><link rel="stylesheet" href="live-globe.css"><link rel="stylesheet" href="cosmos.css"><link rel="stylesheet" href="chat.css"><link rel="stylesheet" href="group-settings.css"><link rel="stylesheet" href="mw-dialog.css"><link rel="stylesheet" href="settings-ui.css"><link rel="stylesheet" href="account-header.css"><link rel="stylesheet" href="edge-layout.css"><link rel="stylesheet" href="studio.css">
-<link rel="stylesheet" href="performance.css"><link rel="stylesheet" href="calls.css"><link rel="stylesheet" href="themes.css?v=5"><link rel="stylesheet" href="post-tools.css"><link rel="stylesheet" href="gifts.css?v=65"><link rel="stylesheet" href="final-layout.css?v=69"><link rel="stylesheet" href="live-in-feed.css"><link rel="stylesheet" href="chat-settings.css?v=4"><link rel="stylesheet" href="compact-buttons.css?v=2"><script src="/milkyway/mw-dialog.js"></script><script src="/milkyway/shared-theme.js?v=6"></script><link rel="stylesheet" href="live-room.css?v=4"><link rel="stylesheet" href="tiktok-live.css?v=2">
+<link rel="stylesheet" href="theme.css"><link rel="stylesheet" href="release.css"><link rel="stylesheet" href="account-hub.css"><link rel="stylesheet" href="android-app.css"><link rel="stylesheet" href="live-globe.css"><link rel="stylesheet" href="cosmos.css"><link rel="stylesheet" href="chat.css"><link rel="stylesheet" href="group-settings.css"><link rel="stylesheet" href="mw-dialog.css"><link rel="stylesheet" href="settings-ui.css"><link rel="stylesheet" href="account-header.css"><link rel="stylesheet" href="edge-layout.css"><link rel="stylesheet" href="studio.css">
+<link rel="stylesheet" href="performance.css"><link rel="stylesheet" href="calls.css"><link rel="stylesheet" href="themes.css?v=5"><link rel="stylesheet" href="post-tools.css"><link rel="stylesheet" href="gifts.css?v=65"><link rel="stylesheet" href="final-layout.css?v=69"><link rel="stylesheet" href="live-in-feed.css"><link rel="stylesheet" href="chat-settings.css?v=4"><link rel="stylesheet" href="compact-buttons.css?v=2"><script src="mw-dialog.js"></script><script src="shared-theme.js?v=6"></script><link rel="stylesheet" href="live-room.css?v=4"><link rel="stylesheet" href="tiktok-live.css?v=2">
 
 
 
@@ -179,7 +179,7 @@ nav.orbit .orbit-inner > #composeBtn{flex:1 1 0!important;width:auto!important;m
 #snMenuPanel{display:grid;gap:6px;margin-top:8px}
 #snMenuPanel[hidden]{display:none}
 </style>
-<link rel="stylesheet" href="/milkyway/fullscreen-bottomsheet-v39.css?v=39">
+<link rel="stylesheet" href="fullscreen-bottomsheet-v39.css?v=39">
 <style id="mw-v41-account-navigation-fix">
 /* v41: keep a single, predictable close control on account sheets */
 .sheet-bg.open .sheet, .modal-bg.open .sheet{position:relative;padding-top:54px}
@@ -224,13 +224,13 @@ nav.orbit .orbit-inner > #composeBtn{flex:1 1 0!important;width:auto!important;m
 }
 </style>
 
-<link rel="stylesheet" href="/milkyway/app-theme-system.css?v=62">
-<link rel="stylesheet" href="/milkyway/light-glass-lock.css?v=61">
+<link rel="stylesheet" href="app-theme-system.css?v=62">
+<link rel="stylesheet" href="light-glass-lock.css?v=61">
 <link rel="stylesheet" href="phase-a.css">
 <link rel="stylesheet" href="mobile-galaxy.css?v=1">
 </head>
 <body><div class="stars"></div><div class="app">
-<header class="top"><div class="brand"><img src="brand/milkyway-emblem-96.png" width="40" height="40" alt="MilkyWay"><div><h1>MilkyWay</h1><small>FREEDOM · TRUTH · LIGHT</small><a class="mw-apk-link" id="mwApkLink" href="/milkyway/download/MilkyWay.apk?v=7" download="MilkyWay.apk" type="application/vnd.android.package-archive" data-mw-i18n-aria="downloadAndroidApp" aria-label="Download the MilkyWay Android app"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3a1 1 0 0 1 1 1v8.6l2.8-2.8a1 1 0 1 1 1.4 1.4l-4.5 4.5a1 1 0 0 1-1.4 0l-4.5-4.5a1 1 0 1 1 1.4-1.4l2.8 2.8V4a1 1 0 0 1 1-1zM5 18a1 1 0 0 1 1 1v.5h12V19a1 1 0 1 1 2 0v1.5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V19a1 1 0 0 1 1-1z"/></svg><span data-mw-i18n="getAndroidApp">Pakua App</span></a></div></div><div class="top-actions"><button class="btn ghost" id="topMenuBtn" type="button" aria-label="Menyu" title="Menyu" style="padding:8px 10px;font-size:1.2rem">☰</button><button class="btn ghost" id="topSearchBtn" type="button" aria-label="Tafuta" title="Tafuta" style="padding:8px 10px">🔍</button><button class="btn ghost" id="topNotifyBtn" type="button" aria-label="Arifa" title="Arifa" style="padding:8px 12px;font-size:1.1rem">🔔<span id="topNotifyBadge" class="badge" style="display:none;margin-left:4px">0</span></button><select id="langSel" title="Lugha"><option value="sw">SW</option><option value="en">EN</option></select><button class="btn primary" id="accountTopBtn" title="MilkyWay Galaxy" aria-label="MilkyWay Galaxy" style="padding:8px 10px;font-size:.72rem;white-space:nowrap;display:inline-flex;align-items:center;gap:6px" data-i18n="login">MilkyWay Galaxy</button></div></header>
+<header class="top"><div class="brand"><img src="brand/milkyway-emblem-96.png" width="40" height="40" alt="MilkyWay"><div><h1>MilkyWay</h1><small>FREEDOM · TRUTH · LIGHT</small><a class="mw-apk-link" id="mwApkLink" href="download/MilkyWay.apk?v=7" download="MilkyWay.apk" type="application/vnd.android.package-archive" data-mw-i18n-aria="downloadAndroidApp" aria-label="Download the MilkyWay Android app"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3a1 1 0 0 1 1 1v8.6l2.8-2.8a1 1 0 1 1 1.4 1.4l-4.5 4.5a1 1 0 0 1-1.4 0l-4.5-4.5a1 1 0 1 1 1.4-1.4l2.8 2.8V4a1 1 0 0 1 1-1zM5 18a1 1 0 0 1 1 1v.5h12V19a1 1 0 1 1 2 0v1.5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V19a1 1 0 0 1 1-1z"/></svg><span data-mw-i18n="getAndroidApp">Pakua App</span></a></div></div><div class="top-actions"><button class="btn ghost" id="topMenuBtn" type="button" aria-label="Menyu" title="Menyu" style="padding:8px 10px;font-size:1.2rem">☰</button><button class="btn ghost" id="topSearchBtn" type="button" aria-label="Tafuta" title="Tafuta" style="padding:8px 10px">🔍</button><button class="btn ghost" id="topNotifyBtn" type="button" aria-label="Arifa" title="Arifa" style="padding:8px 12px;font-size:1.1rem">🔔<span id="topNotifyBadge" class="badge" style="display:none;margin-left:4px">0</span></button><select id="langSel" title="Lugha"><option value="sw">SW</option><option value="en">EN</option></select><button class="btn primary" id="accountTopBtn" title="MilkyWay Galaxy" aria-label="MilkyWay Galaxy" style="padding:8px 10px;font-size:.72rem;white-space:nowrap;display:inline-flex;align-items:center;gap:6px" data-i18n="login">MilkyWay Galaxy</button></div></header>
 <div class="install" id="installBar" style="display:none">
   <span id="installText">Pakua MilkyWay kwenye skrini yako</span>
   <button id="installBtn" type="button">Pakua App</button>
@@ -253,9 +253,9 @@ nav.orbit .orbit-inner > #composeBtn{flex:1 1 0!important;width:auto!important;m
   <h2>🎨🎬 Sanaa & Media</h2>
   <p class="muted">Chagua sehemu unayotaka kufungua.</p>
   <div class="creative-choice-grid">
-    <a class='creative-choice arts-link' href='/sanaa'><span class="creative-icon">🎨</span><span><strong>Sanaa</strong><small>Gallery ya sanaa, wasanii na ujumbe kwa Admin.</small></span><b>›</b></a>
-    <a class='creative-choice media-link' href='/media'><span class="creative-icon">🎬</span><span><strong>Media</strong><small>Picha, video na habari za Masiyatunda.</small></span><b>›</b></a>
-    <a class='creative-choice arts-link' href='/sanaa#artist-register'><span class="creative-icon">🧑‍🎨</span><span><strong>Jisajili kama Msanii</strong><small>Fomu ya usajili wa wasanii — inatumwa kwa Admin pekee.</small></span><b>›</b></a>
+    <a class='creative-choice arts-link' href='../sanaa.html'><span class="creative-icon">🎨</span><span><strong>Sanaa</strong><small>Gallery ya sanaa, wasanii na ujumbe kwa Admin.</small></span><b>›</b></a>
+    <a class='creative-choice media-link' href='../media.html'><span class="creative-icon">🎬</span><span><strong>Media</strong><small>Picha, video na habari za Masiyatunda.</small></span><b>›</b></a>
+    <a class='creative-choice arts-link' href='../sanaa.html#artist-register'><span class="creative-icon">🧑‍🎨</span><span><strong>Jisajili kama Msanii</strong><small>Fomu ya usajili wa wasanii — inatumwa kwa Admin pekee.</small></span><b>›</b></a>
   </div>
 </div></div>
 
@@ -491,7 +491,7 @@ nav.orbit .orbit-inner > #composeBtn{flex:1 1 0!important;width:auto!important;m
 </div>
 <input class="input" id="avatarFile" type="file" accept="image/*" style="display:none">
 <input id="avatarCameraInput" type="file" accept="image/*" capture="environment" style="display:none">
-<input id="avatarSelfieInput" type="file" accept="image/*" capture="user" style="display:none"><div class="row" style="margin-top:12px"><button class="btn ghost" data-close="profileSheet">Funga</button><button class="btn ghost" id="profileFeedBtn">← Orbit</button><button class="btn primary" id="saveProfileBtn">Hifadhi</button></div><p class="muted" id="profileMsg"></p><div class="row" style="margin-top:10px"><button class="btn ghost" id="changePasswordBtn">Badilisha password</button><button class="btn ghost" id="changeEmailBtn">Badilisha email</button><button class="btn danger" id="deleteAccountBtn">Futa akaunti</button><a class='btn ghost admin-link' href='/milkyway/moderation' id='adminLink'>Admin</a></div><div id="profilePosts" hidden></div></div></div>
+<input id="avatarSelfieInput" type="file" accept="image/*" capture="user" style="display:none"><div class="row" style="margin-top:12px"><button class="btn ghost" data-close="profileSheet">Funga</button><button class="btn ghost" id="profileFeedBtn">← Orbit</button><button class="btn primary" id="saveProfileBtn">Hifadhi</button></div><p class="muted" id="profileMsg"></p><div class="row" style="margin-top:10px"><button class="btn ghost" id="changePasswordBtn">Badilisha password</button><button class="btn ghost" id="changeEmailBtn">Badilisha email</button><button class="btn danger" id="deleteAccountBtn">Futa akaunti</button><a class='btn ghost admin-link' href='moderation.html' id='adminLink'>Admin</a></div><div id="profilePosts" hidden></div></div></div>
 
 <!-- gallery -->
 <div class="sheet-bg" id="gallerySheet"><div class="sheet">
@@ -564,10 +564,10 @@ nav.orbit .orbit-inner > #composeBtn{flex:1 1 0!important;width:auto!important;m
 <div class="sheet-bg" id="policySheet"><div class="sheet"><button class="close" data-close="policySheet">×</button><h2 id="policyTitle">Policy</h2><div id="policyBody" class="muted" style="line-height:1.65"></div></div></div>
 
 <!-- about -->
-<div class="sheet-bg" id="aboutSheet"><div class="sheet"><button class="close" data-close="aboutSheet">×</button><h2>◉ Kuhusu MilkyWay</h2><p class="muted" style="line-height:1.55"><b style="color:var(--text)">MilkyWay</b> ni social platform ya Masiyatunda yenye kauli <b style="color:var(--gold)">Freedom · Truth · Light</b>.<br><br>Watumiaji wanaweza kufungua akaunti, kupost picha/video, kufuatana, kutoa Signals, kuandika Echoes, kuhifadhi posts, kutafuta watu, kupokea notifications na kuripoti content.<br><br>MilkyWay ina database yake ndani ya Supabase na imeandaliwa ili baadaye itumike pia na Flutter/FlutterFlow kupitia backend hiyo hiyo.</p><a class='btn ghost' href='/' style='display:block;text-align:center;text-decoration:none'>← Masiyatunda</a></div></div>
+<div class="sheet-bg" id="aboutSheet"><div class="sheet"><button class="close" data-close="aboutSheet">×</button><h2>◉ Kuhusu MilkyWay</h2><p class="muted" style="line-height:1.55"><b style="color:var(--text)">MilkyWay</b> ni social platform ya Masiyatunda yenye kauli <b style="color:var(--gold)">Freedom · Truth · Light</b>.<br><br>Watumiaji wanaweza kufungua akaunti, kupost picha/video, kufuatana, kutoa Signals, kuandika Echoes, kuhifadhi posts, kutafuta watu, kupokea notifications na kuripoti content.<br><br>MilkyWay ina database yake ndani ya Supabase na imeandaliwa ili baadaye itumike pia na Flutter/FlutterFlow kupitia backend hiyo hiyo.</p><a class='btn ghost' href='../index.html' style='display:block;text-align:center;text-decoration:none'>← Masiyatunda</a></div></div>
 <div class="toast" id="toast"></div>
 
-<!-- The Supabase client downloads in parallel (preloaded above) but runs here, so the app skeleton paints first on slow networks. --><script src="/milkyway/offline-data.js?v=2"></script><script src="/milkyway/offline-actions.js?v=1"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- The Supabase client downloads in parallel (preloaded above) but runs here, so the app skeleton paints first on slow networks. --><script src="offline-data.js?v=2"></script><script src="offline-actions.js?v=1"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // Follow state per signed-in account ("account:target" → following?) and accounts with a follow write in flight.
 const followKnown=new Map(),followBusy=new Set();let followTaps=0;
@@ -580,6 +580,16 @@ window.MilkyWayFollows={query:followsQuery,table:()=>followTable||FOLLOW_TABLES[
 const SUPABASE_URL='https://wpclkhgizbvxuvbhbwzs.supabase.co';
 /* Password-reset emails always land on the live MilkyWay page (allow-listed in Supabase Auth), never on the Site URL fallback. */
 const AUTH_REDIRECT_URL='https://masiyatunda.com/milkyway/';
+function mwResolveSiteUrl(path){
+  if(!path||path.startsWith('http')||path.startsWith('data:')) return path;
+  const clean=path.replace(/^\/+/, '');
+  if(location.protocol==='file:'){
+    if(clean.startsWith('api/')) return new URL('../'+clean, document.baseURI).href;
+    if(clean.startsWith('milkyway/')) return new URL(clean.slice('milkyway/'.length), document.baseURI).href;
+    return new URL(clean, document.baseURI).href;
+  }
+  return path;
+}
 /* An expired or already-used reset link comes back as #error_description=…; read it before the auth client clears the hash. */
 const AUTH_LINK_ERROR=(()=>{const h=new URLSearchParams(location.hash.slice(1));return h.get('error_description')||(h.get('error')?h.get('error'):'')})();
 const SUPABASE_ANON_KEY='sb_publishable_GCFJ3Is8t8mdia4gLeHApg_M_3ez9xb';
@@ -808,7 +818,7 @@ async function withLinkedPost(posts){
     return [p,...posts];
   }catch(e){return posts}
 }
-function postShareUrl(id){return new URL('/milkyway/p/'+encodeURIComponent(id),location.origin).href}
+function postShareUrl(id){return new URL('./p/'+encodeURIComponent(id), document.baseURI).href}
 async function getShareContent(id){
   const url=postShareUrl(id);
   let caption='';
@@ -1057,7 +1067,7 @@ async function metadataPreferences(body){
 async function accountPreferencesRequest(method='GET',body){
   const session=(await sb.auth.getSession()).data.session;if(!session)throw new Error(window.MilkyWayI18n.t('signInFirst'));
   let response;
-  try{response=await fetch('/api/milkyway-account?action=preferences',{method,cache:'no-store',signal:AbortSignal.timeout(4000),body:body?JSON.stringify(body):undefined,headers:{Authorization:'Bearer '+session.access_token,...(body?{'Content-Type':'application/json'}:{})}});}
+  try{response=await fetch(mwResolveSiteUrl('/api/milkyway-account?action=preferences'),{method,cache:'no-store',signal:AbortSignal.timeout(4000),body:body?JSON.stringify(body):undefined,headers:{Authorization:'Bearer '+session.access_token,...(body?{'Content-Type':'application/json'}:{})}});}
   catch{return metadataPreferences(body);}
   const result=await response.json().catch(()=>null);
   if(!response.ok||!result?.preferences){
@@ -1071,7 +1081,7 @@ function paintAccountPreferences(preferences){for(const[field,id]of accountSetti
 function setSettingsMessage(text='',tone=''){const message=$('settingsMsg');message.textContent=text;message.dataset.tone=tone;message.hidden=!text;}
 async function privacyFlags(ids){
   const list=[...new Set(ids.filter(id=>/^[a-f0-9-]{36}$/i.test(id||'')))].slice(0,100);if(!list.length)return {};
-  try{const response=await fetch('/api/milkyway-account?action=privacy&ids='+list.join(','),{signal:AbortSignal.timeout(5000)});return response.ok?(await response.json()).accounts||{}:{};}catch(error){return {};}
+  try{const response=await fetch(mwResolveSiteUrl('/api/milkyway-account?action=privacy&ids='+list.join(',')),{signal:AbortSignal.timeout(5000)});return response.ok?(await response.json()).accounts||{}:{};}catch(error){return {};}
 }
 const mutedNotificationTypes=()=>accountPreferences&&accountPreferences.owner===user?.id?[['follow','notifyFollow'],['echo','notifyEcho'],['signal','notifySignal']].filter(([,field])=>accountPreferences[field]===false).map(([type])=>type):[];
 async function assertCanMessage(recipient){
@@ -2049,7 +2059,7 @@ document.getElementById('snAdminBtn')?.addEventListener('click', () => { locatio
   };
 })();
 </script>
-<script src="/milkyway/phase-a.js"></script>
-<script src="/milkyway/phase-b.js"></script>
-<script src="/milkyway/fix-feed.js"></script>
+<script src="phase-a.js"></script>
+<script src="phase-b.js"></script>
+<script src="fix-feed.js"></script>
 </body></html>
