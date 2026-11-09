@@ -330,7 +330,8 @@ nav.orbit .orbit-inner > #composeBtn{flex:1 1 0!important;width:auto!important;m
 </div></div>
 <section id="mwLivePage" class="lv" role="dialog" aria-modal="true" aria-label="MilkyWay Live" data-view="lobby" hidden>
   <div id="mwLiveLobby" class="lv-lobby">
-    <header class="lv-lobby-head"><h1>LIVE</h1><button type="button" class="lv-icon" data-action="close" aria-label="Close">×</button></header>
+    <header class="lv-lobby-head"><h1>LIVE</h1><div class="lv-lobby-actions"><button type="button" id="mwLiveLobbyMenuButton" class="lv-icon" data-action="lobby-menu" aria-label="Menu" aria-expanded="false">⋯</button><button type="button" class="lv-icon" data-action="close" aria-label="Close">×</button></div></header>
+    <div id="mwLiveLobbyMenu" class="lv-lobby-menu" hidden><button type="button" data-action="history">Live history</button></div>
     <form id="mwLiveSetup" class="lv-setup" autocomplete="off">
       <input id="mwLiveTitle" maxlength="100" placeholder="Add a title to your LIVE" aria-label="LIVE title">
       <label class="lv-field"><span id="mwLiveSeatLabel">Guest seats</span><select id="mwLiveSeatCount"><option value="1">1</option><option value="2">2</option><option value="3" selected>3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option></select></label>
@@ -343,6 +344,10 @@ nav.orbit .orbit-inner > #composeBtn{flex:1 1 0!important;width:auto!important;m
     <section class="lv-now">
       <div class="lv-now-head"><h2 id="mwLiveNowTitle">Live now</h2><span id="mwLiveNowCount" class="lv-now-count">0</span><button type="button" class="lv-link" data-action="refresh">&#8635;</button></div>
       <div id="mwLiveSessions" class="lv-session-list"><p class="muted">…</p></div>
+    </section>
+    <section id="mwLiveHistory" class="lv-history" aria-labelledby="mwLiveHistoryTitle" hidden>
+      <header class="lv-history-head"><button type="button" class="lv-link" data-action="history-back" aria-label="Back">‹</button><h2 id="mwLiveHistoryTitle">Live history</h2></header>
+      <div id="mwLiveHistoryList" class="lv-session-list"></div>
     </section>
   </div>
   <section id="mwLiveStage" class="mw-live-stage lv-stage" aria-label="Live broadcast" hidden>
@@ -1740,7 +1745,7 @@ if(AUTH_LINK_ERROR){history.replaceState(null,'',location.pathname+location.sear
 <script src="dm-calls.js"></script>
 <script src="chat.js"></script><script src="chat-settings.js"></script><script src="group-settings.js"></script>
 <script src="chat-search.js"></script><script src="account-country.js"></script><script src="account-details.js"></script>
-<script src="live-room.js?v=4"></script><script src="live-in-feed.js"></script>
+<script src="live-room.js?v=5"></script><script src="live-in-feed.js"></script>
 <script src="ui-language.js"></script>
 <script src="locale-loader.js?v=1"></script><script src="translations.js"></script><script src="live-globe.js"></script>
 <script src="premium.js"></script>

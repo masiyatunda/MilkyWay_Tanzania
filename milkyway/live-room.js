@@ -13,6 +13,10 @@
     live: ['LIVE', 'LIVE'], liveNow: ['Live now', 'Live sasa'], videoLive: ['Video LIVE', 'Video LIVE'], audioLive: ['Audio LIVE', 'Sauti LIVE'],
     titlePh: ['Add a title to your LIVE', 'Weka kichwa cha LIVE yako'], seats: ['Guest seats', 'Viti vya wageni'], auto: ['Auto-accept guests', 'Kubali wageni moja kwa moja'],
     none: ['Nobody is live right now.', 'Hakuna aliye live sasa hivi.'], unavailable: ['Live list unavailable.', 'Orodha ya Live haipatikani.'],
+    history: ['Live history', 'Historia ya Live'], menu: ['Menu', 'Menyu'], back: ['Back', 'Rudi'], noHistory: ['No past LIVE sessions.', 'Hakuna historia ya LIVE bado.'],
+    historySignIn: ['Sign in to view your LIVE history.', 'Ingia ili kuona historia yako ya LIVE.'],
+    historyUnavailable: ['Could not load LIVE history.', 'Historia ya LIVE haikuweza kupakiwa.'],
+    historyRemove: ['Remove from history', 'Ondoa kwenye historia'], historyRemoveConfirm: ['Remove this LIVE from your history? This will not delete it for anyone else.', 'Ondoa LIVE hii kwenye historia yako? Haitaondolewa kwa watu wengine.'],
     watch: ['Watch', 'Tazama'], you: ['You', 'Wewe'], host: ['HOST', 'MWENYEJI'], away: ['Away', 'Hayupo'], connecting: ['Connecting…', 'Inaunganisha…'],
     connected: ['LIVE', 'LIVE'], reconnecting: ['Reconnecting…', 'Inaunganisha tena…'], comment: ['Add comment…', 'Andika maoni…'], send: ['Send', 'Tuma'],
     newMsgs: ['New comments ↓', 'Maoni mapya ↓'], enterBox: ['Enter my box', 'Ingia kwenye boksi'], leaveBox: ['Leave my box', 'Toka kwenye boksi'],
@@ -57,7 +61,7 @@
     page: null, room: null, sdk: null, session: null, host: false, mode: 'video', state: null, gen: 0, joining: false,
     sound: true, volume: 1, inBox: true, staged: false, staging: false, stageTries: 0, facing: 'user', records: [],
     pollTimer: null, polling: false, pollQueued: false, sheet: '', auth: null, ending: null, consumedHash: '', seenPending: new Set(),
-    seenGift: new Set(), chatKey: '', firstChat: true, profiles: new Map(), roster: '', tiles: new Map(), audio: new Map(), discovering: false, lastDiscovery: 0, profileKey: '',
+    seenGift: new Set(), chatKey: '', firstChat: true, profiles: new Map(), roster: '', tiles: new Map(), audio: new Map(), discovering: false, lastDiscovery: 0, profileKey: '', historyRecords: [],
   };
   const tiles = S.tiles;
   const mePublishing = () => !!S.room && S.room.localParticipant.permissions?.canPublish !== false;
@@ -216,6 +220,99 @@
     }
   }
 
+  async function loadHistory() {
+    const list = $('mwLiveHistoryList');
+    if (!list) return;
+    list.replaceChildren();
+    if (!user?.id || typeof sb === 'undefined') {
+      const empty = document.createElement('p');empty.className = 'lv-empty';empty.textContent = t('historySignIn');list.append(empty);return;
+    }
+    const loading = document.createElement('p');loading.className = 'lv-empty';loading.textContent = '…';list.append(loading);
+    try {
+      const result = await sb.from('mw_video_live_sessions')
+        .select('id,room_name,host_id,host_name,title,is_live,started_at,ended_at')
+        .eq('host_id', user.id).eq('is_live', false)
+        .order('ended_at', { ascending: false, nullsFirst: false }).limit(100);
+      if (result.error) throw result.error;
+      const records = result.data || [];
+      let archived = [];
+      if (records.length) {
+        const ids = records.map(record => record.id).join(',');
+        const response = await fetch(`/api/milkyway-account?action=live-history&ids=${encodeURIComponent(ids)}`, {
+          headers: await authHeaders(), cache: 'no-store', signal: AbortSignal.timeout(12000),
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.error || t('historyUnavailable'));
+        archived = data.archived || [];
+      }
+      const hidden = new Set(archived.map(item => `${item.source}:${item.id}`));
+      S.historyRecords = records.filter(record => !hidden.has(`${modeOf(record)}:${record.id}`));
+      paintHistory();
+    } catch (error) {
+      console.error('[MilkyWay Live] history load failed', error);
+      list.replaceChildren();
+      const message = document.createElement('p');message.className = 'lv-empty';message.textContent = error.message || t('historyUnavailable');list.append(message);
+    }
+  }
+  function paintHistory() {
+    const list = $('mwLiveHistoryList');
+    if (!list) return;
+    list.replaceChildren();
+    if (!S.historyRecords.length) {
+      const empty = document.createElement('p');empty.className = 'lv-empty';empty.textContent = t('noHistory');list.append(empty);return;
+    }
+    for (const record of S.historyRecords) {
+      const row = document.createElement('article');row.className = 'lv-history-item';
+      const info = document.createElement('span');info.className = 'lv-history-info';
+      const title = document.createElement('strong');title.textContent = record.title || (modeOf(record) === 'audio' ? t('audioLive') : t('videoLive'));
+      const date = document.createElement('small');date.textContent = `${modeOf(record) === 'audio' ? '🎙' : '🎥'} ${new Date(record.ended_at || record.started_at).toLocaleString(lang().startsWith('sw') ? 'sw-TZ' : 'en')}`;
+      info.append(title, date);
+      const remove = document.createElement('button');remove.type = 'button';remove.className = 'lv-history-delete';remove.dataset.action = 'history-delete';remove.dataset.id = record.id;remove.dataset.source = modeOf(record);remove.textContent = t('historyRemove');remove.setAttribute('aria-label', `${t('historyRemove')}: ${title.textContent}`);
+      row.append(info, remove);list.append(row);
+    }
+  }
+  async function removeHistory(recordId, source, button) {
+    const record = S.historyRecords.find(item => item.id === recordId && modeOf(item) === source);
+    if (!record) return;
+    const confirmed = await (window.MilkyWayDialog?.confirm
+      ? window.MilkyWayDialog.confirm({ message: t('historyRemoveConfirm'), danger: true })
+      : Promise.resolve(confirm(t('historyRemoveConfirm'))));
+    if (!confirmed) return;
+    button.disabled = true;
+    try {
+      const response = await fetch('/api/milkyway-account?action=live-history', {
+        method: 'POST', headers: await authHeaders(),
+        body: JSON.stringify({ sessions: [{ id: record.id, source }] }),
+        signal: AbortSignal.timeout(12000),
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.error || t('historyUnavailable'));
+      await loadHistory();
+    } catch (error) {
+      console.error('[MilkyWay Live] history removal failed', error);
+      say(error.message || t('historyUnavailable'), true);
+      button.disabled = false;
+    }
+  }
+  function openHistory() {
+    $('mwLiveLobbyMenu').hidden = true;
+    $('mwLiveLobbyMenuButton')?.setAttribute('aria-expanded', 'false');
+    $('mwLiveSetup').hidden = true;
+    document.querySelector('#mwLiveLobby .lv-now').hidden = true;
+    $('mwLiveHistory').hidden = false;
+    loadHistory();
+  }
+  function closeHistory() {
+    $('mwLiveHistory').hidden = true;
+    $('mwLiveSetup').hidden = false;
+    document.querySelector('#mwLiveLobby .lv-now').hidden = false;
+  }
+  function closeLobbyMenu() {
+    const menu = $('mwLiveLobbyMenu');
+    if (menu) menu.hidden = true;
+    $('mwLiveLobbyMenuButton')?.setAttribute('aria-expanded', 'false');
+  }
+
   // ---------- page open / close ----------
   let focusBefore = null;
   function open(options = {}) {
@@ -233,6 +330,8 @@
   function hidePage() {
     S.page.hidden = true;S.page.classList.remove('open');
     document.body.classList.remove('lv-open');
+    closeLobbyMenu();
+    if (!$('mwLiveHistory').hidden) closeHistory();
     try { focusBefore?.focus?.({ preventScroll: true }); } catch {}
     focusBefore = null;
   }
@@ -1085,6 +1184,11 @@
     const set = (id, key, attr) => { const node = $(id);if (!node) return;if (attr) node.setAttribute(attr, t(key));else node.textContent = t(key); };
     set('mwLiveTitle', 'titlePh', 'placeholder');set('mwLiveCommentInput', 'comment', 'placeholder');set('mwLiveNew', 'newMsgs');
     set('mwLiveStartLabel', 'videoLive');set('mwLiveStartAudioLabel', 'audioLive');set('mwLiveAutoLabel', 'auto');set('mwLiveSeatLabel', 'seats');set('mwLiveNowTitle', 'liveNow');
+    set('mwLiveHistoryTitle', 'history');
+    const historyMenuItem = document.querySelector('#mwLiveLobbyMenu [data-action="history"]');
+    if (historyMenuItem) historyMenuItem.textContent = t('history');
+    $('mwLiveLobbyMenuButton')?.setAttribute('aria-label', t('menu'));
+    document.querySelector('#mwLiveHistory [data-action="history-back"]')?.setAttribute('aria-label', t('back'));
     set('mwLiveSettingsTitle', 'settings');set('mwLiveVolumeLabel', 'volume');set('mwLiveOutputLabel', 'output');
     $('mwLiveCommentSend')?.setAttribute('aria-label', t('send'));
     paintControls();
@@ -1107,6 +1211,13 @@
       if (!target) return;
       const action = target.dataset.action;
       if (action === 'close') close();
+      else if (action === 'lobby-menu') {
+        const menu = $('mwLiveLobbyMenu');menu.hidden = !menu.hidden;
+        target.setAttribute('aria-expanded', String(!menu.hidden));
+      }
+      else if (action === 'history') openHistory();
+      else if (action === 'history-back') closeHistory();
+      else if (action === 'history-delete') removeHistory(target.dataset.id, target.dataset.source, target);
       else if (action === 'refresh') refresh();
       else if (action === 'start-video') start('video');
       else if (action === 'start-audio') start('audio');
@@ -1142,7 +1253,7 @@
       input.focus({ preventScroll: true });
     });
     page.addEventListener('keydown', event => { if (event.key === 'Escape' && !$('mwLiveSheetBackdrop').hidden) { closeSheet();$('mwLiveSettings').hidden = true; } });
-    window.addEventListener('mw-language-change', () => { paintStatic();cardKey = '';refresh();if (S.state) { $('mwLiveSheet').dataset.key = '';paintSheet(); } });
+    window.addEventListener('mw-language-change', () => { paintStatic();cardKey = '';refresh();if (!$('mwLiveHistory').hidden) paintHistory();if (S.state) { $('mwLiveSheet').dataset.key = '';paintSheet(); } });
     window.addEventListener('hashchange', () => { if (!S.room) refresh(); });
     try { sb.channel('mw-live-discovery-v3').on('postgres_changes', { event: '*', schema: 'public', table: 'mw_video_live_sessions' }, () => refresh()).subscribe(); } catch (error) { console.warn('[MilkyWay Live] realtime unavailable', error); }
     setInterval(() => { if (document.visibilityState !== 'hidden') refresh(false); }, 5000);
