@@ -145,6 +145,16 @@ test('DM deletion is sender-scoped and call ringing does not wait for LiveKit to
   assert.match(calls, /token: async \(\{ ctx, body, method \}\)[\s\S]*return access\(ctx, call, cleanName\(body\.name\)\)/);
   assert.match(client, /callApi\('\?action=token', \{ id: call\.id, name: nameOf\(\) \}, request\.signal\)/);
 });
+
+test('LiveKit call authorization passes its action through the API route query', () => {
+  const liveToken = source('supabase/functions/_shared/milkyway-token.ts');
+  const mediaAuthorize = source('api/milkyway-media-authorize.js');
+  const apiRoutes = source('api/_lib/supa.js');
+  assert.match(liveToken, /authorizationAddress\.searchParams\.set\('action', action\)/);
+  assert.match(liveToken, /fetch\(authorizationAddress,/);
+  assert.match(mediaAuthorize, /export default route\(\{ '': authorize, token: authorize, participants: authorize, sync: authorize, end: authorize \}\)/);
+  assert.match(apiRoutes, /request\.query\?\.action/);
+});
 const ownerId = '11111111-1111-4111-8111-111111111111';
 const otherId = '22222222-2222-4222-8222-222222222222';
 const sessionId = '33333333-3333-4333-8333-333333333333';

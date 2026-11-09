@@ -92,7 +92,9 @@ export async function milkywayToken(request: Request) {
     }
     if (!/^mw-conversation-(audio|video)-[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(roomName)) return json({ error: 'Invalid conversation room.' }, 400);
     if (action === 'sync' && (typeof target !== 'string' || !/^[a-f0-9-]{36}$/i.test(target))) return json({ error: 'Invalid participant.' }, 400);
-    const response = await fetch(authorizationUrl, { method: 'POST', headers: { ...queryHeaders, 'Content-Type': 'application/json' }, body: JSON.stringify({ roomName, action, target }), signal: AbortSignal.timeout(10000), redirect: 'error' });
+    const authorizationAddress = new URL(authorizationUrl);
+    authorizationAddress.searchParams.set('action', action);
+    const response = await fetch(authorizationAddress, { method: 'POST', headers: { ...queryHeaders, 'Content-Type': 'application/json' }, body: JSON.stringify({ roomName, action, target }), signal: AbortSignal.timeout(10000), redirect: 'error' });
     if (!response.ok) return json({ error: 'Live room authorization was denied or unavailable.' }, [401, 403, 404].includes(response.status) ? response.status : 503);
     const grant = await response.json();
     if (grant.roomName !== roomName || action !== 'end' && (!grant.permissions || grant.identity !== (action === 'sync' ? target : account.id))) return json({ error: 'Invalid room authorization response.' }, 503);

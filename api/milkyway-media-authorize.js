@@ -45,4 +45,4 @@ async function authorize({ request, ctx, body }) {
   return { roomName, identity: target, permissions: { canPublish: accepted, canPublishSources: accepted ? sources : [] } };
 }
 
-export default route({ '': authorize, token: authorize, sync: authorize, end: authorize });
+export default route({ '': authorize, token: authorize, participants: authorize, sync: authorize, end: authorize });
