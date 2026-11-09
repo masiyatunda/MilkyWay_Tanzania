@@ -4,7 +4,8 @@ compatibility_date = "2025-09-01"
 # Gives the api/ handlers process.env, Buffer and node:crypto.
 compatibility_flags = ["nodejs_compat"]
 
-# Public values only. Set the secrets with:
+# Configure the Pages build command in Cloudflare Dashboard: npm run build
+# Set credentials as Pages secrets, never as vars in this file:
 #   wrangler pages secret put LIVEKIT_API_KEY --project-name milkyway
 #   wrangler pages secret put LIVEKIT_API_SECRET --project-name milkyway
 #   wrangler pages secret put SUPABASE_ANON_KEY --project-name milkyway
