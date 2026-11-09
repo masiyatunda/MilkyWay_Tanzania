@@ -201,5 +201,179 @@
 
   addSettings();
   scan();
-  window.MilkyWayMediaPlayback = { autoplayEnabled, refresh: update, toggleFullscreen };
+
+  function ensureTikTokStyles() {
+    if (document.getElementById('mw-tiktok-feed-style')) return;
+    const style = document.createElement('style');
+    style.id = 'mw-tiktok-feed-style';
+    style.textContent = `
+      #feed.mw-tiktok-feed {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        padding: 0;
+        scroll-snap-type: y proximity;
+      }
+      #feed.mw-tiktok-feed .post {
+        position: relative;
+        min-height: calc(100svh - 150px);
+        margin: 0;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        border-top: 1px solid rgba(148,163,184,.25);
+        border-bottom: 1px solid rgba(148,163,184,.25);
+        scroll-snap-align: start;
+        overflow: hidden;
+        background: #020914;
+      }
+      #feed.mw-tiktok-feed .post-head,
+      #feed.mw-tiktok-feed .signals,
+      #feed.mw-tiktok-feed .actions {
+        position: relative;
+        z-index: 4;
+      }
+      #feed.mw-tiktok-feed .post-media {
+        display: block;
+        width: 100%;
+        min-height: calc(100svh - 160px);
+        max-height: calc(100svh - 160px);
+        object-fit: cover;
+        background: #000;
+      }
+      #feed.mw-tiktok-feed .post-body {
+        position: absolute;
+        left: 12px;
+        right: 82px;
+        bottom: 72px;
+        z-index: 5;
+        padding: 0;
+        background: linear-gradient(180deg, rgba(2,9,20,0), rgba(2,9,20,.7));
+        border-radius: 12px;
+      }
+      #feed.mw-tiktok-feed .post-body p {
+        color: #edf4ff;
+        text-shadow: 0 1px 8px rgba(0,0,0,.8);
+      }
+      #feed.mw-tiktok-feed .post-head {
+        position: absolute;
+        inset: 12px 12px auto 12px;
+        z-index: 6;
+        background: linear-gradient(180deg, rgba(2,9,20,.38), rgba(2,9,20,0));
+        border-radius: 12px;
+      }
+      #feed.mw-tiktok-feed .post-head .follow-mini {
+        margin-left: auto;
+      }
+      #feed.mw-tiktok-feed .signals {
+        display: none;
+      }
+      #feed.mw-tiktok-feed .actions {
+        position: absolute;
+        right: 10px;
+        bottom: 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        border-top: none;
+        background: transparent;
+        z-index: 6;
+        width: 62px;
+      }
+      #feed.mw-tiktok-feed .actions .act {
+        width: 62px;
+        min-height: 44px;
+        border-radius: 16px;
+        background: rgba(15,23,42,.7);
+        border: 1px solid rgba(148,163,184,.3);
+        color: #f8fafc;
+        font-size: .78rem;
+        padding: 8px 6px;
+      }
+      #feed.mw-tiktok-feed .post .mw-tiktok-ambient {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(180deg, rgba(2,9,20,.26), rgba(2,9,20,.15) 50%, rgba(2,9,20,.55));
+        z-index: 3;
+      }
+      @media (min-width: 720px) {
+        #feed.mw-tiktok-feed .post {
+          min-height: calc(100svh - 100px);
+        }
+        #feed.mw-tiktok-feed .post-media {
+          min-height: calc(100svh - 100px);
+          max-height: calc(100svh - 100px);
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  function activateTikTokFeed(force = false) {
+    const feed = document.getElementById('feed');
+    if (!feed) return;
+    const hasVideo = [...feed.querySelectorAll('video.post-media')].length > 0;
+    if (!hasVideo && !force) {
+      feed.classList.remove('mw-tiktok-feed');
+      return;
+    }
+    ensureTikTokStyles();
+    feed.classList.add('mw-tiktok-feed');
+
+    feed.querySelectorAll('.post').forEach(post => {
+      const media = post.querySelector('video.post-media');
+      if (!media) return;
+      if (!post.querySelector('.mw-tiktok-ambient')) {
+        const ambient = document.createElement('div');
+        ambient.className = 'mw-tiktok-ambient';
+        post.appendChild(ambient);
+      }
+      const button = post.querySelector('.mw-video-fullscreen');
+      if (button && button.parentElement && !button.dataset.mwTikTokPinned) {
+        button.dataset.mwTikTokPinned = 'true';
+        button.style.position = 'absolute';
+        button.style.right = '16px';
+        button.style.top = '16px';
+        button.style.zIndex = '8';
+      }
+    });
+
+    const videos = [...feed.querySelectorAll('video.post-media')];
+    if (!videos.length) return;
+
+    let activeObserver = feed.__mwTikTokObserver;
+    if (activeObserver) activeObserver.disconnect();
+    const observer = new IntersectionObserver(entries => {
+      const visible = entries
+        .filter(entry => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+      const target = visible[0]?.target;
+      for (const video of videos) {
+        if (!video.isConnected) continue;
+        if (video === target) {
+          if (video.paused) {
+            video.muted = true;
+            video.play().catch(() => {});
+          }
+        } else if (!video.paused) {
+          video.pause();
+        }
+      }
+    }, { threshold: [0.2, 0.45, 0.7, 1] });
+
+    videos.forEach(video => observer.observe(video));
+    feed.__mwTikTokObserver = observer;
+  }
+
+  const setupTikTokMode = () => activateTikTokFeed(false);
+  const feedObserver = new MutationObserver(() => setupTikTokMode());
+  document.addEventListener('DOMContentLoaded', () => {
+    setupTikTokMode();
+    feedObserver.observe(document.body, { childList: true, subtree: true });
+  });
+
+  window.addEventListener('mw-settings-open', () => setupTikTokMode());
+  window.addEventListener('resize', () => setupTikTokMode());
+  window.MilkyWayMediaPlayback = { autoplayEnabled, refresh: update, toggleFullscreen, activateTikTokFeed: activateTikTokFeed, disableTikTokFeed: () => document.getElementById('feed')?.classList.remove('mw-tiktok-feed') };
 })();

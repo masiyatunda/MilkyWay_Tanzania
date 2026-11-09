@@ -4,11 +4,13 @@
 (() => {
   const links = document.querySelectorAll('#appDownload, #mwApkLink, a[data-mw-apk]');
   if (!links.length) return;
-  fetch('/milkyway/download/version.json', { cache: 'no-store' })
+  const base = new URL('.', document.baseURI);
+  fetch(new URL('download/version.json', base), { cache: 'no-store' })
     .then(response => response.ok ? response.json() : null)
     .then(latest => {
       if (!latest || !latest.versionCode) return;
-      const url = new URL(latest.url || '/milkyway/download/MilkyWay.apk', location.origin);
+      const target = String(latest.url || 'download/MilkyWay.apk').replace(/^\/+/, '');
+      const url = new URL(target, base);
       url.searchParams.set('v', latest.versionCode);
       links.forEach(link => { link.href = url.pathname + url.search; });
     })

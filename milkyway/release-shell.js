@@ -1,4 +1,6 @@
 (() => {
+  const base = new URL('.', document.baseURI);
+  const resolveLocal = path => new URL(String(path || '').replace(/^\/+/, ''), base).href;
   const byId = identity => document.getElementById(identity);
   const translate = key => window.MilkyWayI18n.t(key);
   // The header's three-line button is the one way into the Menu; My Account keeps only its four essentials.
