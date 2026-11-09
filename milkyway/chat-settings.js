@@ -108,7 +108,7 @@
     const request = window.MilkyWayPremium.messageRequest;
     const hide = (ids, group) => request('?action=hide', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ids, group }) });
     const sweep = async (query, group) => {
-      for (let round = 0; round < 30; round++) {
+      while (true) {
         const { messages } = await request(query);
         const ids = (messages || []).map(message => message.id);
         if (!ids.length) return;

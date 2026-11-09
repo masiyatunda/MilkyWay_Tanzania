@@ -223,7 +223,7 @@
     if (choice !== 'clear') return;
     const group = activeGroupId, peer = threadWith;
     try {
-      for (let round = 0; round < 30; round++) {
+      while (true) {
         if (group !== activeGroupId || peer !== threadWith) return;
         const { messages } = await window.MilkyWayPremium.messageRequest(group ? `?group=${encodeURIComponent(group)}` : `?peer=${encodeURIComponent(peer)}`);
         const ids = (messages || []).map(message => message.id);

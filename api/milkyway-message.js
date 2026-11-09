@@ -33,8 +33,11 @@ export default async function handler(req, res) {
 
     // Messages this person removed with "Delete for me" stay for everyone else.
     const visible = async rows => {
-      const hidden = new Set((await rest(`mw_message_hides?select=message_id&user_id=eq.${user.id}&order=created_at.desc&limit=5000`).catch(() => [])).map(row => row.message_id));
-      return (rows || []).filter(row => !hidden.has(row.id));
+      if (!rows?.length) return rows || [];
+      const ids = rows.map(row => row.id).filter(id => UUID.test(id));
+      if (!ids.length) return rows;
+      const hidden = new Set((await rest(`mw_message_hides?select=message_id&user_id=eq.${user.id}&message_id=in.(${ids.join(',')})&limit=${ids.length}`)).map(row => row.message_id));
+      return rows.filter(row => !hidden.has(row.id));
     };
 
     if (req.method === 'GET') {

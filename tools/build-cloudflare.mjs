@@ -7,13 +7,14 @@ import { fileURLToPath } from 'node:url';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const out = join(root, 'dist');
 const blocked = /\.(sql|bak|md|txt|map|gradle|java|ts)$/i;
+const excludedAssets = new Set([join(root, 'milkyway', 'icon-square-source.png')]);
 const maxBytes = 25 * 1024 * 1024; // Cloudflare Pages per-file limit
 
 rmSync(out, { recursive: true, force: true });
 mkdirSync(out, { recursive: true });
 
 const filter = source => {
-  if (blocked.test(source)) return false;
+  if (blocked.test(source) || excludedAssets.has(source)) return false;
   const info = statSync(source);
   if (info.isFile() && info.size > maxBytes) { console.warn(`Skipped ${source} (over 25 MB).`); return false; }
   return true;
