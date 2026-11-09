@@ -63,10 +63,9 @@ export default route({
     await ctx.rest(`mw_dm_calls?caller_id=eq.${ctx.user.id}&status=eq.ringing`, { method: 'PATCH', body: { status: 'ended', ended_at: new Date().toISOString(), answer: { outcome: 'cancelled' } } });
     const [call] = await ctx.rest('mw_dm_calls', { method: 'POST', returning: true, body: { caller_id: ctx.user.id, callee_id: callee, status: 'ringing', offer: { transport: 'livekit', mode, name } } }) || [];
     if (!call) throw new ApiError(503, 'Call could not start.');
-    // The client requests a fresh token itself when this best-effort one is missing.
-    const grant = await access(ctx, call, name).catch(() => null);
-    await nudge(ctx, callee, call.id, 'ring');
-    return { call, ...(grant ? { access: grant } : {}) };
+    // Let the client request its token after opening the call UI; token issuance must not delay ringing.
+    void nudge(ctx, callee, call.id, 'ring');
+    return { call };
   },
 
   accept: async ({ ctx, body, method }) => {
@@ -75,9 +74,9 @@ export default route({
     const since = new Date(Date.now() - RING_WINDOW_MS).toISOString();
     const [call] = await ctx.rest(`mw_dm_calls?id=eq.${id}&callee_id=eq.${ctx.user.id}&status=eq.ringing&created_at=gte.${encodeURIComponent(since)}`, { method: 'PATCH', returning: true, body: { status: 'accepted', answer: { acceptedAt: new Date().toISOString() } } }) || [];
     if (!call) throw new ApiError(409, 'This call is no longer ringing.');
-    const grant = await access(ctx, call, cleanName(body.name)).catch(() => null);
-    await nudge(ctx, call.caller_id, call.id, 'accepted');
-    return { call, ...(grant ? { access: grant } : {}) };
+    // The accepted client obtains its own token in connect(), so acceptance stays responsive.
+    void nudge(ctx, call.caller_id, call.id, 'accepted');
+    return { call };
   },
 
   decline: async ({ ctx, body, method }) => {

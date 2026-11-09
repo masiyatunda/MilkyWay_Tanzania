@@ -130,6 +130,21 @@ test.skip('feed videos keep user playback audible and expose fullscreen while au
 });
 
 const source = path => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
+
+test('DM deletion is sender-scoped and call ringing does not wait for LiveKit token issuance', () => {
+  const deletion = source('api/milkyway-message.js');
+  const deletionMigration = source('supabase/migrations/20261109_milkyway_message_delete_permissions.sql');
+  assert.match(deletion, /sender_id=eq\.\$\{user\.id\}/);
+  assert.match(deletionMigration, /grant delete on public\.mw_messages, public\.mw_dm_group_messages to authenticated/i);
+  assert.match(deletionMigration, /for delete to authenticated using \(sender_id = auth\.uid\(\)\)/i);
+
+  const calls = source('api/milkyway-call.js');
+  const client = source('milkyway/dm-calls.js');
+  assert.match(calls, /void nudge\(ctx, callee, call\.id, 'ring'\)/);
+  assert.match(calls, /void nudge\(ctx, call\.caller_id, call\.id, 'accepted'\)/);
+  assert.match(calls, /token: async \(\{ ctx, body, method \}\)[\s\S]*return access\(ctx, call, cleanName\(body\.name\)\)/);
+  assert.match(client, /callApi\('\?action=token', \{ id: call\.id, name: nameOf\(\) \}, request\.signal\)/);
+});
 const ownerId = '11111111-1111-4111-8111-111111111111';
 const otherId = '22222222-2222-4222-8222-222222222222';
 const sessionId = '33333333-3333-4333-8333-333333333333';

@@ -210,7 +210,8 @@
           if (group) throw error;
           // The gateway route is unavailable: delete the row directly; row-level security still limits it to the sender.
           const { data, error: failure } = await sb.from('mw_messages').delete().eq('id', id).select('id');
-          if (failure || !data?.length) throw error;
+          if (failure) throw failure;
+          if (!data?.length) throw error;
         }
       }
       else await hide([id], group);
