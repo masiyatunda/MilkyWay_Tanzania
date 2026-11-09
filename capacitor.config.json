@@ -1,0 +1,19 @@
+{
+  "appId": "com.masiyatunda.milkyway",
+  "appName": "MilkyWay",
+  "webDir": "android/capacitor-web",
+  "server": {
+    "url": "https://www.masiyatunda.com/milkyway/",
+    "androidScheme": "https",
+    "allowNavigation": ["masiyatunda.com", "www.masiyatunda.com", "*.masiyatunda.com", "*.onrender.com", "*.supabase.co", "*.livekit.cloud"]
+  },
+  "android": {
+    "path": "android/capacitor",
+    "backgroundColor": "#030A20"
+  },
+  "plugins": {
+    "PushNotifications": {
+      "presentationOptions": ["badge", "sound", "alert"]
+    }
+  }
+}

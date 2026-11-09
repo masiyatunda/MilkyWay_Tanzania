@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">MilkyWay</string>
+    <string name="title_activity_main">MilkyWay</string>
+    <string name="package_name">com.masiyatunda.milkyway</string>
+    <string name="custom_url_scheme">com.masiyatunda.milkyway</string>
+</resources>

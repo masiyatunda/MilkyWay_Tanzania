@@ -1,0 +1,65 @@
+/* Mobile-first responsive layout + TikTok-style galaxy glass chrome.
+   Loaded last. It only sets layout, shape and spacing; colours come from the active theme variables, so every theme keeps working. */
+
+/* ---------- Fluid base ---------- */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+html body{min-width:0;overflow-x:hidden}
+html body .app{width:100%;max-width:min(560px,100%);box-sizing:border-box;min-height:100dvh;padding-bottom:calc(92px + env(safe-area-inset-bottom,0px))}
+html body img,html body video{max-width:100%}
+
+/* ---------- Header: brand + search on one clean row, only 3 actions ---------- */
+html body .top{box-sizing:border-box;flex-wrap:wrap;align-items:center;gap:8px 8px;padding:calc(8px + env(safe-area-inset-top,0px)) max(10px,env(safe-area-inset-right,0px)) 8px max(10px,env(safe-area-inset-left,0px));border-radius:0 0 22px 22px;-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4)}
+html body .top .brand{flex:0 1 auto;min-width:0;gap:8px}
+html body .top .brand img{flex:0 0 auto;width:36px;height:36px;border-radius:50%}
+html body .top .brand>div{min-width:0}
+html body .top .brand h1{margin:0;font-size:clamp(.9rem,4.4vw,1.1rem);line-height:1.1;white-space:nowrap}
+html body .top .brand small,html body .top .brand .mw-apk-link{display:none!important}
+html body .top .top-actions{flex:0 0 auto;margin-left:auto;gap:6px!important;align-items:center;flex-wrap:nowrap}
+/* Search lives in the inline search box; language lives in Settings and the sign-in sheet; the app link lives in the Menu. */
+html body .top-actions>#topSearchBtn,html body .top-actions>.mw-header-language,html body .top-actions>#langSel{display:none!important}
+html body .top-actions>.btn{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;min-width:40px;height:40px;min-height:40px;padding:0 12px!important;border-radius:999px!important;white-space:nowrap;writing-mode:horizontal-tb;line-height:1;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+html body .top-actions>#topMenuBtn,html body .top-actions>#topNotifyBtn{width:40px;padding:0!important;font-size:1.1rem!important;position:relative}
+html body .top-actions>#topNotifyBtn .badge{position:absolute;top:-3px;right:-3px;margin:0!important}
+html body .top-actions>#accountTopBtn{max-width:clamp(84px,30vw,132px);gap:6px;overflow:hidden;text-overflow:ellipsis;font-size:.74rem!important;font-weight:800}
+html body .top-actions>#accountTopBtn>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+html body .top>.mw-top-search{order:5;flex:1 0 100%;max-width:none;min-width:0}
+html body .top .mw-top-search-box{border-radius:999px}
+
+/* ---------- Footer / orbit: one floating glass pill ---------- */
+html body .orbit{box-sizing:border-box;left:max(8px,env(safe-area-inset-left,0px));right:max(8px,env(safe-area-inset-right,0px));bottom:calc(6px + env(safe-area-inset-bottom,0px));width:auto;max-width:560px;margin-inline:auto;padding:5px 6px!important;border:1px solid var(--mw-glass-line,rgba(186,170,255,.28))!important;border-radius:999px;background:var(--mw-chrome-glass,rgba(12,16,40,.72));-webkit-backdrop-filter:blur(20px) saturate(1.5);backdrop-filter:blur(20px) saturate(1.5)}
+html body nav.orbit .orbit-inner{box-sizing:border-box;width:100%!important;max-width:none;justify-content:space-between!important;align-items:center!important;gap:2px!important;flex-wrap:nowrap}
+html body .orbit .orb{flex:1 1 0;min-width:0;max-width:none;padding:3px 0;gap:1px;flex-direction:column;align-items:center;justify-content:center;writing-mode:horizontal-tb;border-radius:999px}
+html body .orbit .orb>b{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:clamp(.54rem,2.6vw,.64rem);line-height:1.1;text-align:center;font-weight:800}
+html body .orbit .orb[data-tab="profile"]{max-width:none;padding-inline:0}
+html body .orbit .orb[data-tab="profile"] b{max-width:100%}
+/* Only the active tab shows its word, like TikTok, so the bar never feels cluttered. */
+html body .orbit .orb:not(.on):not(.mw-live-launch)>b{opacity:.72}
+@media(max-width:360px){html body .orbit .orb:not(.on):not(.mw-live-launch)>b{display:none}}
+
+/* ---------- Registration / login (and every modal sheet) ---------- */
+html body .modal-bg,html body .sheet-bg{box-sizing:border-box;padding:0!important;overscroll-behavior:contain}
+html body #authModal>.sheet,html body #resetModal>.sheet{box-sizing:border-box;width:100%;max-width:min(520px,100%);max-height:100dvh;min-height:0;margin-inline:auto;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px max(16px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))!important}
+html body #authModal .sheet h2{font-size:clamp(1.05rem,5vw,1.3rem);overflow-wrap:anywhere}
+html body #authModal .sheet .muted,html body #authModal .sheet small,html body #authModal .sheet .msg{overflow-wrap:anywhere}
+/* 16px fields stop iPhones zooming the page on focus; full width keeps them inside any screen. */
+html body #authModal .sheet :is(input,select,textarea),html body #resetModal .sheet :is(input,select,textarea){box-sizing:border-box;width:100%;max-width:100%;min-height:46px;font-size:16px!important;border-radius:14px}
+html body #authModal .pw-wrap{width:100%}
+html body #authModal .pw-wrap input{padding-right:48px}
+html body #authModal .pw-eye{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:40px;height:40px;min-height:40px;padding:0;border-radius:50%;display:grid;place-items:center}
+html body #authModal .tabs{display:flex;gap:6px;padding:4px;border-radius:999px;background:rgba(255,255,255,.06)}
+html body #authModal .tabs .tab{flex:1 1 0;min-width:0;min-height:42px;padding:8px 10px;border-radius:999px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center}
+html body #authModal .sheet .row{flex-wrap:wrap}
+html body #authModal .sheet .row>*{flex:1 1 140px;min-width:0}
+html body #authModal .sheet .btn{box-sizing:border-box;max-width:100%;min-height:46px;border-radius:999px;white-space:normal;text-align:center;writing-mode:horizontal-tb}
+html body #authModal .sheet .btn.primary{width:100%}
+html body .sheet>.close,html body .modal-bg .sheet>.close{width:40px;height:40px;min-height:40px;border-radius:50%;display:grid;place-items:center;padding:0}
+
+/* Short landscape phones: let the sheet use the whole height. */
+@media(max-height:520px){html body #authModal>.sheet{padding-top:10px}html body .top{position:static}}
+
+/* ---------- Very narrow phones (<= 340px) ---------- */
+@media(max-width:340px){
+  html body .top .brand>div{display:none}
+  html body .top-actions>#accountTopBtn{max-width:84px;padding:0 8px!important;font-size:.68rem!important}
+}
+@media(min-width:561px){html body .orbit{max-width:520px}}

@@ -1,0 +1,10 @@
+/* Edge-to-edge feed: post cards span the full width of the app container with no side margins, and the page ends
+   right above the bottom navigation instead of leaving extra empty space. */
+html body #feed.feed{padding:6px 0 10px!important;gap:10px}
+html body #feed>.post,html body #feed>.mw-ad-slot{width:100%;margin-inline:0!important;border-radius:0!important;border-inline:0!important}
+html body #feed>.post .mw-media-frame{margin-inline:0!important;border-radius:0!important}
+html body #feed>.post .mw-media-frame>.post-media{border-radius:0!important}
+html body .app{padding-bottom:calc(84px + var(--safe,0px))!important}
+
+/* "Reduce transparency" must not turn the top bar and bottom navigation into white strips on dark themes. */
+@media (prefers-reduced-transparency:reduce){html body .top,html body .orbit{background:var(--panel)!important}}

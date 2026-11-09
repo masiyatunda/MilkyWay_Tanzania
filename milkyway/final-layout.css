@@ -1,0 +1,177 @@
+/* Final layout pass: compact bottom nav, toolbar search & chat box, GO LIVE in the bottom-center navigation and language in the header, two-button account footer, smoother inline comments. */
+
+/* Bottom navigation: planets and icons keep their original compact size (36px planets, 17px icons; 32/15px on
+   narrow phones, set in cosmos.css). Only the Messages glyph is drawn as a solid, filled envelope so it reads at a glance. */
+html body .orbit .orb>span.mw-planet.mw-planet--messages svg{width:19px;height:19px;stroke-width:0;filter:drop-shadow(0 1px 1.5px rgba(0,0,0,.65))}
+html body .orbit .orb>span.mw-planet--messages svg .mw-envelope-body{fill:#fff;stroke:none}
+html body .orbit .orb>span.mw-planet--messages svg .mw-envelope-flap{fill:none;stroke:#123a7a;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+html body .orbit .orb>span.mw-planet--messages svg .mw-envelope-fold{fill:none;stroke:#123a7a;stroke-width:1.5;stroke-linecap:round;opacity:.55}
+html[data-mw-appearance="sunlight"] body .orbit .orb>span.mw-planet--messages svg .mw-envelope-body{stroke:#000;stroke-width:1.2}
+@media(max-width:390px){html body .orbit .orb>span.mw-planet.mw-planet--messages svg{width:17px;height:17px}}
+
+/* Unread badges: a red count pinned to the top-right of the Messages and Alerts planets; it pops when the count changes. */
+html body .orbit .orb{position:relative}
+html body .orbit .orb>.badge.mw-nav-badge{position:absolute!important;top:0;left:calc(50% + 8px);right:auto;width:max-content;white-space:nowrap;margin:0!important;z-index:5;min-width:17px;height:17px;padding:0 4px;border-radius:999px;place-items:center;background:#ff2d55;color:#fff;font:900 .62rem/1 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;border:2px solid var(--bg,#07111f);box-shadow:0 2px 8px rgba(255,45,85,.55)}
+html body .orbit .orb>.badge.mw-nav-badge.mw-badge-pop{animation:mwBadgePop .45s cubic-bezier(.2,1.6,.4,1)}
+@keyframes mwBadgePop{0%{transform:scale(.4)}60%{transform:scale(1.25)}100%{transform:scale(1)}}
+@media(prefers-reduced-motion:reduce){html body .orbit .orb>.badge.mw-nav-badge.mw-badge-pop{animation:none}}
+
+/* GO LIVE: a header globe whose "GO LIVE" ring races round it like a meteor, trailing fire, then crashes on top,
+   explodes and settles so the words read clearly. One 4.8s cycle: launch (0–4%), six blazing laps (4–30%),
+   crash + explosion (30–40%), the words burn steady (40–100%), repeat. It runs in every theme. */
+html body .top-actions>#composeBtn.mw-live-launch{position:relative;inset:auto;flex:0 0 60px;width:60px;height:60px;margin:0 2px;z-index:2;animation:none}
+html body .top-actions>#composeBtn .mw-live-globe-sphere{position:absolute;left:50%;top:50%;margin:-32px 0 0 -32px;transform:scale(.6)}
+html body .top-actions>#composeBtn:hover .mw-live-globe-sphere{transform:scale(.64)}
+html body .top-actions>#composeBtn:active .mw-live-globe-sphere{transform:scale(.56)}
+html body .top-actions>#composeBtn .mw-live-globe-sphere{animation:mwMeteorGlobeFlare var(--mw-meteor-cycle,4.8s) linear infinite}
+html body .top-actions>#composeBtn .mw-live-orbit{--mw-meteor-cycle:4.8s;transform:scale(.6)}
+html[data-mw-appearance] body .top-actions>#composeBtn .mw-live-orbit-ring{stroke:rgba(255,170,90,.3);stroke-width:1;stroke-dasharray:1.5 3}
+html[data-mw-appearance] body .top-actions>#composeBtn .mw-live-orbit-spin{animation:mwMeteorSpin var(--mw-meteor-cycle) linear infinite!important}
+html[data-mw-appearance] body .top-actions>#composeBtn .mw-live-orbit-text{font-size:17px;letter-spacing:1.4px;opacity:1;animation:mwMeteorText var(--mw-meteor-cycle) linear infinite!important}
+html[data-mw-appearance] body .top-actions>#composeBtn .mw-live-trail{display:inline;filter:drop-shadow(0 0 2px #ff6a00) drop-shadow(0 0 5px rgba(255,80,0,.75));animation:mwMeteorTrail var(--mw-meteor-cycle) linear infinite!important}
+html[data-mw-appearance] body .top-actions>#composeBtn .mw-live-trail use{animation:mwMeteorFlicker .16s steps(2,jump-none) infinite alternate!important}
+html[data-mw-appearance] body .top-actions>#composeBtn .mw-live-trail-ember{stroke-width:3}
+html[data-mw-appearance] body .top-actions>#composeBtn .mw-live-trail-flame{stroke-width:4.8}
+html[data-mw-appearance] body .top-actions>#composeBtn .mw-live-trail-blaze{stroke-width:6.4}
+html[data-mw-appearance] body .top-actions>#composeBtn .mw-live-trail-core{stroke-width:7}
+html[data-mw-appearance] body .top-actions>#composeBtn .mw-live-impact{display:inline}
+html[data-mw-appearance] body .top-actions>#composeBtn .mw-live-flash{animation:mwMeteorFlash var(--mw-meteor-cycle) linear infinite!important}
+html[data-mw-appearance] body .top-actions>#composeBtn .mw-live-shock{stroke-width:2;animation:mwMeteorShock var(--mw-meteor-cycle) linear infinite!important}
+html[data-mw-appearance] body .top-actions>#composeBtn .mw-live-shock-outer{fill:none;stroke:#ff6a00;stroke-width:1.4;opacity:0;animation:mwMeteorShockOuter var(--mw-meteor-cycle) linear infinite!important}
+html[data-mw-appearance] body .top-actions>#composeBtn .mw-live-spark{stroke-width:2;animation:mwMeteorSpark var(--mw-meteor-cycle) linear infinite!important}
+html[data-mw-appearance] body .top-actions>#composeBtn .mw-live-debris{opacity:0;animation:mwMeteorDebris var(--mw-meteor-cycle) cubic-bezier(.15,.7,.35,1) infinite!important}
+html body .top-actions>#composeBtn .mw-live-globe-dot{right:13px;bottom:13px;width:9px;height:9px;border-width:1.5px}
+/* Launch slowly, accelerate to meteor speed through six laps and stop dead on top: the crash. */
+@keyframes mwMeteorSpin{0%,4%{transform:rotate(0);animation-timing-function:cubic-bezier(.5,0,1,.6)}30%,100%{transform:rotate(2160deg)}}
+@keyframes mwMeteorTrail{0%,4.5%{opacity:0}7.5%,29.6%{opacity:1}30.4%,100%{opacity:0}}
+@keyframes mwMeteorFlicker{from{stroke-opacity:.6}to{stroke-opacity:1}}
+@keyframes mwMeteorText{
+  0%,3%{transform:scale(1);opacity:1;stroke:#ff3d00;stroke-width:2.6px}
+  5%{transform:scale(.9,.78);opacity:1;stroke:#ff2a00;stroke-width:3.6px}
+  29.8%{transform:scale(.9,.78);opacity:.95;stroke:#ffcf3a;stroke-width:4px}
+  30.2%{transform:scale(.2);opacity:0;stroke:#fff;stroke-width:6px}
+  33%{transform:scale(1.55);opacity:1;stroke:#fff3b0;stroke-width:6px}
+  36%{transform:scale(.88);stroke:#ff8a00;stroke-width:3.6px}
+  39%{transform:scale(1.08)}
+  42%{transform:scale(1);stroke:#ff3d00;stroke-width:2.6px}
+  70%{stroke:#ff5a00;stroke-width:3px}
+  100%{transform:scale(1);opacity:1;stroke:#ff3d00;stroke-width:2.6px}}
+@keyframes mwMeteorFlash{0%,29.9%{opacity:0;transform:scale(.1)}30.4%{opacity:1;transform:scale(1.6)}33%{opacity:.95;transform:scale(3.2)}38%,100%{opacity:0;transform:scale(4.2)}}
+@keyframes mwMeteorShock{0%,30%{opacity:0;transform:scale(.2)}30.6%{opacity:1;transform:scale(.5)}39%,100%{opacity:0;transform:scale(4.2)}}
+@keyframes mwMeteorShockOuter{0%,31%{opacity:0;transform:scale(.3)}32%{opacity:.9;transform:scale(.8)}42%,100%{opacity:0;transform:scale(5.4)}}
+@keyframes mwMeteorSpark{0%,30%{opacity:0;transform:translateY(0)}30.8%{opacity:1;transform:translateY(-2px)}37%{opacity:.9}41%,100%{opacity:0;transform:translateY(calc(-1.4 * var(--d,20px)))}}
+@keyframes mwMeteorDebris{0%,30.2%{opacity:0;transform:translate(0,0) scale(1)}31%{opacity:1;transform:translate(calc(var(--x) * .15),calc(var(--y) * .15)) scale(1.2)}44%,100%{opacity:0;transform:translate(var(--x),var(--y)) scale(.3)}}
+@keyframes mwMeteorGlobeFlare{0%,30%,46%,100%{box-shadow:0 0 0 1px rgba(255,255,255,.35),0 0 16px rgba(110,180,255,.55),0 8px 22px rgba(0,0,0,.45)}32%{box-shadow:0 0 0 2px #ffe08a,0 0 30px 8px rgba(255,120,0,.95),0 8px 22px rgba(0,0,0,.45)}}
+
+/* Language selector: last control in the header, so it sits in the top-right corner. */
+html body .top-actions{display:flex;align-items:center;flex-wrap:nowrap;min-width:0}
+html body .top-actions>.mw-header-language{order:99;flex:none}
+
+html body .top-actions>.mw-header-language .mw-language-trigger{min-height:40px;height:40px;padding:0 9px}
+html body .top-actions>#composeBtn{order:98}
+@media(max-width:430px){
+  html body .top{gap:6px}
+  html body .top-actions{gap:6px!important}
+  html body .top-actions>#accountTopBtn{max-width:96px;overflow:hidden;text-overflow:ellipsis}
+}
+/* Narrow phones: tighter header controls so the GO LIVE globe and the language button always fit on screen. */
+@media(max-width:380px){
+  html body .top{gap:4px;padding-inline:8px}
+  html body .top-actions{gap:3px!important}
+  html body .top-actions>#accountTopBtn{max-width:80px;padding-inline:8px!important;font-size:.68rem!important;line-height:1.1!important;white-space:normal!important;text-align:center;overflow:hidden}
+  html body .top-actions>#composeBtn.mw-live-launch{margin:0}
+  html body .top-actions>.mw-header-language .mw-language-trigger{padding:0 6px}
+}
+@media(max-width:345px){
+  html body .top .brand>div{display:none}
+}
+
+/* Sign-up fields never show in My Account. */
+#authModal .sheet.mw-account-mode :is(#authPhoneWrap,#confirmPassWrap,.tabs,#authName,#authEmail,#authPass){display:none!important}
+#authModal .sheet.mw-account-mode #loggedBox~label{display:none!important}
+
+/* Inline comments, Facebook style: the thread unfolds right under the post that was tapped, without leaving the feed.
+   Each comment is a round initial plus a soft bubble (name + text) with small Reply / Edit links under it, and the
+   comment box is a slim rounded field at the end of the thread that stays open after sending. */
+#feed .post>.mw-inline-comments{animation:mwFinalCommentsIn .28s cubic-bezier(.2,.8,.2,1);transform-origin:top center;margin:0 6px 10px;padding:0 6px 10px;border-top:1px solid var(--line);border-radius:0 0 14px 14px}
+#feed .post>.mw-inline-comments>header{padding:8px 0 4px;margin-bottom:0;border-bottom:0;font-size:.84rem}
+#feed .post>.mw-inline-comments .mw-inline-close{width:32px;height:32px;min-width:32px;min-height:32px;font-size:1.15rem;border-radius:50%}
+#feed .post>.mw-inline-comments .mw-comment-list{max-height:min(48vh,400px);overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;gap:10px;padding:4px 0}
+#feed .post>.mw-inline-comments .mw-comment{display:grid;grid-template-columns:32px minmax(0,1fr);gap:8px;align-items:start;padding:0;border:0;border-radius:0;background:transparent}
+#feed .post>.mw-inline-comments .mw-comment.mw-reply{margin-left:40px;grid-template-columns:24px minmax(0,1fr);border-left:0}
+#feed .post>.mw-inline-comments .mw-comment-avatar{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#7DD3FC,#6366F1);color:#fff;font-weight:800;font-size:.82rem;line-height:1}
+#feed .post>.mw-inline-comments .mw-reply>.mw-comment-avatar{width:24px;height:24px;font-size:.66rem}
+#feed .post>.mw-inline-comments .mw-comment-main{min-width:0}
+#feed .post>.mw-inline-comments .mw-comment-bubble{display:inline-block;max-width:100%;box-sizing:border-box;padding:7px 12px 8px;border-radius:18px;background:rgba(127,140,170,.18)}
+#feed .post>.mw-inline-comments .mw-comment-bubble header{gap:6px}
+#feed .post>.mw-inline-comments .mw-comment-bubble header b{font-size:.8rem}
+#feed .post>.mw-inline-comments .mw-comment-bubble header small{font-size:.66rem}
+#feed .post>.mw-inline-comments .mw-comment-body{margin:1px 0 0;font-size:.9rem;line-height:1.35}
+#feed .post>.mw-inline-comments .mw-comment-tools{gap:2px;padding:1px 6px 0}
+#feed .post>.mw-inline-comments .mw-comment-tools button{padding:3px 6px;min-height:0;font-size:.7rem;color:var(--muted)}
+#feed .post>.mw-inline-comments .mw-comment-tools button.danger{color:var(--danger)}
+#feed .post>.mw-inline-comments .mw-comment-composer{position:static;display:block;margin-top:8px;padding:0;border:0;background:transparent;border-radius:0;box-shadow:none}
+#feed .post>.mw-inline-comments .mw-comment-input{display:block;width:100%;box-sizing:border-box;min-height:40px;height:40px;max-height:120px;padding:9px 14px;border-radius:20px;border:1px solid var(--line);background:rgba(127,140,170,.14);resize:none;font-size:.9rem;line-height:1.35;transition:height .15s}
+#feed .post>.mw-inline-comments .mw-comment-input:focus{height:64px}
+#feed .post>.mw-inline-comments .mw-comment-actions{display:flex;align-items:center;flex-wrap:nowrap;gap:4px;margin-top:6px;min-width:0}
+#feed .post>.mw-inline-comments .mw-comment-actions .mw-tool{flex:0 1 auto;min-width:0;min-height:28px!important;height:28px;padding:0 8px!important;border-radius:14px;font-size:.66rem!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#feed .post>.mw-inline-comments .mw-comment-actions .mw-comment-send{flex:none;margin-left:auto;min-height:32px!important;height:32px;padding:0 14px!important;border-radius:16px;font-size:.78rem!important;white-space:nowrap}
+#feed .post>.mw-inline-comments .mw-comment-status:empty{display:none}
+#feed .post.mw-comments-open>.post-echo-preview{display:none}
+#feed .post>.post-echo-preview .post-echo-line{cursor:pointer}
+@keyframes mwFinalCommentsIn{from{opacity:0;transform:translateY(-8px) scaleY(.96)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){#feed .post>.mw-inline-comments{animation:none}#feed .post>.mw-inline-comments .mw-comment-input{transition:none}}
+
+/* "Save offline" lives only inside each post's ••• menu, as a compact entry in the same small text as the other options. */
+.post .mw-message-menu-items>.mwx-offline-save{display:flex;align-items:center;gap:6px;width:100%;margin:0;min-height:34px!important;padding:6px 10px!important;border:0!important;border-radius:10px;background:transparent!important;color:inherit;font-size:.76rem!important;font-weight:inherit;line-height:1.2;text-align:left;justify-content:flex-start;box-shadow:none!important}
+.post .mw-message-menu-items>.mwx-offline-save:hover{background:rgba(127,140,170,.16)!important}
+.post .mw-message-menu-items>.mwx-offline-save[data-saved="true"]{opacity:.75}
+#feed .post .actions .mw-message-menu-items>button{font-size:.76rem;min-height:34px;padding:6px 10px;text-align:left}
+/* Profile post lists have no action bar, so their ••• menu (holding Save offline) sits at the bottom-right of the post. */
+.post>.mwx-offline-menu-host{display:flex;justify-content:flex-end;position:relative;margin:4px 6px 0;padding:0;background:none!important;border:0!important}
+.post>.mwx-offline-menu-host>summary{display:grid;place-items:center;min-width:34px;height:30px;padding:0 8px;border-radius:999px;color:var(--muted);font-size:.8rem;letter-spacing:.06em}
+.post>.mwx-offline-menu-host>.mw-message-menu-items{position:absolute;right:0;bottom:calc(100% + 4px);z-index:6;min-width:180px;padding:5px;border:1px solid var(--line);border-radius:14px;background:var(--mw-glass-strong,var(--panel));box-shadow:0 12px 30px rgba(2,4,18,.5)}
+
+/* Composer visibility: a quick one-tap choice above the text — Public, Followers only or Only me. */
+#composeSheet .mw-audience-picker{display:grid;gap:6px;margin:4px 0 10px}
+#composeSheet .mw-audience-title{font-size:.76rem;font-weight:700;color:var(--muted)}
+#composeSheet .mw-audience-chips{display:flex;flex-wrap:wrap;gap:6px}
+#composeSheet .mw-audience-chip{min-height:34px;padding:0 12px;border:1px solid var(--line);border-radius:999px;background:transparent;color:var(--text);font:inherit;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap}
+#composeSheet .mw-audience-chip.on{background:var(--mw-accent,#FACC15);border-color:var(--mw-accent,#FACC15);color:var(--mw-accent-ink,#1a1400)}
+#composeSheet .mw-audience-chip:focus-visible{outline:2px solid var(--mw-accent,#FACC15);outline-offset:2px}
+#feed .post>.mw-inline-comments .mw-comment-actions .mw-tool:first-child{flex:none;width:32px;padding:0!important;overflow:visible}
+
+/* Toolbar search & chat box: sits in the header between the brand and the header controls; on phones it takes its
+   own full-width row inside the header so there is room to type. Results drop down right under it. */
+html body header.top{flex-wrap:wrap}
+html body .top>.mw-top-search{position:relative;flex:1 1 220px;min-width:0;max-width:480px;margin:0}
+html body .mw-top-search-box{display:flex;align-items:center;gap:7px;height:38px;padding:0 6px 0 12px;border:1px solid var(--line,rgba(110,170,255,.32));border-radius:999px;background:var(--card,#0d1b31);color:var(--text,#fff);cursor:text;transition:border-color .2s,box-shadow .2s}
+html body .mw-top-search-box:focus-within{border-color:var(--mw-accent,#60A5FA);box-shadow:0 0 0 3px rgba(96,165,250,.22)}
+html body .mw-top-search-box>svg{flex:none;width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;opacity:.7}
+html body .mw-top-search-box>input{flex:1;min-width:0;height:100%;padding:0!important;border:0!important;border-radius:0!important;outline:none!important;background:transparent!important;box-shadow:none!important;color:inherit!important;font:600 .9rem/1 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+html body .mw-top-search-box>input::placeholder{color:var(--muted,#94a3b8);opacity:1}
+html body .mw-top-search-box>input::-webkit-search-cancel-button{display:none}
+html body .mw-top-search-clear{flex:none;display:grid;place-items:center;width:26px;height:26px;padding:0;border:0;border-radius:50%;background:rgba(148,163,184,.18);color:inherit;cursor:pointer}
+html body .mw-top-search-clear[hidden]{display:none}
+html body .mw-top-search-clear svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round}
+html body .mw-top-search-panel{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:60;max-height:min(62vh,460px);overflow:auto;padding:6px;border:1px solid var(--line,rgba(110,170,255,.32));border-radius:16px;background:var(--panel,#0b1628);box-shadow:0 16px 40px rgba(0,0,0,.45)}
+html body .mw-top-search-panel[hidden]{display:none}
+html body .mw-top-search-heading{margin:8px 8px 4px;font-size:.68rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted,#94a3b8)}
+html body .mw-top-search-note{margin:8px;font-size:.82rem;color:var(--muted,#94a3b8)}
+html body .mw-top-search-row{display:flex;align-items:center;gap:10px;width:100%;min-height:44px;padding:6px 8px;border:0;border-radius:11px;background:transparent;color:var(--text,#fff);text-align:left;font:inherit;font-size:.86rem;cursor:pointer}
+html body .mw-top-search-row:hover,html body .mw-top-search-row:focus-visible{background:rgba(96,165,250,.14);outline:none}
+html body .mw-top-search-row b{font-weight:750}
+html body .mw-top-search-icon{flex:none;display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:rgba(96,165,250,.18);color:var(--mw-accent,#60A5FA)}
+html body .mw-top-search-icon svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+html body .mw-top-search-avatar{flex:none;display:grid;place-items:center;width:32px;height:32px;overflow:hidden;border-radius:50%;background:linear-gradient(135deg,var(--blue,#3b82f6),var(--gold,#f4c64e));color:#021;font-weight:900}
+html body .mw-top-search-avatar img{width:100%;height:100%;object-fit:cover}
+html body .mw-top-search-text{display:flex;flex-direction:column;flex:1;min-width:0}
+html body .mw-top-search-text>*{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+html body .mw-top-search-text small{font-size:.72rem;color:var(--muted,#94a3b8)}
+html body .mw-top-search-chat{flex:none;padding:5px 11px;border-radius:999px;background:var(--mw-accent,#60A5FA);color:#04101f;font-size:.74rem;font-weight:800}
+html body .mw-top-search-all{justify-content:center;min-height:38px;color:var(--mw-accent,#60A5FA);font-weight:750}
+html[data-mw-appearance="sunlight"] body .mw-top-search-box,html[data-mw-appearance="sunlight"] body .mw-top-search-panel{border:2px solid #000}
+@media(max-width:600px){
+  html body .top>.mw-top-search{order:5;flex:1 0 100%;max-width:none}
+  html body .mw-top-search-box{height:36px}
+}

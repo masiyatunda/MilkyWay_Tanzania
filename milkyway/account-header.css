@@ -1,0 +1,101 @@
+/* My Account: a compact identity header and the four essential actions; every other tool lives in Settings or the Menu. */
+#authModal .sheet.mw-account-mode .mw-auth-logo,
+#authModal .sheet.mw-account-mode>p.muted,
+#authModal .sheet.mw-account-mode>label,
+#authModal .sheet.mw-account-mode>.row,
+#authModal .sheet.mw-account-mode>.msg:empty,
+#authModal .sheet.mw-account-mode .pw-wrap{display:none!important}
+#authModal .sheet.mw-account-mode{padding-top:14px!important}
+#authModal .sheet.mw-account-mode>.close{width:36px;height:36px;min-height:36px;border-radius:50%;display:grid;place-items:center;background:var(--card)!important;border:1px solid var(--line)!important;color:var(--text)!important;font-size:1.25rem;line-height:1}
+#authModal .sheet.mw-account-mode>h2{margin:4px 0 12px!important;font-size:1.3rem!important;letter-spacing:-.01em}
+#authModal .sheet.mw-account-mode #loggedBox{margin-top:0!important}
+
+/* Compact identity header: galaxy-glass card with the photo, name, handle and follower counts on one or two rows. */
+#loggedBox .profile-card.mw-account-hero{position:relative;overflow:hidden;display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;min-height:0;padding:12px;border-radius:20px;background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.02)),var(--card);border:1px solid var(--mw-glass-line,var(--line));box-shadow:inset 0 1px rgba(255,255,255,.06),0 10px 26px rgba(3,8,24,.2)}
+#loggedBox .mw-account-hero::before,#loggedBox .mw-account-hero::after{content:none!important}
+#loggedBox .mw-account-cover{position:absolute;inset:0;pointer-events:none;opacity:.5;background:url('profile-galaxy-watermark.svg') right center/auto 150% no-repeat,radial-gradient(110% 130% at 0% 0%,rgba(61,156,255,.24),transparent 60%),radial-gradient(90% 120% at 100% 100%,rgba(192,206,230,.2),transparent 60%)}
+#loggedBox .mw-account-top{position:relative;z-index:1;display:flex;align-items:center;gap:12px;flex:1 1 170px;min-width:0}
+#loggedBox .mw-account-id{min-width:0}
+#loggedBox .mw-account-id strong{display:block;font-size:1.02rem;line-height:1.25;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#loggedBox .mw-account-id small{display:block;margin-top:1px;color:var(--muted);font-size:.78rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#loggedBox .mw-account-avatar{position:relative;flex:0 0 56px;width:56px;height:56px;min-width:56px;min-height:56px;border-radius:50%;display:grid;place-items:center;font-size:1.35rem;font-weight:800;color:var(--mw-accent-ink,#1a1400);background:var(--mw-gradient,var(--mw-accent,#3d9cff));border:2px solid var(--panel,#0F172A);box-shadow:0 0 0 2px var(--mw-accent,#3d9cff),0 6px 18px var(--mw-accent-soft,rgba(61,156,255,.3))}
+#loggedBox .mw-account-avatar img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block}
+#loggedBox .mw-account-avatar.mw-avatar-button::after{right:-4px;bottom:-2px;width:22px;height:22px;font-size:.8rem;font-weight:800;background:var(--mw-accent,#3d9cff);color:var(--mw-accent-ink,#fff);border:2px solid var(--panel,#0F172A)}
+#loggedBox .mw-account-avatar:focus-visible{outline:2px solid var(--mw-accent,#3d9cff);outline-offset:4px}
+#loggedBox .mw-account-hero .stats{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;flex:0 1 auto;min-width:min(100%,150px);margin:0;gap:0;padding:0;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid var(--line);font-size:.7rem;color:var(--muted)}
+#loggedBox .mw-account-hero .stats span{display:grid;justify-items:center;align-content:center;gap:1px;min-height:44px;padding:5px 12px;border:0;border-radius:0;background:transparent;-webkit-backdrop-filter:none;backdrop-filter:none;cursor:pointer}
+#loggedBox .mw-account-hero .stats span+span{border-inline-start:1px solid var(--line)}
+#loggedBox .mw-account-hero .stats b{font-size:1rem;line-height:1.2;color:var(--text)}
+#loggedBox .mw-account-hero .stats em{font-style:normal;color:var(--muted)}
+
+/* The four essentials: My Profile, Balance, Administration (administrators only) and Log out, as one compact 2×2 grid. */
+#loggedBox .mw-account-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
+#loggedBox .mw-account-tile{position:relative;display:grid;grid-template-columns:34px minmax(0,1fr);align-items:center;align-content:center;column-gap:10px;min-height:58px;margin:0;padding:10px 12px;border-radius:16px;border:1px solid var(--mw-glass-line,var(--line));background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.025)),var(--card);color:var(--text);font:inherit;font-size:.86rem;font-weight:700;line-height:1.2;text-align:start;text-decoration:none;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background-color .15s,border-color .15s}
+#loggedBox .mw-account-tile[hidden]{display:none!important}
+#loggedBox .mw-account-tile:hover{border-color:var(--mw-accent,#3d9cff)}
+#loggedBox .mw-account-tile:focus-visible{outline:2px solid var(--mw-accent,#3d9cff);outline-offset:2px}
+#loggedBox .mw-account-tile:active{transform:scale(.98)}
+#loggedBox .mw-account-tile-icon{grid-row:1/3;display:grid;place-items:center;width:34px;height:34px;border-radius:11px;background:var(--mw-accent-soft,rgba(61,156,255,.16));color:var(--mw-accent,#3d9cff)}
+#loggedBox .mw-account-tile-icon svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+#loggedBox .mw-account-tile-label{grid-column:2;min-width:0;overflow-wrap:break-word;hyphens:auto}
+#loggedBox .mw-account-tile-label:last-child{grid-row:1/3}
+#loggedBox .mw-account-tile-value{grid-column:2;margin-top:2px;font-size:.8rem;font-weight:800;color:var(--mw-accent,#3d9cff);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#loggedBox .mw-account-tile--logout .mw-account-tile-icon{background:rgba(244,63,94,.14);color:#f43f5e}
+/* Without the Administration tile, Log out takes the full last row instead of leaving a gap. */
+#loggedBox .mw-account-grid:has(#mwAccountAdmin[hidden]) .mw-account-tile--logout{grid-column:1/-1}
+/* Narrow phones: icon above the label, so long words (Administration, Kontostand, تسجيل الخروج) never break mid-word. */
+@media(max-width:400px){#loggedBox .mw-account-tile{grid-template-columns:minmax(0,1fr);justify-items:start;align-content:start;row-gap:6px;min-height:0;padding:10px 12px}#loggedBox .mw-account-tile-icon,#loggedBox .mw-account-tile-label:last-child{grid-row:auto}#loggedBox .mw-account-tile-label,#loggedBox .mw-account-tile-value{grid-column:1}#loggedBox .mw-account-tile-value{margin-top:-4px}}
+html[data-mw-appearance="sunlight"] #loggedBox .mw-account-tile{background:#fff;color:#000;border:2px solid #1F2937}
+html[data-mw-appearance="sunlight"] #loggedBox .mw-account-id strong{color:#000}
+
+:is([data-mw-appearance="light"],[data-mw-appearance="sunlight"]) #loggedBox .mw-account-avatar{border-color:#fff}
+
+
+/* My Account visual alignment with the supplied MilkyWay reference */
+#loggedBox .profile-card.mw-account-hero{min-height:124px!important;padding:18px 16px!important;gap:14px 16px!important;background:radial-gradient(ellipse at 85% 15%,rgba(48,132,255,.35),transparent 42%),radial-gradient(ellipse at 15% 100%,rgba(10,74,170,.42),transparent 55%),linear-gradient(135deg,#071a3b 0%,#0b2d61 52%,#061632 100%)!important;border:1px solid rgba(103,176,255,.65)!important;box-shadow:0 12px 30px rgba(0,20,60,.24),inset 0 1px rgba(255,255,255,.18)!important}
+#loggedBox .mw-account-cover{opacity:.7!important;background:url('profile-galaxy-watermark.svg') right center/auto 160% no-repeat,radial-gradient(circle at 72% 30%,rgba(255,255,255,.18) 0 1px,transparent 2px),radial-gradient(circle at 86% 66%,rgba(255,255,255,.2) 0 1px,transparent 2px),radial-gradient(ellipse at 50% 50%,rgba(44,112,218,.24),transparent 70%)!important}
+#loggedBox .mw-account-top{gap:16px!important;flex:1 1 220px!important}
+#loggedBox .mw-account-avatar{flex-basis:82px!important;width:82px!important;height:82px!important;min-width:82px!important;min-height:82px!important;border:3px solid #fff!important;box-shadow:0 0 0 2px #2d8dff,0 8px 22px rgba(0,0,0,.28)!important;color:#fff!important}
+#loggedBox .mw-account-id strong{font-size:1.15rem!important;color:#fff!important}
+#loggedBox .mw-account-id small{font-size:.86rem!important;color:#d6e8ff!important}
+#loggedBox .mw-account-hero .stats{background:rgba(4,17,43,.52)!important;border-color:rgba(173,207,255,.28)!important;color:#d6e8ff!important}
+#loggedBox .mw-account-hero .stats b{color:#fff!important}#loggedBox .mw-account-hero .stats em{color:#c7dcff!important}
+html body .orbit .orb[data-tab="profile"]{min-width:0;max-width:104px;padding-inline:2px}
+html body .orbit .orb[data-tab="profile"] b{display:block;max-width:94px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.68rem;line-height:1.15;text-align:center}
+html body .orbit .mw-planet--profile.has-avatar{overflow:hidden!important;border:2px solid rgba(255,255,255,.92)!important}
+html body .orbit .mw-planet--profile.has-avatar:before,html body .orbit .mw-planet--profile.has-avatar:after{display:none!important;opacity:0!important}
+html body .orbit .mw-planet--profile.has-avatar img{position:relative;z-index:1;width:100%;height:100%;border-radius:50%;object-fit:cover}
+
+
+/* Reference-style My Account hub */
+#loggedBox .mw-account-reference{padding:0 0 8px;color:#10213e}
+#loggedBox .mw-account-reference-heading{display:flex;align-items:center;gap:12px;padding:4px 4px 14px;font-size:1.05rem;color:var(--text,#10213e)}
+#loggedBox .mw-account-reference-heading>span{font-size:2rem;line-height:1;font-weight:300}
+#loggedBox .mw-account-reference-card{position:relative;isolation:isolate;display:grid;grid-template-columns:82px minmax(0,1fr) 40px;align-items:center;gap:12px;padding:18px 14px 14px;overflow:hidden;border:1px solid rgba(82,157,255,.58);border-radius:22px;background:radial-gradient(ellipse at 85% 20%,rgba(60,146,255,.4),transparent 40%),radial-gradient(ellipse at 20% 100%,rgba(10,78,175,.5),transparent 58%),linear-gradient(135deg,#071a3b,#0b2c5d 56%,#06152f);color:#fff;box-shadow:0 12px 26px rgba(0,24,70,.22)}
+#loggedBox .mw-account-reference-stars{position:absolute;inset:0;z-index:-1;opacity:.48;background-image:radial-gradient(1px 1px at 12% 22%,#fff,transparent 2px),radial-gradient(1px 1px at 38% 66%,#bde6ff,transparent 2px),radial-gradient(1.5px 1.5px at 72% 28%,#fff,transparent 2px),radial-gradient(1px 1px at 88% 78%,#fff,transparent 2px),radial-gradient(1px 1px at 56% 15%,#c7e7ff,transparent 2px)}
+#loggedBox .mw-account-reference-card .mw-account-avatar{grid-column:1;grid-row:1/3;width:82px;height:82px;min-width:82px;min-height:82px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 2px #338bff,0 6px 18px #0006;background:#174a86;color:white;overflow:hidden}
+#loggedBox .mw-account-reference-card .mw-account-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+#loggedBox .mw-account-reference-identity{grid-column:2;grid-row:1;min-width:0;align-self:end}
+#loggedBox .mw-account-reference-identity>strong{display:block;color:#fff;font-size:1.1rem;line-height:1.3;overflow-wrap:anywhere}
+#loggedBox .mw-account-reference-identity>small{display:block;color:#d9eaff;font-size:.85rem;margin-top:3px}
+#loggedBox .mw-account-online{display:inline-flex;align-items:center;gap:7px;margin-top:9px;color:#e6f1ff;font-size:.78rem}
+#loggedBox .mw-account-online i{width:10px;height:10px;border-radius:50%;background:#19d58a;box-shadow:0 0 0 3px #19d58a2b}
+#loggedBox .mw-account-edit-shortcut{grid-column:3;grid-row:1;align-self:start;width:38px;height:38px;border:1px solid #b9dcff;border-radius:50%;background:#ffffff18;color:white;font-size:1.45rem;cursor:pointer}
+#loggedBox .mw-account-reference-stats{grid-column:2/4;grid-row:2;display:flex;gap:8px;align-self:end;margin-top:5px}
+#loggedBox .mw-account-reference-stats>span{display:flex;align-items:center;gap:5px;padding:5px 10px;border:1px solid #ffffff35;border-radius:13px;background:#06183288;color:#eaf4ff;font-size:.7rem;cursor:pointer}
+#loggedBox .mw-account-reference-stats b{color:white;font-size:.85rem}
+#loggedBox .mw-account-reference-stats small{color:#cbdfff}
+#loggedBox .mw-account-reference-list{display:grid;gap:8px;margin-top:12px}
+#loggedBox .mw-account-reference-row{display:grid;grid-template-columns:38px minmax(0,1fr) 18px;align-items:center;gap:10px;width:100%;min-height:66px;padding:10px 12px;border:1px solid #e3edf8;border-radius:17px;background:linear-gradient(135deg,#fff,#f8fbff);color:#10213e;text-align:left;font:inherit;cursor:pointer;box-shadow:0 3px 10px rgba(22,58,100,.035)}
+#loggedBox .mw-account-reference-row>span:nth-child(2){min-width:0}
+#loggedBox .mw-account-reference-icon{display:grid;place-items:center;width:36px;height:36px;border-radius:11px;background:#e8f3ff;color:#0969d8;font-size:1.25rem;font-weight:800}
+#loggedBox .mw-account-reference-row strong{display:block;font-size:.88rem;line-height:1.25;color:#10213e}
+#loggedBox .mw-account-reference-row small{display:block;margin-top:2px;font-size:.72rem;line-height:1.3;color:#526780}
+#loggedBox .mw-account-reference-row> b{font-size:1.5rem;line-height:1;color:#55718f;font-weight:400}
+#loggedBox .mw-account-reference-row:hover,#loggedBox .mw-account-reference-row:focus-visible{border-color:#4d9eff;outline:none;box-shadow:0 0 0 2px #4d9eff20}
+#loggedBox .mw-account-reference-logout{grid-template-columns:38px minmax(0,1fr);background:linear-gradient(135deg,#fff,#fff8f8);margin-top:1px}
+#loggedBox .mw-account-reference-logout .mw-account-reference-icon{background:#fff0f0;color:#dc2626}
+#loggedBox .mw-account-reference-logout strong{color:#b91c1c}
+#loggedBox .mw-account-reference-logout small{color:#7c5260}
+#authModal .sheet{max-height:92dvh!important;overflow-y:auto!important}
+@media(max-width:380px){#loggedBox .mw-account-reference-card{grid-template-columns:68px minmax(0,1fr) 34px;padding:14px 10px}#loggedBox .mw-account-reference-card .mw-account-avatar{width:66px;height:66px;min-width:66px;min-height:66px}#loggedBox .mw-account-reference-identity>strong{font-size:1rem}#loggedBox .mw-account-reference-row{min-height:60px;padding:8px}#loggedBox .mw-account-reference-row small{font-size:.68rem}}

@@ -1,0 +1,23 @@
+/* MilkyWay v39: full-height app pages and bottom-up sheets. CSS-only: preserve existing controls and handlers. */
+:root{--mw-v39-ease:cubic-bezier(.2,.8,.2,1)}
+html,body{min-height:100%;overscroll-behavior-y:contain}
+/* Every sheet/modal enters from the bottom on phones and occupies the available viewport. */
+html body .sheet-bg,html body .modal-bg{align-items:flex-end!important;justify-content:stretch!important;padding:0!important;overflow:hidden!important;overscroll-behavior:contain}
+html body .sheet-bg>.sheet,html body .modal-bg>.sheet{box-sizing:border-box!important;width:100%!important;max-width:none!important;height:min(96dvh,100%)!important;max-height:96dvh!important;min-height:min(72dvh,100%)!important;margin:0!important;overflow:auto!important;overscroll-behavior:contain;border-radius:24px 24px 0 0!important;padding-bottom:max(20px,env(safe-area-inset-bottom))!important;transform:translateY(24px);transition:transform .24s var(--mw-v39-ease),opacity .18s ease;will-change:transform}
+html body .sheet-bg.open>.sheet,html body .modal-bg.open>.sheet{transform:translateY(0)}
+html body .sheet-bg:not(.open)>.sheet,html body .modal-bg:not(.open)>.sheet{pointer-events:none}
+/* Make close controls obvious, reachable and sticky while scrolling. */
+html body .sheet>.close,html body .modal-bg .sheet>.close{position:sticky!important;top:max(8px,env(safe-area-inset-top))!important;float:right!important;z-index:100!important;display:grid!important;place-items:center!important;width:44px!important;height:44px!important;min-width:44px!important;min-height:44px!important;margin:0 0 8px auto!important;border:1px solid rgba(125,170,230,.42)!important;border-radius:50%!important;background:rgba(8,26,61,.94)!important;color:#fff!important;font-size:28px!important;line-height:1!important;box-shadow:0 5px 18px rgba(0,0,0,.22)!important;cursor:pointer!important;backdrop-filter:blur(12px)}
+html body .sheet button:focus-visible,html body .modal-bg button:focus-visible{outline:3px solid #4aa3ff!important;outline-offset:3px!important}
+/* Consistent full-page content spacing without changing the app's features. */
+html body .sheet>h1,html body .sheet>h2,html body .sheet>h3,html body .sheet>header{clear:both}
+html body .sheet input,html body .sheet textarea,html body .sheet select{max-width:100%;box-sizing:border-box}
+/* Dialogs and small confirmation popups remain compact, but their close/action buttons stay visible. */
+html body .mw-dialog-bg{align-items:center!important;justify-content:center!important;padding:18px!important}
+html body .mw-dialog-bg .mw-dialog{width:min(440px,100%)!important;max-height:calc(100dvh - 36px)!important;overflow:auto!important;border-radius:24px!important}
+/* Specific DM and thread views remain full-screen with safe-area support. */
+html body #msgSheet.sheet-bg,html body #threadSheet.sheet-bg{align-items:stretch!important;justify-content:stretch!important;padding:0!important}
+html body #msgSheet .sheet,html body #threadSheet .sheet{width:100%!important;max-width:none!important;height:100dvh!important;max-height:100dvh!important;min-height:100dvh!important;border-radius:0!important;padding-top:max(8px,env(safe-area-inset-top))!important;padding-bottom:max(12px,env(safe-area-inset-bottom))!important}
+/* Desktop: retain a full-height app-like panel while avoiding an oversized desktop dialog. */
+@media(min-width:760px){html body .sheet-bg,html body .modal-bg{align-items:flex-end!important;justify-content:center!important;padding:0!important}html body .sheet-bg>.sheet,html body .modal-bg>.sheet{width:min(760px,100%)!important;height:min(92dvh,100%)!important;max-height:92dvh!important;min-height:min(68dvh,100%)!important;border-radius:26px 26px 0 0!important}html body #msgSheet .sheet,html body #threadSheet .sheet{width:min(900px,100%)!important;height:100dvh!important;max-height:100dvh!important;border-radius:0!important}}
+@media(prefers-reduced-motion:reduce){html body .sheet-bg>.sheet,html body .modal-bg>.sheet{transition:none!important;transform:none!important}}

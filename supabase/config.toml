@@ -1,0 +1,32 @@
+[functions.livekit-token]
+verify_jwt = false
+
+# Auth links (password reset, email confirmation) must point at the live domain, never localhost.
+# Apply to the hosted project with `supabase config push`, or mirror these values in
+# Dashboard → Authentication → URL Configuration.
+[auth]
+site_url = "https://masiyatunda.com"
+additional_redirect_urls = [
+  "https://masiyatunda.com",
+  "https://masiyatunda.com/**",
+  "https://www.masiyatunda.com/**",
+]
+
+# MilkyWay-branded password reset email. Apply with `supabase config push`, or paste the
+# subject and the contents of supabase/templates/recovery.html into
+# Dashboard → Authentication → Emails → Templates → Reset Password.
+[auth.email.template.recovery]
+subject = "Reset your MilkyWay password"
+content_path = "./supabase/templates/recovery.html"
+
+# The sender shown in the inbox ("From") can only be changed with custom SMTP; Supabase's
+# built-in mailer always sends as "Supabase Auth". Set the SMTP env vars, then flip
+# `enabled` to true (or fill in Dashboard → Authentication → Emails → SMTP Settings).
+[auth.email.smtp]
+enabled = false
+host = "env(SUPABASE_AUTH_SMTP_HOST)"
+port = 587
+user = "env(SUPABASE_AUTH_SMTP_USER)"
+pass = "env(SUPABASE_AUTH_SMTP_PASS)"
+admin_email = "no-reply@masiyatunda.com"
+sender_name = "MilkyWay"

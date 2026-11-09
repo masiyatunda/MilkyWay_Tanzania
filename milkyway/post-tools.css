@@ -1,0 +1,76 @@
+/* Post cards: one-line reactions and actions, inline comments, reposts and the photo zoom viewer. Loaded after the theme sheets. */
+.mw-sr{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+/* One compact action line right under the post: reactions (star, fire, heart) then Comments, Share, Repost, Save and •••.
+   Small icons with counts, no wrapping, at every width. */
+#feed .post>.actions{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:center;gap:2px;padding:4px 8px 6px;min-width:0}
+#feed .post .actions>.signals{display:flex;flex-wrap:nowrap;align-items:center;gap:2px;padding:0;margin:0;flex:0 1 auto;min-width:0}
+#feed .post .actions>:is(.signals>.sig,.act){flex:0 0 auto!important;min-width:34px;min-height:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;gap:4px;padding:0 7px!important;border:0!important;border-radius:999px!important;background:transparent!important;box-shadow:none!important;color:var(--muted)!important;font-size:.8rem;font-weight:700;line-height:1;white-space:nowrap;overflow:visible;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+#feed .post .actions>:is(.signals>.sig,.act):hover{background:var(--mw-accent-soft,rgba(127,127,127,.12))!important}
+#feed .post .actions>:is(.signals>.sig,.act):focus-visible{outline:2px solid var(--mw-accent,var(--blue));outline-offset:1px}
+#feed .post .actions>.act[data-share]::before{display:none}
+#feed .post .actions .sig-ico{font-size:1rem;transition:transform .15s ease}
+#feed .post .actions :is(.sig-count,.mw-act-count){font-variant-numeric:tabular-nums;font-weight:700;min-width:1ch;text-align:left}
+#feed .post .actions .sig.on{color:var(--text)!important}
+#feed .post .actions .sig.on .sig-ico{transform:scale(1.12)}
+#feed .post .actions .sig:active .sig-ico,#feed .post .actions>.act:active .mw-act-ico{transform:scale(.9)}
+#feed .post .actions .mw-act-ico{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .15s ease}
+#feed .post .actions>.act[data-echo]{margin-left:auto}
+#feed .post .actions>.act.on{color:var(--mw-accent,var(--gold,#facc15))!important}
+#feed .post .actions>.act[data-save].on .mw-act-ico{fill:currentColor}
+#feed .post .actions>.act[data-repost]:disabled{opacity:.6;cursor:progress}
+#feed .post .actions>.mw-message-menu{flex:0 0 auto;margin-left:0}
+#feed .post .actions>.mw-message-menu>summary{min-width:34px;min-height:34px;height:34px;padding:0 6px;border:0;background:transparent;color:var(--muted);font-size:.8rem;letter-spacing:.06em}
+@media(max-width:380px){
+  #feed .post>.actions{padding-inline:4px;gap:0}
+  #feed .post .actions>:is(.signals>.sig,.act){min-width:30px;padding:0 5px!important;gap:3px;font-size:.74rem}
+  #feed .post .actions .mw-act-ico{width:17px;height:17px}
+  #feed .post .actions .sig-ico{font-size:.92rem}
+  #feed .post .actions>.mw-message-menu>summary{min-width:28px;padding:0 3px}
+}
+
+/* Inline comments under the post (Facebook style); the posts above and below stay visible */
+#feed .post>.mw-inline-comments{display:flex;flex-direction:column;flex:none;padding:0 12px 12px;border-top:1px solid var(--line);animation:mwCommentsIn .18s ease-out}
+#feed .post>.mw-inline-comments>header{padding:10px 0 6px}
+#feed .post>.mw-inline-comments .mw-comment-list{flex:none;min-height:0;max-height:min(46vh,380px)}
+#feed .post>.mw-inline-comments .mw-comment-composer{position:static}
+#feed .post>.mw-inline-comments .mw-inline-close{min-width:44px;min-height:44px}
+#feed .post.mw-comments-open>.post-echo-preview{display:none}
+.mw-comment-composer[hidden],.mw-comment-reopen[hidden]{display:none!important}
+.mw-comment-reopen{align-self:flex-start;margin-top:8px;min-height:44px}
+.mw-comment-status.is-error{color:var(--danger,#f87171);font-weight:700}
+.mw-comment-new{animation:mwCommentNew 1.8s ease-out}
+@keyframes mwCommentsIn{from{opacity:0;transform:translateY(-4px)}}
+@keyframes mwCommentNew{from{box-shadow:0 0 0 2px var(--gold,#facc15)}}
+
+/* Reposts */
+.mw-repost-line{margin:0;padding:0 14px 8px;font-size:.8rem;color:var(--muted)}
+.mw-repost-line .mw-mention{font-size:inherit}
+
+/* Photos that can be zoomed: one finger still scrolls the feed, two fingers reach the pinch handler */
+:is(#feed .post img.post-media,#feed .mw-post-gallery img,#feed .mw-comment-media img,#profilePosts img.post-media,#publicProfile img.post-media){touch-action:pan-x pan-y;cursor:zoom-in}
+
+/* Zoom viewer */
+.mw-zoom{position:fixed;inset:0;z-index:400;display:flex;flex-direction:column;background:rgba(3,4,14,calc(.95 * var(--mw-zoom-fade,1)));touch-action:none;overscroll-behavior:contain;color:#fff}
+.mw-zoom[hidden]{display:none}
+.mw-zoom-stage{position:relative;flex:1;min-height:0;overflow:hidden;display:grid;place-items:center;touch-action:none;cursor:zoom-in}
+.mw-zoom.is-zoomed .mw-zoom-stage{cursor:grab}
+.mw-zoom-stage img{display:block;max-width:100vw;max-height:100dvh;width:auto;height:auto;object-fit:contain;transform-origin:50% 50%;will-change:transform;user-select:none;-webkit-user-select:none;-webkit-user-drag:none;pointer-events:none}
+.mw-zoom.is-animating .mw-zoom-stage img{transition:transform .22s cubic-bezier(.2,.8,.2,1)}
+.mw-zoom-bar{position:absolute;top:calc(10px + env(safe-area-inset-top,0px));right:10px;z-index:2;display:flex;gap:8px}
+.mw-zoom-bar button{min-width:44px;min-height:44px;padding:0 14px;border-radius:999px;border:1px solid rgba(255,255,255,.35);background:rgba(15,23,42,.72);color:#fff;font:inherit;font-weight:700;font-size:.9rem;cursor:pointer;backdrop-filter:blur(8px)}
+.mw-zoom-bar .mw-zoom-close{font-size:1.5rem;line-height:1;padding:0}
+.mw-zoom-bar button[hidden]{display:none}
+.mw-zoom-bar button:focus-visible{outline:3px solid #facc15;outline-offset:2px}
+.mw-zoom-caption{position:absolute;left:0;right:0;bottom:0;margin:0;padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px));background:linear-gradient(transparent,rgba(0,0,0,.7));font-size:.9rem;max-height:30%;overflow:auto;pointer-events:none}
+.mw-zoom-caption[hidden]{display:none}
+.mw-zoom-hint{position:absolute;left:50%;top:calc(18px + env(safe-area-inset-top,0px));transform:translateX(-50%);margin:0;padding:6px 12px;border-radius:999px;background:rgba(15,23,42,.72);font-size:.78rem;white-space:nowrap;pointer-events:none;transition:opacity .6s ease}
+.mw-zoom-hint.is-faded{opacity:0}
+@media(max-width:420px){.mw-zoom-hint{top:auto;bottom:calc(70px + env(safe-area-inset-bottom,0px))}}
+@media(prefers-reduced-motion:reduce){.mw-zoom.is-animating .mw-zoom-stage img,#feed .post>.mw-inline-comments,.mw-comment-new{transition:none;animation:none}}
+
+/* Light mode for low-end phones (any theme): no drifting star layers, no glass blur, lighter shadows. Taps are never blocked. */
+html[data-mw-lite] body::after,html[data-mw-lite] #mwLivePage::before{animation:none!important;will-change:auto!important}
+html[data-mw-lite] :is(.top,.mw-call-panel,.mw-zoom-bar button,.mw-call-swap){backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+html[data-mw-lite] #feed .post{box-shadow:none!important}
+.stars,html body::after,#mwLivePage::before{pointer-events:none}

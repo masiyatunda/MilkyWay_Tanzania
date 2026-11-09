@@ -1,0 +1,49 @@
+/* Floating LIVE launcher: rotating Earth globe; "GO LIVE" orbits it as a blazing meteor, crashes on top and ignites into place */
+html body #composeBtn.mw-live-launch{position:relative;display:grid;place-items:center;width:68px;height:68px;padding:0!important;border:0!important;border-radius:50%!important;background:transparent!important;box-shadow:none!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-shadow:none;letter-spacing:0;overflow:visible;contain:layout style;-webkit-tap-highlight-color:transparent}
+#composeBtn .mw-live-globe-sphere{position:relative;display:block;width:64px;height:64px;border-radius:50%;overflow:hidden;background:#0b2a5b;box-shadow:0 0 0 1px rgba(255,255,255,.35),0 0 16px rgba(110,180,255,.55),0 8px 22px rgba(0,0,0,.45);transform:translateZ(0);transition:transform .2s}
+/* The map slides with transform (compositor only) instead of repainting background-position every frame */
+#composeBtn .mw-live-globe-map{position:absolute;top:0;left:0;width:256px;height:64px;background:url('brand/earth-texture.jpg') 0 0/128px 64px repeat-x;will-change:transform;animation:mw-earth-spin 16s linear infinite}
+#composeBtn .mw-live-globe-sphere::before{content:"";position:absolute;inset:0;z-index:1;border-radius:50%;background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.38),rgba(255,255,255,.08) 22%,transparent 45%);pointer-events:none}
+#composeBtn .mw-live-globe-sphere::after{content:"";position:absolute;inset:0;z-index:1;border-radius:50%;box-shadow:inset -12px -6px 18px rgba(0,8,30,.78),inset 5px 3px 10px rgba(150,205,255,.35),inset 0 0 3px rgba(150,205,255,.6);pointer-events:none}
+#composeBtn:hover .mw-live-globe-sphere{transform:scale(1.05)}
+#composeBtn:active .mw-live-globe-sphere{transform:scale(.94)}
+#composeBtn:focus-visible{outline:2px solid #fff;outline-offset:4px}
+@keyframes mw-earth-spin{from{transform:translate3d(0,0,0)}to{transform:translate3d(-128px,0,0)}}
+@keyframes mw-earth-dot{0%{transform:scale(.9);opacity:1}70%,100%{transform:scale(1);opacity:.75}}
+#composeBtn .mw-live-globe-dot{position:absolute;right:4px;bottom:6px;z-index:3;width:11px;height:11px;border-radius:50%;background:#ff2d55;border:2px solid #fff;box-shadow:0 0 6px rgba(255,45,85,.9);animation:mw-earth-dot 1.6s ease-out infinite alternate;pointer-events:none}
+
+/* Orbit layer. One 6.4s cycle: launch (0–5%), four blazing laps (5–27%), crash + ignition (27–37%), the words burn in place, repeat. */
+#composeBtn .mw-live-orbit{--mw-meteor-cycle:6.4s;position:absolute;left:50%;top:50%;z-index:2;width:118px;height:118px;margin:-59px 0 0 -59px;overflow:visible;pointer-events:none}
+#composeBtn .mw-live-orbit-ring{fill:none;stroke:rgba(255,190,110,.16);stroke-width:.6;stroke-dasharray:1.5 3}
+#composeBtn .mw-live-orbit-spin{transform-origin:60px 60px;transform-box:view-box;animation:mw-meteor-spin var(--mw-meteor-cycle) linear infinite}
+#composeBtn .mw-live-trail{opacity:0;animation:mw-meteor-trail var(--mw-meteor-cycle) linear infinite}
+#composeBtn .mw-live-trail use{fill:none;stroke-linecap:round}
+#composeBtn .mw-live-trail-ember{stroke:#ff2a00;stroke-width:2;stroke-opacity:.5}
+#composeBtn .mw-live-trail-flame{stroke:#ff6a00;stroke-width:3.6;stroke-opacity:.75}
+#composeBtn .mw-live-trail-blaze{stroke:#ffb300;stroke-width:5;stroke-opacity:.92}
+#composeBtn .mw-live-trail-core{stroke:#fff6c4;stroke-width:5.6}
+#composeBtn .mw-live-orbit-text{fill:url(#mwLiveTextFire);-webkit-text-fill-color:initial;font:900 15px/1 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:1.6px;paint-order:stroke fill;stroke:#ff3d00;stroke-width:2.6px;stroke-linejoin:round;transform-origin:60px 8px;transform-box:view-box;animation:mw-meteor-text var(--mw-meteor-cycle) linear infinite}
+#composeBtn .mw-live-impact circle{opacity:0;transform-box:fill-box;transform-origin:center}
+#composeBtn .mw-live-flash{fill:url(#mwLiveFlash);animation:mw-meteor-flash var(--mw-meteor-cycle) linear infinite}
+#composeBtn .mw-live-shock{fill:none;stroke:#ffd36b;stroke-width:1.4;animation:mw-meteor-shock var(--mw-meteor-cycle) linear infinite}
+#composeBtn .mw-live-spark{opacity:0;stroke:#ffe27a;stroke-width:1.5;stroke-linecap:round;animation:mw-meteor-spark var(--mw-meteor-cycle) linear infinite}
+
+/* Launch from the resting spot, accelerate through four laps and stop dead on top: the crash */
+@keyframes mw-meteor-spin{0%,5%{transform:rotate(0);animation-timing-function:cubic-bezier(.42,0,1,1)}27%,100%{transform:rotate(1440deg)}}
+@keyframes mw-meteor-trail{0%,4%{opacity:0}8%,26.6%{opacity:1}27.4%,100%{opacity:0}}
+@keyframes mw-meteor-text{
+  0%{transform:scale(1);opacity:1;stroke:#ff3d00;stroke-width:2.6px}
+  5%{transform:scale(.92,.86);opacity:1;stroke:#ff2a00;stroke-width:3.4px}
+  26.8%{transform:scale(.92,.86);opacity:.95;stroke:#ff2a00;stroke-width:3.4px}
+  27.1%{transform:scale(.2);opacity:0;stroke:#fff;stroke-width:6px}
+  30.5%{transform:scale(1.42);opacity:1;stroke:#fff3b0;stroke-width:5.5px}
+  33.5%{transform:scale(.9);stroke:#ff8a00;stroke-width:3.4px}
+  36.5%{transform:scale(1.06)}
+  39%{transform:scale(1);stroke:#ff3d00;stroke-width:2.6px}
+  62%{stroke:#ff5a00;stroke-width:3px}
+  84%{stroke:#ff3d00;stroke-width:2.6px}
+  100%{transform:scale(1);opacity:1;stroke:#ff3d00;stroke-width:2.6px}}
+@keyframes mw-meteor-flash{0%,26.9%{opacity:0;transform:scale(.1)}27.3%{opacity:1;transform:scale(.9)}31%{opacity:.85;transform:scale(1.9)}35%,100%{opacity:0;transform:scale(2.4)}}
+@keyframes mw-meteor-shock{0%,27%{opacity:0;transform:scale(.2)}27.6%{opacity:1;transform:scale(.4)}36%,100%{opacity:0;transform:scale(3.4)}}
+@keyframes mw-meteor-spark{0%,27%{opacity:0;transform:translateY(0)}27.8%{opacity:1;transform:translateY(-2px)}35%{opacity:.9}38%,100%{opacity:0;transform:translateY(calc(-1 * var(--d,20px)))}}
+@media(prefers-reduced-motion:reduce){#composeBtn .mw-live-globe-map,#composeBtn .mw-live-globe-dot,#composeBtn .mw-live-orbit-spin,#composeBtn .mw-live-orbit-text,#composeBtn .mw-live-impact *,#composeBtn .mw-live-trail{animation:none}#composeBtn .mw-live-trail,#composeBtn .mw-live-impact{display:none}}

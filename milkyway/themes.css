@@ -1,0 +1,372 @@
+/* v36 App-wide themes. Loaded last on every page.
+   galaxy   = Galaxy 3D Dynamic: deep starfield parallax, glowing planets and the spinning Live globe, everywhere including Live rooms.
+   milkyway = Clean MilkyWay Galaxy: the same layout in cosmic purples, glowing blues and starlight accents, without heavy 3D motion.
+   sunlight = Sunlight: white, black text and solid borders for reading outdoors in bright sun.
+   The Clear Glass (light) look is styled in theme.css, release.css and cosmos.css. */
+
+/* While the theme switches, colour transitions are skipped so phones repaint every surface in the new theme at once
+   instead of leaving bars and cards half-way between the old and new colours. */
+html[data-mw-theme-switching] :is(*,*::before,*::after){transition:none!important}
+
+/* ================= Theme 1: Galaxy 3D Dynamic ================= */
+/* A second, slower star layer drifts over the background photo for depth. Transform-only, so it stays on the GPU. */
+html[data-mw-appearance="galaxy"] body::after{content:"";position:fixed;left:0;right:0;top:-560px;height:calc(100% + 1120px);z-index:-1;pointer-events:none;background:url('galaxy-starfield.svg') 0 0/720px 840px repeat;opacity:.55;will-change:transform;backface-visibility:hidden}
+html[data-mw-appearance="galaxy"] .post{box-shadow:0 1px 0 rgba(253,230,138,.06) inset,0 18px 40px -18px rgba(2,6,23,.85),0 0 0 1px rgba(250,204,21,.08)}
+html[data-mw-appearance="galaxy"] .post-media{box-shadow:0 10px 30px -12px rgba(0,0,0,.7)}
+
+/* Live screens and rooms share the same deep-space look */
+html[data-mw-appearance="galaxy"] #mwLivePage::before{content:"";position:absolute;left:0;right:0;top:-560px;height:calc(100% + 1120px);z-index:-1;pointer-events:none;background:url('galaxy-starfield.svg') 0 0/600px 700px repeat;opacity:.6;will-change:transform}
+html[data-mw-appearance="galaxy"] .mw-live-stage{background:radial-gradient(ellipse at 20% 10%,rgba(124,58,237,.28),transparent 55%),radial-gradient(ellipse at 85% 85%,rgba(250,204,21,.12),transparent 50%),url('galaxy-starfield.svg') 0 0/480px 560px repeat,#050816}
+html[data-mw-appearance="galaxy"] #mwLivePage .mw-live-glass{box-shadow:0 0 0 1px rgba(250,204,21,.1),0 18px 44px -16px rgba(2,6,23,.9)}
+
+@media (prefers-reduced-motion:no-preference){
+  html[data-mw-appearance="galaxy"] body::after{animation:mwStarDrift 160s linear infinite}
+  html[data-mw-appearance="galaxy"] #mwLivePage::before{animation:mwStarDrift 120s linear infinite}
+}
+@keyframes mwStarDrift{to{transform:translate3d(0,560px,0)}}
+
+/* ================= Theme 2: Clean MilkyWay Galaxy ================= */
+html[data-mw-appearance="milkyway"]{
+  color-scheme:dark;
+  --mw-accent:#8AB4FF;--mw-accent-ink:#0B0620;--mw-accent-soft:rgba(138,180,255,.14);
+  --mw-ink:#F5F3FF;--mw-ink-soft:#C3BCEB;--mw-electric:#8AB4FF;--mw-electric-deep:#C7D7FF;--mw-cyan:#7DD3FC;--mw-sky:#C7D7FF;
+  --mw-gold:#FDE68A;--mw-gold-deep:#FDE68A;--mw-ice:#1A1040;--mw-platinum:#221650;
+  --mw-glass:rgba(29,18,70,.74);--mw-glass-strong:rgba(24,15,58,.97);--mw-glass-line:rgba(167,139,250,.28);
+  --mw-chrome-glass:rgba(17,10,44,.92);--mw-chrome-blur:10px;--mw-card-blur:0px;
+  --mw-gradient:linear-gradient(135deg,#8B5CF6,#6366F1 48%,#38BDF8);
+  --mw-glow:inset 0 1px 0 rgba(245,243,255,.06),0 10px 28px rgba(6,2,22,.45);
+  --mw-glow-strong:0 0 0 1px rgba(138,180,255,.32),0 12px 34px rgba(99,102,241,.22);
+  --mw-focus:0 0 0 3px rgba(138,180,255,.55);
+  --mw-galaxy-background:radial-gradient(ellipse at 12% -8%,rgba(139,92,246,.45),transparent 58%),radial-gradient(ellipse at 100% 38%,rgba(56,189,248,.22),transparent 52%),radial-gradient(ellipse at 20% 100%,rgba(99,102,241,.3),transparent 60%),#0D0721;
+  --bg:#0D0721;--panel:var(--mw-glass-strong);--card:var(--mw-glass);--line:var(--mw-glass-line);
+  --text:#F5F3FF;--muted:#B8B2E6;--blue:#8AB4FF;--cyan:#7DD3FC;--gold:#FDE68A;
+  --mw-dark-glass:var(--mw-glass);--mw-dark-glass-line:var(--mw-glass-line);
+  background:#0D0721
+}
+/* Flat cosmic gradient with a still, faint star dusting instead of the photo */
+html[data-mw-appearance="milkyway"] body::before{background:url('galaxy-starfield.svg') 0 0/480px 560px repeat,radial-gradient(ellipse at 12% -8%,rgba(139,92,246,.5),transparent 58%),radial-gradient(ellipse at 100% 38%,rgba(56,189,248,.22),transparent 52%),radial-gradient(ellipse at 20% 100%,rgba(99,102,241,.32),transparent 60%),linear-gradient(180deg,#120A2E,#0D0721 55%,#090518)!important;opacity:1}
+html[data-mw-appearance="milkyway"] body{background:transparent!important}
+html[data-mw-appearance="milkyway"] .top,html[data-mw-appearance="milkyway"] .orbit{background:rgba(17,10,44,.9)!important;border-color:rgba(167,139,250,.22)!important}
+html[data-mw-appearance="milkyway"] :is(.post,.mw-ad-slot){background:linear-gradient(180deg,rgba(33,21,78,.86),rgba(22,14,54,.9))!important;border:1px solid rgba(167,139,250,.22)!important;box-shadow:0 12px 30px -16px rgba(6,2,22,.8)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+html[data-mw-appearance="milkyway"] .post-media{background:#0B0620}
+html[data-mw-appearance="milkyway"] :is(.primary,.btn.primary,.tab.on){background:var(--mw-gradient)!important;color:#fff!important;border-color:transparent!important;box-shadow:0 6px 18px rgba(99,102,241,.35)!important}
+html[data-mw-appearance="milkyway"] .top .brand h1{background-image:linear-gradient(90deg,#F5F3FF 0 44%,#8AB4FF 44% 100%)!important}
+html[data-mw-appearance="milkyway"] .top .brand small{color:#FDE68A!important}
+html[data-mw-appearance="milkyway"] :is(#langSel){border-color:rgba(138,180,255,.3)!important;background:#1A1040!important}
+
+html[data-mw-appearance="milkyway"] :is(.sheet-bg .sheet,.modal-bg .sheet,.mw-menu-panel){background:linear-gradient(180deg,rgba(35,22,82,.98),rgba(15,9,40,.98))!important;border-color:rgba(167,139,250,.26)!important}
+html[data-mw-appearance="milkyway"] :is(.sheet input,.sheet textarea,.sheet select,.searchbox input){background:#120A2E!important;color:#F5F3FF!important;border-color:rgba(167,139,250,.32)!important}
+html[data-mw-appearance="milkyway"] .story-card[data-viewed="false"]{box-shadow:0 0 0 2px #8AB4FF,0 0 0 4px rgba(139,92,246,.35)}
+html[data-mw-appearance="milkyway"] .toast{background:#1A1040!important;color:#F5F3FF!important;border-color:rgba(138,180,255,.35)!important}
+html[data-mw-appearance="milkyway"] a:not(.btn){color:#C7D7FF}
+html[data-mw-appearance="milkyway"] .empty h3{color:#FDE68A}
+html[data-mw-appearance="milkyway"] .act.on{color:#FDE68A!important;border-color:rgba(253,230,138,.45)!important;background:rgba(253,230,138,.1)!important}
+html[data-mw-appearance="milkyway"] :is(.danger,.btn.danger){background:rgba(244,63,94,.14)!important;color:#FDA4AF!important;border-color:rgba(244,63,94,.35)!important}
+html[data-mw-appearance="milkyway"] select option{background:#1A1040;color:#F5F3FF}
+html[data-mw-appearance="milkyway"] :is(.wa-chat,.wa-inbox){--wa-bg:#100926;--wa-glow:rgba(139,92,246,.16);--wa-doodle:rgba(199,215,255,.07);--wa-head:#1A1040;--wa-panel:#140C34;--wa-field:#261A58;--wa-menu:#22174E;--wa-in:#221650;--wa-out:#4338CA;--wa-accent:#8AB4FF;--wa-accent-ink:#0B0620;--wa-chip:#1A1040}
+
+/* Bottom navigation: clean glowing discs instead of shaded 3D planets */
+html[data-mw-appearance="milkyway"] .orbit .orb>span.mw-planet.mw-planet{box-shadow:0 0 0 1px rgba(255,255,255,.14),0 0 12px var(--mw-planet-glow,rgba(138,180,255,.35))!important}
+html[data-mw-appearance="milkyway"] .orbit .orb>span.mw-planet.mw-planet:after{display:none}
+html[data-mw-appearance="milkyway"] .orbit .mw-planet--feed{--mw-planet-surface:linear-gradient(135deg,#8B5CF6,#6366F1)}
+
+html[data-mw-appearance="milkyway"] .orbit .mw-planet--compose{--mw-planet-surface:linear-gradient(135deg,#FDE68A,#F59E0B)}
+html[data-mw-appearance="milkyway"] .orbit .mw-planet--messages{--mw-planet-surface:linear-gradient(135deg,#7DD3FC,#4F46E5)}
+
+html[data-mw-appearance="milkyway"] .orbit .orb.on>span.mw-planet.mw-planet{box-shadow:0 0 0 2px #C7D7FF,0 0 16px rgba(138,180,255,.6)!important}
+
+/* No heavy motion: planets, studio moons and idle alien loops stay still (the GO LIVE meteor keeps its effect) */
+html[data-mw-appearance="milkyway"] :is(.orbit .orb>span.mw-planet,.orbit .orb>span.mw-planet:before,.orbit .orb>span.mw-planet:after,.mws-orbit i,.mwxa-body,.mwxa-head,.mwxa-shadow,.mwxa-antenna-l,.mwxa-antenna-r,.mwxa-orb,.mwxa-shine){animation:none!important}
+
+/* Live screens and rooms */
+html[data-mw-appearance="milkyway"] .mw-live-page{--g-bg:#0D0721;--g-panel:#1A1040;--g-gold:#8AB4FF;--g-gold-ink:#0B0620;--g-text:#F5F3FF;--g-muted:#B8B2E6;--g-line:rgba(167,139,250,.28);--g-glass:rgba(24,15,58,.6);--g-glass-strong:rgba(26,16,64,.95)}
+html[data-mw-appearance="milkyway"] #mwLivePage.mw-live-page{background:radial-gradient(ellipse at 15% 0%,rgba(139,92,246,.42),transparent 58%),radial-gradient(ellipse at 100% 100%,rgba(56,189,248,.2),transparent 50%),linear-gradient(180deg,#120A2E,#0D0721)!important}
+html[data-mw-appearance="milkyway"] .mw-live-stage{background:radial-gradient(ellipse at 50% 30%,rgba(99,102,241,.3),transparent 62%),#0B0620}
+html[data-mw-appearance="milkyway"] .mw-live-stage[data-layout]:not([data-layout="fullscreen"]){background:radial-gradient(120% 70% at 15% 0%,rgba(139,92,246,.34),transparent 60%),radial-gradient(100% 60% at 100% 100%,rgba(56,189,248,.2),transparent 60%),#0B0620}
+html[data-mw-appearance="milkyway"] .mw-live-stage[data-mode="audio"] .mw-stage-grid{background:radial-gradient(circle at 50% 38%,#2A1A66 0,#1A1040 38%,#0D0721 75%)}
+html[data-mw-appearance="milkyway"] #mwLivePage .mw-live-audio-stage{background:radial-gradient(circle at 50% 38%,rgba(139,92,246,.22),rgba(13,7,33,.6) 70%)!important}
+html[data-mw-appearance="milkyway"] .mw-live-page .mw-live-primary{background:var(--mw-gradient)!important;color:#fff!important;box-shadow:0 10px 26px rgba(99,102,241,.4)!important}
+html[data-mw-appearance="milkyway"] .mw-live-page :is(input,select){background:rgba(18,10,46,.8)!important;border-color:rgba(167,139,250,.32)!important}
+html[data-mw-appearance="milkyway"] .mw-live-stage .mwx-seat[data-state="empty"] .mwx-seat-photo{background:#8AB4FF!important;color:#0B0620!important}
+
+/* ================= Theme 7: Sunlight (outdoor, high contrast) ================= */
+/* Built on the light theme: pure white surfaces, near-black text, solid dark borders and saturated accents.
+   No glass, blur, gradients or star layers, so nothing washes out or glares in direct sunlight. */
+html[data-mw-appearance="sunlight"]{
+  color-scheme:light;
+  --mw-accent:#0037A6;--mw-accent-ink:#ffffff;--mw-accent-soft:rgba(0,55,166,.1);
+  --mw-ink:#000000;--mw-ink-soft:#1F2937;--mw-electric:#0037A6;--mw-electric-deep:#002A80;--mw-cyan:#005F73;--mw-sky:#0037A6;--mw-ice:#ffffff;--mw-platinum:#F2F2F2;
+  --mw-gold:#8A4B00;--mw-gold-deep:#7A4100;--mw-danger:#B00020;--mw-ok:#00652E;
+  --mw-glass:#ffffff;--mw-glass-strong:#ffffff;--mw-glass-line:#1F2937;--mw-chrome-glass:#ffffff;--mw-chrome-blur:0px;--mw-card-blur:0px;
+  --mw-gradient:linear-gradient(#0037A6,#0037A6);
+  --mw-glow:none;--mw-glow-strong:0 0 0 2px #000;
+  --mw-focus:0 0 0 3px #000;
+  --bg:#ffffff;--panel:#ffffff;--card:#ffffff;--line:#4B5563;--text:#000000;--muted:#1F2937;
+  --blue:#0037A6;--cyan:#005F73;--gold:#7A4100;--ok:#00652E;--danger:#B00020;
+  background:#ffffff
+}
+html[data-mw-appearance="sunlight"] body{background:#ffffff!important;color:#000!important;-webkit-font-smoothing:antialiased}
+html[data-mw-appearance="sunlight"] body::before,html[data-mw-appearance="sunlight"] body::after{content:none!important;display:none!important}
+html[data-mw-appearance="sunlight"] *{text-shadow:none!important}
+html[data-mw-appearance="sunlight"] :is(.top,.orbit){background:#ffffff!important;border-color:#000!important;box-shadow:0 1px 0 #000!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+html[data-mw-appearance="sunlight"] :is(.post,.mw-ad-slot,.story-card,.creative-main-btn,.creative-choice){background:#ffffff!important;border:2px solid #1F2937!important;box-shadow:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+html[data-mw-appearance="sunlight"] :is(#feed,#profilePosts,#publicProfile,.sheet) :is(.post-body,.post-head,.post-echo-line,label,.who){color:#000}
+html[data-mw-appearance="sunlight"] .post :is(.muted,.post-head small,time){color:#1F2937!important}
+html[data-mw-appearance="sunlight"] .top .brand h1{background:none!important;color:#000!important;-webkit-text-fill-color:#000!important}
+html[data-mw-appearance="sunlight"] .top .brand small{color:#7A4100!important}
+html[data-mw-appearance="sunlight"] :is(.sheet-bg .sheet,.modal-bg .sheet,.mw-menu-panel,.mw-language-options,.mw-message-menu-items){background:#ffffff!important;color:#000!important;border:2px solid #000!important;box-shadow:0 6px 0 rgba(0,0,0,.18)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+html[data-mw-appearance="sunlight"] :is(.sheet-bg,.modal-bg){background:rgba(0,0,0,.55)!important}
+html[data-mw-appearance="sunlight"] :is(input,textarea,select,.searchbox input){background:#ffffff!important;color:#000!important;border:2px solid #1F2937!important}
+html[data-mw-appearance="sunlight"] :is(input,textarea)::placeholder{color:#4B5563!important;opacity:1}
+html[data-mw-appearance="sunlight"] select option{background:#fff;color:#000}
+html[data-mw-appearance="sunlight"] :is(.btn,.tab,.icon-btn,.share-option,#langSel,.mw-language-trigger){background:#ffffff!important;color:#000!important;border:2px solid #1F2937!important;box-shadow:none!important}
+html[data-mw-appearance="sunlight"] :is(.primary,.btn.primary,.tab.on,.mw-live-primary){background:#0037A6!important;color:#fff!important;border-color:#0037A6!important;box-shadow:none!important}
+html[data-mw-appearance="sunlight"] :is(.danger,.btn.danger){background:#ffffff!important;color:#B00020!important;border-color:#B00020!important}
+html[data-mw-appearance="sunlight"] a:not(.btn){color:#0037A6;text-decoration:underline}
+html[data-mw-appearance="sunlight"] :focus-visible{outline:3px solid #000!important;outline-offset:2px}
+html[data-mw-appearance="sunlight"] .toast{background:#000!important;color:#fff!important;border:2px solid #000!important}
+html[data-mw-appearance="sunlight"] .story-card[data-viewed="false"]{box-shadow:0 0 0 3px #0037A6!important}
+html[data-mw-appearance="sunlight"] .empty h3{color:#000}
+/* Post action line: dark icons and counts, the active state is a solid colour rather than a soft glow */
+html[data-mw-appearance="sunlight"] #feed .post .actions>:is(.signals>.sig,.act){color:#000!important}
+html[data-mw-appearance="sunlight"] #feed .post .actions>.act.on,html[data-mw-appearance="sunlight"] #feed .post .actions .sig.on{color:#0037A6!important;background:rgba(0,55,166,.1)!important}
+html[data-mw-appearance="sunlight"] #feed .post .actions>.mw-message-menu>summary{color:#000}
+html[data-mw-appearance="sunlight"] #feed .post>.post-echo-preview{color:#000}
+/* Bottom navigation: flat, high-contrast discs with no spin */
+html[data-mw-appearance="sunlight"] .orbit .orb{color:#000!important}
+html[data-mw-appearance="sunlight"] .orbit .orb>span.mw-planet.mw-planet{box-shadow:0 0 0 2px #000!important}
+html[data-mw-appearance="sunlight"] .orbit .orb>span.mw-planet.mw-planet:after{display:none}
+html[data-mw-appearance="sunlight"] .orbit .orb.on>span.mw-planet.mw-planet{box-shadow:0 0 0 3px #0037A6,0 0 0 5px #fff,0 0 0 6px #000!important}
+html[data-mw-appearance="sunlight"] :is(.orbit .orb>span.mw-planet,.orbit .orb>span.mw-planet:before,.orbit .orb>span.mw-planet:after,.mws-orbit i){animation:none!important}
+/* Chats */
+html[data-mw-appearance="sunlight"] :is(.wa-chat,.wa-inbox){--wa-bg:#ffffff;--wa-glow:transparent;--wa-doodle:transparent;--wa-head:#ffffff;--wa-panel:#ffffff;--wa-field:#ffffff;--wa-menu:#ffffff;--wa-in:#F2F2F2;--wa-out:#DCE8FF;--wa-accent:#0037A6;--wa-accent-ink:#ffffff;--wa-text:#000000;--wa-muted:#1F2937;--wa-meta:#1F2937;--wa-chip:#ffffff;--wa-line:rgba(0,0,0,.35)}
+
+
+/* ================= Extra selectable MilkyWay palettes =================
+   These themes reuse the existing layout and component system; only colour tokens and
+   a lightweight background change, so switching themes does not add heavy assets. */
+html:is([data-mw-appearance="nebula"],[data-mw-appearance="ocean"],[data-mw-appearance="emerald"],[data-mw-appearance="rose"]){
+  color-scheme:dark;--mw-ink:#f4f7ff;--mw-ink-soft:#c4cde0;--mw-ice:#10172b;--mw-platinum:#18233b;
+  --mw-glass:rgba(10,18,38,.76);--mw-glass-strong:rgba(7,13,29,.94);--mw-glass-line:rgba(147,197,253,.28);
+  --mw-chrome-glass:rgba(5,12,28,.9);--mw-chrome-blur:8px;--mw-card-blur:0px;
+  --mw-glow:0 8px 24px rgba(0,0,0,.28);--mw-glow-strong:0 0 0 1px var(--mw-glass-line),0 10px 28px rgba(0,0,0,.3);
+  --mw-focus:0 0 0 3px var(--mw-electric);--bg:#07101f;--panel:var(--mw-glass-strong);--card:var(--mw-glass);--line:var(--mw-glass-line);
+  --text:var(--mw-ink);--muted:var(--mw-ink-soft);--blue:var(--mw-electric);--cyan:var(--mw-cyan);--gold:var(--mw-gold);
+  background:#07101f;
+}
+html[data-mw-appearance="nebula"]{--mw-electric:#b56cff;--mw-electric-deep:#8b5cf6;--mw-cyan:#e879f9;--mw-sky:#d8b4fe;--mw-gold:#f0abfc;--mw-gold-deep:#e9a8ff;--mw-glass-line:rgba(192,132,252,.34);--mw-gradient:linear-gradient(135deg,#6d28d9,#a855f7 55%,#ec4899);--mw-galaxy-background:radial-gradient(ellipse at 12% 0%,rgba(147,51,234,.35),transparent 55%),radial-gradient(ellipse at 100% 55%,rgba(236,72,153,.17),transparent 48%),linear-gradient(180deg,#170b2e,#080916);--mw-focus:0 0 0 3px rgba(192,132,252,.6)}
+html[data-mw-appearance="ocean"]{--mw-electric:#38bdf8;--mw-electric-deep:#0284c7;--mw-cyan:#22d3ee;--mw-sky:#bae6fd;--mw-gold:#67e8f9;--mw-gold-deep:#67e8f9;--mw-glass-line:rgba(56,189,248,.32);--mw-gradient:linear-gradient(135deg,#075985,#0284c7 52%,#06b6d4);--mw-galaxy-background:radial-gradient(ellipse at 10% 0%,rgba(14,165,233,.3),transparent 58%),radial-gradient(ellipse at 100% 70%,rgba(20,184,166,.18),transparent 50%),linear-gradient(180deg,#041b2d,#03101e);--mw-focus:0 0 0 3px rgba(56,189,248,.6)}
+html[data-mw-appearance="emerald"]{--mw-electric:#34d399;--mw-electric-deep:#059669;--mw-cyan:#5eead4;--mw-sky:#a7f3d0;--mw-gold:#facc15;--mw-gold-deep:#fde047;--mw-glass-line:rgba(52,211,153,.3);--mw-gradient:linear-gradient(135deg,#065f46,#059669 55%,#14b8a6);--mw-galaxy-background:radial-gradient(ellipse at 15% 0%,rgba(5,150,105,.32),transparent 55%),radial-gradient(ellipse at 100% 75%,rgba(20,184,166,.16),transparent 50%),linear-gradient(180deg,#041f1a,#06130f);--mw-focus:0 0 0 3px rgba(52,211,153,.58)}
+html[data-mw-appearance="rose"]{--mw-electric:#fb7185;--mw-electric-deep:#e11d48;--mw-cyan:#f9a8d4;--mw-sky:#fbcfe8;--mw-gold:#fda4af;--mw-gold-deep:#fda4af;--mw-glass-line:rgba(251,113,133,.3);--mw-gradient:linear-gradient(135deg,#9f1239,#e11d48 55%,#c026d3);--mw-galaxy-background:radial-gradient(ellipse at 12% 0%,rgba(225,29,72,.28),transparent 55%),radial-gradient(ellipse at 100% 70%,rgba(192,38,211,.18),transparent 52%),linear-gradient(180deg,#260b20,#100817);--mw-focus:0 0 0 3px rgba(251,113,133,.58)}
+html:is([data-mw-appearance="nebula"],[data-mw-appearance="ocean"],[data-mw-appearance="emerald"],[data-mw-appearance="rose"]) body{background:var(--mw-galaxy-background)!important;color:var(--mw-ink)!important}
+html:is([data-mw-appearance="nebula"],[data-mw-appearance="ocean"],[data-mw-appearance="emerald"],[data-mw-appearance="rose"]) body::before{background:radial-gradient(ellipse at 15% 0%,var(--mw-accent-soft,rgba(56,189,248,.12)),transparent 55%),linear-gradient(180deg,transparent,rgba(0,0,0,.1))!important;opacity:1}
+html:is([data-mw-appearance="nebula"],[data-mw-appearance="ocean"],[data-mw-appearance="emerald"],[data-mw-appearance="rose"]) :is(.top,.orbit){background:var(--mw-chrome-glass)!important;border-color:var(--mw-glass-line)!important}
+html:is([data-mw-appearance="nebula"],[data-mw-appearance="ocean"],[data-mw-appearance="emerald"],[data-mw-appearance="rose"]) :is(.post,.mw-ad-slot,.story-card,.creative-main-btn,.creative-choice,.sheet,.modal-bg .sheet){background:var(--mw-glass-strong)!important;border-color:var(--mw-glass-line)!important;color:var(--mw-ink)!important}
+html:is([data-mw-appearance="nebula"],[data-mw-appearance="ocean"],[data-mw-appearance="emerald"],[data-mw-appearance="rose"]) :is(.post p,.post h1,.post h2,.post h3,.post-head,.who,.sheet label,.sheet p,.mw-menu-panel){color:var(--mw-ink)!important}
+html:is([data-mw-appearance="nebula"],[data-mw-appearance="ocean"],[data-mw-appearance="emerald"],[data-mw-appearance="rose"]) :is(input,textarea,select,.searchbox input){background:#07101f!important;color:var(--mw-ink)!important;border-color:var(--mw-glass-line)!important}
+html:is([data-mw-appearance="nebula"],[data-mw-appearance="ocean"],[data-mw-appearance="emerald"],[data-mw-appearance="rose"]) :is(.primary,.btn.primary,.tab.on,.mw-live-primary){background:var(--mw-gradient)!important;color:#fff!important;border-color:transparent!important}
+html:is([data-mw-appearance="nebula"],[data-mw-appearance="ocean"],[data-mw-appearance="emerald"],[data-mw-appearance="rose"]) .top .brand h1{background-image:linear-gradient(90deg,#f8fafc 0 44%,var(--mw-electric) 44% 100%)!important}
+@media(prefers-reduced-motion:reduce){html:is([data-mw-appearance="nebula"],[data-mw-appearance="ocean"],[data-mw-appearance="emerald"],[data-mw-appearance="rose"]) *{animation:none!important;transition:none!important}}
+
+
+/* v55 — Adaptive Light Glass: match the device appearance and keep controls legible. */
+html[data-mw-appearance="light"] {
+  --mw-control-bg: rgba(255,255,255,.96);
+  --mw-control-ink: #17324a;
+  --mw-control-border: #b8ccdc;
+  --mw-control-accent: #0878d1;
+  --mw-control-focus: rgba(8,120,209,.34);
+  accent-color: var(--mw-control-accent);
+}
+html[data-mw-appearance="light"] :is(button, .btn, .icon-btn, .tab, .share-option, input, select, textarea, summary) {
+  accent-color: var(--mw-control-accent);
+}
+html[data-mw-appearance="light"] :is(input, select, textarea, .input, .mw-menu-preference select) {
+  color: var(--mw-control-ink) !important;
+  background-color: var(--mw-control-bg) !important;
+  border-color: var(--mw-control-border) !important;
+}
+html[data-mw-appearance="light"] :is(input, select, textarea, button, .btn, [role="button"], a:focus-visible):focus-visible {
+  outline: 2px solid var(--mw-control-accent) !important;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px var(--mw-control-focus) !important;
+}
+html[data-mw-appearance="light"] :is(.primary, .btn.primary, .tab.on, .mw-live-launch) {
+  background: var(--mw-gradient) !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  border-color: transparent !important;
+}
+html[data-mw-appearance="light"] :is(.permission-card, .mw-permission-card, .permission-row, [data-permission]) {
+  color: var(--mw-ink) !important;
+  background: var(--mw-glass-strong) !important;
+  border-color: var(--mw-glass-line) !important;
+}
+@media (prefers-color-scheme: dark) {
+  html[data-mw-appearance="light"] {
+    color-scheme: dark;
+    --mw-accent: #7dd3fc;
+    --mw-accent-ink: #06152b;
+    --mw-accent-soft: rgba(56,189,248,.16);
+    --mw-ink: #eef6ff;
+    --mw-ink-soft: #b8c9dc;
+    --mw-electric: #38bdf8;
+    --mw-electric-deep: #7dd3fc;
+    --mw-cyan: #67e8f9;
+    --mw-sky: #bae6fd;
+    --mw-gold: #fbbf24;
+    --mw-gold-deep: #fcd34d;
+    --mw-ice: #111c2d;
+    --mw-platinum: #1b2a40;
+    --mw-glass: rgba(15,28,47,.78);
+    --mw-glass-strong: rgba(13,24,41,.97);
+    --mw-glass-line: rgba(125,211,252,.3);
+    --mw-chrome-glass: rgba(9,20,36,.92);
+    --mw-gradient: linear-gradient(135deg,#0878d1,#0e7490 55%,#6366f1);
+    --mw-focus: 0 0 0 3px rgba(56,189,248,.48);
+    --bg: #0b1525;
+    --panel: var(--mw-glass-strong);
+    --card: var(--mw-glass);
+    --line: var(--mw-glass-line);
+    --text: #eef6ff;
+    --muted: #b8c9dc;
+    --blue: #7dd3fc;
+    --cyan: #67e8f9;
+    --gold: #fcd34d;
+    --mw-control-bg: rgba(17,31,50,.98);
+    --mw-control-ink: #f1f7ff;
+    --mw-control-border: #425a75;
+    --mw-control-accent: #38bdf8;
+    --mw-control-focus: rgba(56,189,248,.34);
+    --mw-galaxy-background: radial-gradient(ellipse at 12% -8%,rgba(56,189,248,.14),transparent 58%),radial-gradient(ellipse at 100% 38%,rgba(99,102,241,.16),transparent 52%),linear-gradient(180deg,#101b2c,#0b1525 70%,#08111f);
+  }
+  html[data-mw-appearance="light"] body { background: var(--mw-galaxy-background) !important; color: var(--mw-ink) !important; }
+  html[data-mw-appearance="light"] :is(.top, .orbit) { background: var(--mw-chrome-glass) !important; border-color: var(--mw-glass-line) !important; }
+  html[data-mw-appearance="light"] :is(.post, .mw-ad-slot, .sheet, .sheet-bg .sheet, .modal-bg .sheet, .mw-menu-panel, .card, .panel, .info-box) {
+    color: var(--mw-ink) !important;
+    background: var(--mw-glass-strong) !important;
+    border-color: var(--mw-glass-line) !important;
+  }
+  html[data-mw-appearance="light"] :is(.btn, button, .icon-btn, .tab, .share-option) { color: var(--mw-control-ink); border-color: var(--mw-control-border); }
+  html[data-mw-appearance="light"] :is(.btn.ghost, .ghost, .tab:not(.on), .icon-btn) { background: rgba(30,48,72,.82) !important; color: #eef6ff !important; }
+  html[data-mw-appearance="light"] :is(.sheet input, .sheet select, .sheet textarea, .searchbox input, .mw-menu-panel select) { background: var(--mw-control-bg) !important; color: var(--mw-control-ink) !important; border-color: var(--mw-control-border) !important; }
+  html[data-mw-appearance="light"] :is(.muted, small, .setting-row, .mw-menu-section h3) { color: var(--mw-ink-soft); }
+  html[data-mw-appearance="light"] a:not(.btn) { color: #7dd3fc; }
+  html[data-mw-appearance="light"] .danger, html[data-mw-appearance="light"] .btn.danger { background: rgba(244,63,94,.16) !important; color: #fda4af !important; border-color: rgba(251,113,133,.45) !important; }
+}
+
+
+/* v58 — Complete Light Glass system-tone adaptation.
+   Scope is deliberately limited to Light Glass so the named Galaxy themes stay unchanged. */
+@media (prefers-color-scheme: dark) {
+  html[data-mw-appearance="light"] {
+    color-scheme: dark;
+    --mw-control-bg: #122238;
+    --mw-control-ink: #f2f7ff;
+    --mw-control-border: #49627d;
+    --mw-control-accent: #38bdf8;
+    --mw-control-focus: rgba(56,189,248,.42);
+    --mw-glass: rgba(15,28,47,.94);
+    --mw-glass-strong: rgba(11,22,38,.985);
+    --mw-glass-line: rgba(125,211,252,.32);
+    --mw-ink: #f1f7ff;
+    --mw-ink-soft: #c0d0e2;
+    --text: #f1f7ff;
+    --muted: #c0d0e2;
+    --panel: #0d1b2e;
+    --card: #13243a;
+    --line: #3a526c;
+  }
+  html[data-mw-appearance="light"] :is(
+    #settingsSheet, #settingsSheet .sheet, #settingsSheet .mws-sheet,
+    .sheet-bg .sheet, .modal-bg .sheet, .mw-menu-panel, .mw-language-options,
+    .mw-select-options, .dropdown-menu, .popover, .dialog, .permission-card,
+    .mw-permission-card, .permission-row, [data-permission]
+  ) {
+    color: #f1f7ff !important;
+    background: #0d1b2e !important;
+    border-color: #3a526c !important;
+  }
+  html[data-mw-appearance="light"] :is(
+    #settingsSheet .mws-card, .mw-menu-section, .mw-menu-card, .settings-card,
+    .setting-card, .form-card, .card, .panel, .info-box
+  ) {
+    color: #f1f7ff !important;
+    background: rgba(19,36,58,.98) !important;
+    border-color: #3a526c !important;
+  }
+  html[data-mw-appearance="light"] :is(
+    #settingsSheet, #settingsSheet label, #settingsSheet .setting-row,
+    #settingsSheet .mws-group h3, #settingsSheet .mws-help,
+    #settingsSheet .mws-subhead, .mw-menu-panel, .mw-menu-panel label,
+    .mw-menu-section h3, .mw-language-options button, .mw-select-options button,
+    .setting-row, .muted, small
+  ) { color: #d7e5f5 !important; }
+  html[data-mw-appearance="light"] :is(input, select, textarea, .input, .mw-select-trigger,
+    .mw-language-trigger, .mw-menu-preference select) {
+    color: #f1f7ff !important;
+    -webkit-text-fill-color: #f1f7ff;
+    background: #122238 !important;
+    border-color: #49627d !important;
+    color-scheme: dark;
+  }
+  html[data-mw-appearance="light"] :is(input, select, textarea)::placeholder {
+    color: #a9bdd2 !important;
+    opacity: 1;
+  }
+  html[data-mw-appearance="light"] .mw-language-options {
+    background: #0d1b2e !important;
+    border-color: #49627d !important;
+    opacity: 1 !important;
+    backdrop-filter: blur(14px) saturate(130%);
+    -webkit-backdrop-filter: blur(14px) saturate(130%);
+  }
+  html[data-mw-appearance="light"] .mw-language-options button {
+    background: #122238 !important;
+    color: #f1f7ff !important;
+    -webkit-text-fill-color: #f1f7ff !important;
+    border-color: #344c66 !important;
+  }
+  html[data-mw-appearance="light"] .mw-language-options button[aria-selected="true"] {
+    background: #16466b !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    border-color: #38bdf8 !important;
+  }
+  html[data-mw-appearance="light"] :is(.btn.ghost, .ghost, .tab:not(.on), .icon-btn, .share-option) {
+    background: #172b43 !important;
+    color: #f1f7ff !important;
+    -webkit-text-fill-color: #f1f7ff !important;
+    border-color: #49627d !important;
+  }
+  html[data-mw-appearance="light"] :is(.primary, .btn.primary, .tab.on, .mw-live-launch, #settingsSheet .save) {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+  }
+  html[data-mw-appearance="light"] :is(.mws-links .btn, #settingsSheet .mws-links .btn) {
+    background: #172b43 !important;
+    color: #f1f7ff !important;
+    border-color: #49627d !important;
+  }
+  html[data-mw-appearance="light"] :is(a:not(.btn), .link) { color: #7dd3fc !important; }
+}
+@media (prefers-color-scheme: light) {
+  html[data-mw-appearance="light"] {
+    color-scheme: light;
+    --mw-control-bg: rgba(255,255,255,.98);
+    --mw-control-ink: #17324a;
+    --mw-control-border: #b8ccdc;
+    --mw-ink: #17324a;
+    --mw-ink-soft: #4b6a80;
+    --text: #17324a;
+    --muted: #4b6a80;
+  }
+  html[data-mw-appearance="light"] :is(.mw-language-options, .mw-select-options) {
+    color: #17324a;
+    background: rgba(255,255,255,.98);
+  }
+  html[data-mw-appearance="light"] .mw-language-options button {
+    color: #17324a !important;
+    -webkit-text-fill-color: #17324a !important;
+  }
+}

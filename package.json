@@ -1,0 +1,28 @@
+{
+  "name": "milkyway",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "build": "node tools/build-cloudflare.mjs",
+    "build:cloudflare": "node tools/build-cloudflare.mjs",
+    "test": "node --test tools/repair-regressions.test.mjs",
+    "check:syntax": "node tools/check-syntax.mjs",
+    "android:sync": "cap sync android",
+    "android:open": "cap open android",
+    "release:check": "node tools/release-readiness.mjs"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@capacitor/android": "^8.5.3",
+    "@capacitor/cli": "^8.5.3",
+    "@capacitor/core": "^8.5.3",
+    "@capacitor/push-notifications": "^8.1.3",
+    "@capacitor/share": "^8.0.3"
+  }
+}

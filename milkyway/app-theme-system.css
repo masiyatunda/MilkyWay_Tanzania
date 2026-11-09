@@ -1,0 +1,62 @@
+
+/* MilkyWay app-wide theme contract v59.
+   Every screen consumes the same semantic tokens. The chosen app theme is independent
+   of Android/iOS system appearance, so mixed light surfaces and light text cannot occur. */
+html{
+ --mw-app-bg:#f4f9ff;--mw-app-surface:rgba(255,255,255,.88);--mw-app-surface-solid:#fff;
+ --mw-app-raised:#eef7ff;--mw-app-line:#cfe4f5;--mw-app-text:#17344d;--mw-app-muted:#58748a;
+ --mw-app-accent:#1677d2;--mw-app-accent-text:#fff;--mw-app-soft:#e3f2ff;--mw-app-shadow:0 8px 24px rgba(28,88,135,.10);
+ color-scheme:light;
+}
+html[data-mw-appearance="galaxy"],html[data-mw-appearance="milkyway"],
+html[data-mw-appearance="nebula"],html[data-mw-appearance="ocean"],
+html[data-mw-appearance="emerald"],html[data-mw-appearance="rose"]{
+ --mw-app-bg:#071426;--mw-app-surface:rgba(13,29,50,.92);--mw-app-surface-solid:#0d1d32;
+ --mw-app-raised:#132943;--mw-app-line:#294665;--mw-app-text:#edf5ff;--mw-app-muted:#afc2d8;
+ --mw-app-accent:#258ce8;--mw-app-accent-text:#fff;--mw-app-soft:#173753;--mw-app-shadow:0 8px 24px rgba(0,0,0,.24);
+ color-scheme:dark;
+}
+html[data-mw-appearance="galaxy"]{--mw-app-bg:#050816;--mw-app-surface:rgba(10,20,43,.92);--mw-app-surface-solid:#0a142b;--mw-app-raised:#111f3d;--mw-app-line:#34416c;--mw-app-accent:#8b5cf6;--mw-app-soft:#201746}
+html[data-mw-appearance="milkyway"]{--mw-app-bg:#100926;--mw-app-surface:rgba(29,18,70,.92);--mw-app-surface-solid:#1d1246;--mw-app-raised:#2a1d58;--mw-app-line:#493b78;--mw-app-accent:#8ab4ff;--mw-app-soft:#30245e}
+html[data-mw-appearance="nebula"]{--mw-app-bg:#170b2e;--mw-app-surface:rgba(43,19,65,.93);--mw-app-surface-solid:#2b1341;--mw-app-raised:#3a1c50;--mw-app-line:#633d7d;--mw-app-accent:#d879ff;--mw-app-soft:#45215b}
+html[data-mw-appearance="ocean"]{--mw-app-bg:#041b2d;--mw-app-surface:rgba(6,39,59,.93);--mw-app-surface-solid:#06273b;--mw-app-raised:#0c3851;--mw-app-line:#24546b;--mw-app-accent:#25b9e8;--mw-app-soft:#10465e}
+html[data-mw-appearance="emerald"]{--mw-app-bg:#041f1a;--mw-app-surface:rgba(8,45,37,.93);--mw-app-surface-solid:#082d25;--mw-app-raised:#104438;--mw-app-line:#286858;--mw-app-accent:#34d399;--mw-app-soft:#155342}
+html[data-mw-appearance="rose"]{--mw-app-bg:#260b20;--mw-app-surface:rgba(57,17,47,.93);--mw-app-surface-solid:#39112f;--mw-app-raised:#4b1c40;--mw-app-line:#75375f;--mw-app-accent:#fb7185;--mw-app-soft:#5b234b}
+html[data-mw-appearance="sunlight"]{
+ --mw-app-bg:#fff;--mw-app-surface:#fff;--mw-app-surface-solid:#fff;--mw-app-raised:#f4f4f5;--mw-app-line:#343434;
+ --mw-app-text:#111827;--mw-app-muted:#404856;--mw-app-accent:#111827;--mw-app-accent-text:#fff;--mw-app-soft:#e5e7eb;--mw-app-shadow:0 3px 12px rgba(0,0,0,.08);color-scheme:light;
+}
+html[data-mw-appearance="light"]{
+ /* Light Glass is intentionally light with a very subtle cloud-blue tint, irrespective of device theme. */
+ --mw-app-bg:#f5faff;--mw-app-surface:rgba(255,255,255,.88);--mw-app-surface-solid:#fff;
+ --mw-app-raised:#f0f7fd;--mw-app-line:#d4e7f4;--mw-app-text:#17344d;--mw-app-muted:#5d7487;
+ --mw-app-accent:#087bd3;--mw-app-accent-text:#fff;--mw-app-soft:#e8f5ff;--mw-app-shadow:0 8px 24px rgba(39,112,163,.10);color-scheme:light;
+}
+html,html body{background-color:var(--mw-app-bg)!important;color:var(--mw-app-text)}
+html body{--bg:var(--mw-app-bg);--panel:var(--mw-app-surface-solid);--card:var(--mw-app-surface-solid);--line:var(--mw-app-line);--text:var(--mw-app-text);--muted:var(--mw-app-muted);--blue:var(--mw-app-accent);color:var(--mw-app-text)!important}
+html :is(.top,.orbit,.sheet,.modal-bg .sheet,.sheet-bg .sheet,.mws-card,.mws-group,.menu-panel,.menu-sheet,.dropdown-menu,.language-menu,.language-dropdown,.settings-panel,.settings-card,.chat-panel,.chat-list,.chat-item,.message-list,.mw-live-glass,.mw-live-card,.mw-live-launcher,.mw-call-sheet,.mw-dialog,.mw-modal,.toast,.post,.story-card,.account-panel,.profile-panel,.admin-card,.admin-panel,.form-card,.panel,.card,.section-card){
+ background-color:var(--mw-app-surface)!important;color:var(--mw-app-text)!important;border-color:var(--mw-app-line)!important;box-shadow:var(--mw-app-shadow);
+}
+html :is(.top,.orbit,.sheet,.modal-bg .sheet,.sheet-bg .sheet,.mws-card,.menu-panel,.menu-sheet,.dropdown-menu,.language-menu,.language-dropdown,.settings-panel,.settings-card,.chat-panel,.chat-list,.message-list,.mw-live-glass,.mw-live-card,.mw-call-sheet,.mw-dialog,.mw-modal,.account-panel,.profile-panel,.admin-card,.admin-panel,.form-card,.panel,.card,.section-card){
+ -webkit-backdrop-filter:blur(16px) saturate(112%);backdrop-filter:blur(16px) saturate(112%);
+}
+html :is(p,span,label,small,strong,b,h1,h2,h3,h4,h5,h6,legend,.muted,.post-meta,.who,.mws-help,.setting-row,.menu-item,.nav-item,.chat-preview,.message-preview,.empty-state,.description){color:var(--mw-app-text)}
+html :is(.muted,.who,.mws-help,.post-meta span,.chat-preview,.message-preview,.secondary-text,.hint,.subtle){color:var(--mw-app-muted)!important}
+html :is(input,textarea,select,.searchbox input,.searchbox button,.icon-btn,.btn,.act,.tab,.setting-row,button[role="button"],[role="combobox"]){
+ color:var(--mw-app-text);border-color:var(--mw-app-line);
+}
+html :is(input,textarea,select,.searchbox input){background:var(--mw-app-surface-solid)!important;color:var(--mw-app-text)!important}
+html :is(input,textarea,select)::placeholder{color:var(--mw-app-muted)!important;opacity:1}
+html select option{background:var(--mw-app-surface-solid)!important;color:var(--mw-app-text)!important}
+html :is(.btn,.act,.tab,.icon-btn,.setting-row,.menu-item,.nav-item,.dropdown-item){background-color:var(--mw-app-raised);color:var(--mw-app-text)}
+html :is(.primary,.btn.primary,.mw-live-launch,.tab.on,[aria-pressed="true"],.selected){background:var(--mw-gradient,linear-gradient(135deg,var(--mw-app-accent),#087d9f))!important;color:var(--mw-app-accent-text)!important;border-color:transparent!important}
+html :is(.danger,.btn.danger){background:#fff0f2!important;color:#a91f36!important;border-color:#f2c4cd!important}
+html[data-mw-tone="dark"] :is(.danger,.btn.danger){background:#4b1723!important;color:#fecdd3!important;border-color:#873044!important}
+html :is(.sheet-bg,.modal-bg){background:rgba(4,18,35,.48)!important}
+html[data-mw-tone="light"] :is(.sheet-bg .sheet,.modal-bg .sheet){background:rgba(255,255,255,.97)!important}
+html[data-mw-tone="dark"] :is(.sheet-bg .sheet,.modal-bg .sheet){background:rgba(10,25,44,.98)!important}
+html :is(.mws-actions,.bottom-sheet-actions){background:var(--mw-app-surface)!important;border-color:var(--mw-app-line)!important}
+html :is(.mws-nav-chevron,svg.icon){color:var(--mw-app-muted)}
+html :is(.orb.on,.tab.on){color:var(--mw-app-accent-text)!important}
+html :focus-visible{outline:2px solid var(--mw-app-accent)!important;outline-offset:2px}
+html[data-mw-theme-switching] *,html[data-mw-theme-switching] *::before,html[data-mw-theme-switching] *::after{transition:none!important}

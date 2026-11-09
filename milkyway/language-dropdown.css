@@ -1,0 +1,24 @@
+.mw-language-native,#langSel.mw-language-native,#mwAuthLanguage.mw-language-native,#mwSettingsLanguage.mw-language-native{display:none!important}
+.mw-header-language>.mw-language-dropdown{display:inline-flex!important}
+.mw-language-dropdown{position:relative;display:inline-flex;flex-shrink:0;isolation:isolate;max-width:100%}
+.mw-language-trigger{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:8px 10px;border:1px solid rgba(153,187,226,.36);border-radius:12px;background:rgba(12,25,48,.82);color:#e8f2ff;font:inherit;font-size:.82rem;font-weight:700;white-space:nowrap;cursor:pointer}
+.mw-language-options{position:absolute;top:calc(100% + 7px);left:0;z-index:1500;display:flex;flex-direction:column;width:158px;max-width:calc(100vw - 16px);padding:5px;border:1px solid rgba(153,187,226,.4);border-radius:13px;background:rgba(8,20,40,.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 8px 24px rgba(0,0,0,.4),0 0 12px rgba(65,136,227,.12)}
+.mw-language-options[hidden]{display:none!important}
+.mw-language-options.align-end{left:auto;right:0}
+.mw-language-options button{min-height:40px;display:block;width:100%;margin:0;padding:9px 12px;text-align:left;border:1px solid transparent;border-radius:8px;background:transparent;color:#e8f2ff;font:inherit;font-size:.9rem;cursor:pointer;white-space:nowrap}
+.mw-language-options button[aria-selected="true"]{background:rgba(65,136,227,.22);border-color:rgba(153,187,226,.28);color:#a9d5ff;font-weight:700}
+.mw-language-options button:hover{background:rgba(65,136,227,.18)}
+.mw-language-trigger:focus-visible,.mw-language-options button:focus-visible{outline:2px solid #9bc8ff;outline-offset:2px}
+.mw-header-language:has(.mw-language-dropdown){overflow:visible}
+@media(prefers-reduced-transparency:reduce){.mw-language-options{background:#081428;backdrop-filter:none}}
+/* Live setup selects (Guest seats): dark glass picker with a scrollable vertical list */
+.mw-live-page .mw-select-dropdown{display:flex;width:100%}
+.mw-live-page .mw-select-dropdown .mw-select-trigger{width:100%;min-height:46px;justify-content:space-between;padding:10px 14px;border:1px solid rgba(153,187,226,.36);border-radius:16px;background:rgba(12,25,48,.82);color:#e8f2ff;font-size:.95rem;font-weight:700;-webkit-appearance:none;appearance:none;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.mw-live-page .mw-select-dropdown .mw-select-caret{opacity:.8;font-size:.8rem;transition:transform .2s}
+.mw-live-page .mw-select-dropdown .mw-select-trigger[aria-expanded="true"] .mw-select-caret{transform:rotate(180deg)}
+.mw-live-page .mw-select-dropdown .mw-select-options{left:0;right:0;width:auto;min-width:120px;max-height:min(264px,45vh);gap:3px;padding:6px;border-radius:20px;overflow-y:auto;overscroll-behavior:contain;scroll-snap-type:y proximity;scrollbar-width:thin;scrollbar-color:rgba(153,187,226,.35) transparent;background:rgba(8,20,40,.9);backdrop-filter:blur(14px) saturate(140%);-webkit-backdrop-filter:blur(14px) saturate(140%);-webkit-mask-image:linear-gradient(transparent,#000 14px,#000 calc(100% - 14px),transparent);mask-image:linear-gradient(transparent,#000 14px,#000 calc(100% - 14px),transparent)}
+.mw-live-page .mw-select-dropdown .mw-select-options::-webkit-scrollbar{width:4px}
+.mw-live-page .mw-select-dropdown .mw-select-options::-webkit-scrollbar-thumb{background:rgba(153,187,226,.35);border-radius:4px}
+.mw-live-page .mw-select-dropdown .mw-select-options button{flex-shrink:0;min-height:42px;padding:9px 12px;border:1px solid transparent;border-radius:14px;background:transparent;color:#e8f2ff;font-size:1rem;font-weight:500;font-variant-numeric:tabular-nums;text-align:center;scroll-snap-align:center;transform:none;transition:background .15s,color .15s}
+.mw-live-page .mw-select-dropdown .mw-select-options button:hover{background:rgba(65,136,227,.18)}
+.mw-live-page .mw-select-dropdown .mw-select-options button[aria-selected="true"]{background:rgba(65,136,227,.22);border-color:rgba(153,187,226,.32);color:#a9d5ff;font-weight:800}

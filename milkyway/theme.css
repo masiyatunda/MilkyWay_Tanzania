@@ -1,0 +1,114 @@
+:root{
+  --mw-electric:#0a84ff;--mw-electric-deep:#0067d6;--mw-cyan:#1fb8e6;--mw-sky:#7fd4ff;--mw-ice:#eaf7ff;
+  --mw-white:#fff;--mw-platinum:#eef3f8;--mw-silver:#c4d0dc;
+  --mw-gold:#f0b545;--mw-gold-deep:#805716;
+  --mw-ink:#10304a;--mw-ink-soft:#4b6a80;--mw-danger:#e5384f;--mw-ok:#14845d;
+  --mw-space:#061433;--mw-space-2:#0d2a6a;
+  --mw-glass:rgba(255,255,255,.74);--mw-glass-strong:rgba(255,255,255,.9);--mw-glass-line:rgba(127,212,255,.55);
+  --mw-chrome-blur:16px;--mw-card-blur:6px;
+  --mw-galaxy-background:url('galaxy-starfield.svg') 0 0/480px 560px repeat fixed,url('galaxy-nebula.svg') center top/cover no-repeat fixed #030818;
+  --mw-dark-glass:rgba(10,28,70,.46);--mw-dark-glass-line:rgba(127,212,255,.34);
+  --mw-gradient:linear-gradient(135deg,var(--mw-electric-deep),#087d9f);
+  --mw-glow:0 10px 30px rgba(10,132,255,.14);--mw-glow-strong:0 0 0 1px var(--mw-glass-line),0 12px 34px rgba(10,132,255,.22);
+  --mw-r-sm:12px;--mw-r-md:18px;--mw-r-lg:26px;--mw-r-pill:999px;
+  --mw-s-1:4px;--mw-s-2:8px;--mw-s-3:12px;--mw-s-4:16px;--mw-s-5:24px;
+  --mw-focus:0 0 0 3px rgba(31,184,230,.55);
+  --mw-ease:cubic-bezier(.2,.7,.2,1);
+  /* Map the legacy variables onto the token set so older rules follow the theme. */
+  --bg:#f3f9ff;--panel:var(--mw-white);--card:var(--mw-white);--text:var(--mw-ink);--muted:var(--mw-ink-soft);
+  --line:#d3e6f4;--blue:var(--mw-electric-deep);--cyan:var(--mw-cyan);--gold:var(--mw-gold-deep);--ok:var(--mw-ok);--danger:#b8283e;
+}
+body{background:radial-gradient(1200px 600px at 0% -10%,#dff2ff,transparent 60%),radial-gradient(900px 500px at 100% 30%,#eef0ff,transparent 60%),radial-gradient(700px 500px at 30% 110%,#e3f9ff,transparent 60%),var(--bg)!important;color:var(--text)}
+
+/* Glass chrome: blur only on fixed surfaces to keep scrolling cheap on low-end Android. */
+.top,.orbit{background:var(--mw-chrome-glass,var(--mw-glass))!important;border-color:var(--mw-glass-line)!important;box-shadow:var(--mw-glow)!important}
+@supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.top,.orbit,.sheet-bg .sheet,.modal-bg .sheet,.toast,.mw-network-banner{-webkit-backdrop-filter:blur(var(--mw-chrome-blur)) saturate(110%);backdrop-filter:blur(var(--mw-chrome-blur)) saturate(110%)}}
+@media (prefers-reduced-transparency:reduce){.top,.orbit{background:var(--mw-white)!important}}
+
+/* Brand lockup */
+.top .brand img{width:40px!important;height:40px!important;object-fit:contain;border:0!important;border-radius:0!important;background:none!important;box-shadow:none!important;filter:drop-shadow(0 2px 6px rgba(10,103,214,.25))}
+.top .brand h1{background:linear-gradient(90deg,#5d7286 0 44%,var(--mw-electric) 44% 100%);-webkit-background-clip:text;background-clip:text;color:transparent!important;-webkit-text-fill-color:transparent;letter-spacing:-.01em}
+.top .brand small{color:var(--mw-gold-deep)!important;letter-spacing:.18em}
+.mw-auth-logo{display:block;width:min(150px,42vw);height:auto;margin:4px auto 10px;padding:14px 18px 10px;border-radius:var(--mw-r-lg);background:radial-gradient(circle at 50% 38%,var(--mw-space-2),var(--mw-space) 72%);box-shadow:var(--mw-glow-strong)}
+
+/* Cards and sheets */
+.post,.mw-ad-slot,.sheet,.modal-bg .sheet,.creative-main-btn,.creative-choice{border-radius:var(--mw-r-lg)!important;border:1px solid var(--line)!important;box-shadow:var(--mw-glow)!important}
+.sheet-bg .sheet,.modal-bg .sheet{background:var(--mw-glass-strong)!important}
+.sheet-bg,.modal-bg{background:rgba(16,48,74,.32)!important}
+
+/* Buttons and controls */
+.btn,.act,.tab,.icon-btn,.share-option{border-radius:var(--mw-r-sm)!important;transition:background-color .18s var(--mw-ease),transform .18s var(--mw-ease),box-shadow .18s var(--mw-ease)}
+.btn:active,.act:active,.icon-btn:active,.tab:active{transform:scale(.97)}
+.primary,.btn.primary,.mw-live-launch{background:var(--mw-gradient)!important;color:#fff!important;border-color:transparent!important;box-shadow:0 6px 18px rgba(10,132,255,.28)!important}
+.tab.on{background:var(--mw-gradient)!important;color:#fff!important;border-color:transparent!important}
+.danger,.btn.danger{background:#fff1f3!important;color:#a91f36!important;border-color:#f3c3cc!important}
+:focus-visible{outline:none!important;box-shadow:var(--mw-focus)!important}
+input,textarea,select{border-radius:var(--mw-r-sm)!important;border-color:var(--line)!important}
+input:focus,textarea:focus,select:focus{outline:none!important;border-color:var(--mw-cyan)!important;box-shadow:var(--mw-focus)!important}
+
+/* Bottom navigation */
+.orbit .orb.on{color:var(--mw-electric-deep)!important}
+.orbit .orb.on>span:first-child{background:var(--mw-gradient)!important;color:#fff!important;border-color:transparent!important}
+
+/* Stories, Live discovery and badges */
+.story-card{border-radius:var(--mw-r-md)!important;overflow:hidden;box-shadow:var(--mw-glow)}
+.story-card[data-viewed="false"]{box-shadow:0 0 0 2px var(--mw-electric),0 0 0 4px rgba(240,181,69,.6),var(--mw-glow)}
+.mw-story-state{background:var(--mw-gradient)!important;color:#fff!important}
+.story-card[data-viewed="true"] .mw-story-state{background:rgba(16,48,74,.62)!important}
+
+
+.mw-discovery-live-badge{background:linear-gradient(135deg,#ff3b5c,#e5384f)!important;color:#fff!important;border-radius:var(--mw-r-sm)!important;font-weight:800;letter-spacing:.08em}
+.mw-ad-slot>header{color:var(--mw-gold-deep)!important;font-weight:800;letter-spacing:.06em}
+
+/* Watermark overlay: transparent logo, never baked into the original upload. */
+.mw-media-frame{position:relative;display:block;line-height:0;border-radius:var(--mw-r-md);overflow:hidden;margin:0 12px;background:var(--mw-ice)}
+.mw-media-frame>.post-media{margin:0!important;width:100%;border-radius:0!important}
+.mw-video-fullscreen{position:absolute;right:12px;bottom:54px;z-index:4;display:grid;place-items:center;width:40px;height:40px;padding:8px;border:1px solid rgba(255,255,255,.55);border-radius:50%;background:rgba(0,0,0,.68);color:#fff;cursor:pointer}
+.mw-video-fullscreen svg{width:21px;height:21px}
+.mw-video-fullscreen[hidden]{display:none}
+.mw-media-frame:fullscreen{width:100vw;height:100dvh;margin:0!important;border-radius:0;background:#000}
+.mw-media-frame:fullscreen>.post-media{width:100%;height:100%;max-height:100dvh;object-fit:contain}
+.mw-watermark{position:absolute;right:clamp(8px,2.4%,16px);bottom:clamp(8px,2.4%,16px);width:clamp(46px,15%,104px);height:auto;opacity:.82;pointer-events:none;user-select:none;filter:drop-shadow(0 1px 3px rgba(0,20,60,.6));z-index:1}
+.mw-media-frame[data-kind="video"]>.mw-watermark{bottom:clamp(46px,9%,64px)}
+
+/* DM: envelope, bubbles and composer */
+
+/* Notifications and loading */
+.toast{background:var(--mw-glass-strong)!important;color:var(--mw-ink)!important;border:1px solid var(--mw-glass-line)!important;border-radius:var(--mw-r-md)!important;box-shadow:var(--mw-glow-strong)!important}
+.mw-network-banner{background:rgba(5,19,41,.86);color:#dbe7f5;border:1px solid rgba(244,198,78,.35);border-radius:var(--mw-r-pill);font-size:.82rem}
+.empty h3{color:var(--mw-electric-deep)}
+@keyframes mw-shimmer{to{background-position:-200% 0}}
+[aria-busy="true"]{background:linear-gradient(90deg,transparent,rgba(127,212,255,.25),transparent) 0 0/200% 100%;animation:mw-shimmer 1.4s linear infinite}
+
+/* ---------- Video Live: Galaxy Glass on a selective dark galaxy surface ---------- */
+/* Stage: the host video fills the area; brand mark sits top-right like the reference */
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.top,.orbit{background:var(--panel)!important}}
+
+html:is([data-mw-appearance="galaxy"],[data-mw-appearance="milkyway"]){
+  color-scheme:dark;
+  --mw-ink:#f0f5ff;--mw-ink-soft:#b9cadf;--mw-electric-deep:#88d8ff;--mw-gold-deep:#ebcf91;
+  --mw-ice:#101e35;--mw-platinum:#15243d;
+  --mw-glass:rgba(5,12,28,.48);--mw-glass-strong:rgba(8,17,35,.8);--mw-glass-line:rgba(176,217,245,.3);
+  --mw-chrome-blur:12px;--mw-card-blur:.6px;
+  --mw-chrome-glass:url('galaxy-starfield.svg') 0 0/480px 560px repeat fixed rgba(5,12,28,.82);
+  --mw-hub-backdrop:transparent;
+  --mw-glow:inset 0 1px 0 rgba(222,239,255,.08),0 10px 30px rgba(2,5,16,.3);
+  --mw-gradient:linear-gradient(135deg,#1454a1,#146579);
+  --bg:#030818;--panel:var(--mw-glass-strong);--card:var(--mw-glass);--line:var(--mw-glass-line);
+}
+html:is([data-mw-appearance="galaxy"],[data-mw-appearance="milkyway"]) body{background:var(--mw-galaxy-background)!important}
+html:is([data-mw-appearance="galaxy"],[data-mw-appearance="milkyway"]) .post,html:is([data-mw-appearance="galaxy"],[data-mw-appearance="milkyway"]) .mw-ad-slot{background:var(--mw-glass)!important;border-color:var(--mw-glass-line)!important}
+html:is([data-mw-appearance="galaxy"],[data-mw-appearance="milkyway"]) .top .brand h1{background-image:linear-gradient(90deg,#e2ebf5 0 44%,#88d8ff 44% 100%)}
+html:is([data-mw-appearance="galaxy"],[data-mw-appearance="milkyway"]) .story-card{border-color:var(--mw-glass-line);background:var(--mw-glass)}
+html:is([data-mw-appearance="galaxy"],[data-mw-appearance="milkyway"]) .creative-main-btn,html:is([data-mw-appearance="galaxy"],[data-mw-appearance="milkyway"]) .creative-choice{background:var(--mw-glass)!important}
+.mw-header-language{display:inline-flex!important;align-items:center;gap:4px;color:var(--mw-electric-deep);min-width:0}
+
+.mw-history-delete{font-size:.8rem;white-space:normal}
+.mw-live-session-info{min-width:0;overflow-wrap:anywhere}
+.mw-live-session{flex-wrap:wrap}
+.mw-business-placement{padding:18px 22px;background:var(--mw-glass)!important}
+.mw-business-placement h3{margin:0 0 6px;color:var(--mw-electric-deep);font-size:1rem}
+.mw-business-placement p{margin:0;font-size:.85rem;line-height:1.55;color:var(--mw-ink-soft)}
+@media(max-width:600px){.top .brand{min-width:0}.top .brand small{display:none}.top .brand h1{font-size:1.15rem!important}.top .brand img{width:32px!important;height:32px!important}.mw-header-language>span{display:none}.mw-top-live{max-width:72px!important;padding-right:5px}.mw-top-live span:last-child{display:none}.mw-live-session button{flex:1 1 auto}}
+@supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){html:is([data-mw-appearance="galaxy"],[data-mw-appearance="milkyway"]) .post,html:is([data-mw-appearance="galaxy"],[data-mw-appearance="milkyway"]) .mw-ad-slot{-webkit-backdrop-filter:blur(var(--mw-card-blur));backdrop-filter:blur(var(--mw-card-blur))}}
+@media(prefers-reduced-transparency:reduce){html:is([data-mw-appearance="galaxy"],[data-mw-appearance="milkyway"]) .top,html:is([data-mw-appearance="galaxy"],[data-mw-appearance="milkyway"]) .orbit,html:is([data-mw-appearance="galaxy"],[data-mw-appearance="milkyway"]) .post,html:is([data-mw-appearance="galaxy"],[data-mw-appearance="milkyway"]) .mw-ad-slot{background:#0a162c!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}}

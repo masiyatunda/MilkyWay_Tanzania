@@ -1,0 +1,35 @@
+/* Performance layer, loaded last: the same look with less GPU work while scrolling on phones. */
+/* Feed cards no longer blur what is behind them. At .6px the blur was invisible but cost a backdrop pass per card. */
+html[data-mw-appearance] .post,html[data-mw-appearance] .mw-ad-slot{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+/* The fixed galaxy backdrop gets its own layer, so scrolling moves the feed over it instead of repainting it. */
+html[data-mw-appearance] body::before{transform:translateZ(0);backface-visibility:hidden}
+/* Touch devices: lighter blur on the fixed bars and sheets, which are redrawn on every scroll frame. */
+@media (hover:none) and (pointer:coarse){html[data-mw-appearance]{--mw-chrome-blur:8px}}
+/* The active compose planet pulsed with an animated drop-shadow filter (a full repaint every frame). It now pulses with transform only. */
+@media(prefers-reduced-motion:no-preference){.orbit .orb.on>span.mw-planet--compose{animation:mwStarPulseLite 2.8s ease-in-out infinite!important}}
+@keyframes mwStarPulseLite{50%{transform:scale(1.08)}}
+/* Off-screen feed cards skip layout and paint until they scroll near the viewport, so long feeds open instantly. */
+#feed>.post{content-visibility:auto;contain-intrinsic-size:auto 560px}
+/* Live button: the trail flickered its stroke 6 times a second under a double drop-shadow (a re-raster every frame),
+   and the globe flare animated box-shadow (a repaint every frame). Both are now static; the meteor still flies. */
+html[data-mw-appearance] body .top-actions>#composeBtn .mw-live-trail use{animation:none!important}
+@media (hover:none) and (pointer:coarse){html[data-mw-appearance] body .top-actions>#composeBtn .mw-live-trail{filter:drop-shadow(0 0 3px #ff6a00)}}
+html[data-mw-appearance] body .top-actions>#composeBtn .mw-live-globe-sphere{animation:none!important}
+/* Loading shimmer moved a background (repaint) every frame; a cheap opacity pulse reads the same. */
+[aria-busy="true"]{animation:mwBusyPulse 1.4s ease-in-out infinite!important;background-size:100% 100%!important}
+@keyframes mwBusyPulse{50%{opacity:.6}}
+/* Lite mode (low-end phones, 2G, Data Saver): no decorative loops at all and no glass blur anywhere. */
+html[data-mw-lite] :is(.orbit .orb>span,.orbit .orb>span::before,.orbit .orb>span::after,.mw-globe-sphere,.mw-globe-sphere::before,#composeBtn .mw-live-globe-map,#composeBtn svg *){animation:none!important}
+html[data-mw-lite] *{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+/* Slow networks (Data Saver, 2G/3G, set by media-images.js): the galaxy backdrops fall back to the plain image under a darker overlay. */
+html[data-mw-net="slow"][data-mw-appearance="galaxy"] body::before{background:linear-gradient(180deg,rgba(2,6,23,.3),rgba(2,6,23,.5)),url('/milkyway/backgrounds/app-background.webp') center/cover no-repeat #0F172A}
+html[data-mw-net="slow"][data-mw-appearance="galaxy"] #mwLivePage.mw-live-page{background:linear-gradient(180deg,rgba(2,6,23,.25),rgba(2,6,23,.5)),url('/milkyway/backgrounds/live-background.webp') center/cover no-repeat #0F172A!important}
+/* Feed skeleton: shown instantly from the saved app shell while the first posts arrive. */
+.mw-skeleton{display:grid;gap:14px}
+.mw-skeleton-card{display:grid;grid-template-columns:42px 1fr;gap:10px 12px;padding:14px;border-radius:18px;background:rgba(127,160,210,.1);border:1px solid rgba(127,160,210,.14)}
+.mw-skeleton-card>*{display:block;border-radius:10px;background:rgba(127,160,210,.2)}
+.mw-skeleton-card>i{width:42px;height:42px;border-radius:50%}
+.mw-skeleton-card>b{align-self:center;width:48%;height:14px}
+.mw-skeleton-card>span{grid-column:1/-1;height:min(52vw,260px);border-radius:14px}
+html[data-mw-appearance="sunlight"] .mw-skeleton-card,html[data-mw-appearance="light"] .mw-skeleton-card{background:rgba(15,23,42,.05);border-color:rgba(15,23,42,.08)}
+html[data-mw-appearance="sunlight"] .mw-skeleton-card>*,html[data-mw-appearance="light"] .mw-skeleton-card>*{background:rgba(15,23,42,.09)}

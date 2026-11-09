@@ -1,0 +1,76 @@
+/* v35.5 Cosmos: planet navigation, account avatar orb and shared UI polish. Loaded last. */
+
+/* ---------- Bottom navigation: each tab is its own miniature celestial body ---------- */
+html[data-mw-appearance] .orbit .orb>span.mw-planet.mw-planet{position:relative;isolation:isolate;display:grid;place-items:center;width:36px;height:36px;margin-bottom:3px;border:0!important;border-radius:50%;background:none!important;color:#fff!important;text-shadow:none!important;font-size:.95rem;font-weight:900;line-height:1;box-shadow:inset -5px -6px 9px rgba(0,0,0,.5),inset 2px 2px 5px rgba(255,255,255,.28),0 0 10px var(--mw-planet-glow,rgba(96,165,250,.35))!important;transition:transform .25s var(--mw-ease,ease),box-shadow .25s var(--mw-ease,ease)}
+html[data-mw-appearance] .orbit .orb>span.mw-planet.mw-planet:before{content:"";position:absolute;inset:0;z-index:-1;border-radius:50%;background:var(--mw-planet-surface);background-size:cover;pointer-events:none}
+html[data-mw-appearance] .orbit .orb>span.mw-planet.mw-planet:after{content:"";position:absolute;inset:auto;left:-6px;right:-6px;top:50%;height:10px;margin-top:-5px;z-index:-2;border:0;border-radius:50%;background:var(--mw-planet-ring,none);transform:rotate(-22deg);pointer-events:none;animation:none}
+.orbit .orb>span.mw-planet svg{width:17px;height:17px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 1px 1.5px rgba(0,0,0,.65))}
+
+/* Orbit: a spiral galaxy with a glowing core */
+.orbit .mw-planet--feed{--mw-planet-glow:rgba(167,139,250,.55);--mw-planet-surface:radial-gradient(circle at 50% 50%,#fffbea 0 7%,rgba(253,230,138,.85) 13%,transparent 34%),conic-gradient(from 30deg,#1e1b4b,#7c3aed 12%,#1e3a8a 24%,#c084fc 37%,#172554 50%,#60a5fa 62%,#2e1065 75%,#a78bfa 88%,#1e1b4b),#0b0820}
+/* Search: an ice giant with a faint crystal ring */
+/* Post: a young golden star with a corona */
+.orbit .mw-planet--compose{--mw-planet-glow:rgba(250,204,21,.7);--mw-planet-surface:radial-gradient(circle at 40% 36%,#fffbe6 0 12%,#fde047 32%,#f59e0b 62%,#9a3412 96%)}
+.orbit .orb>span.mw-planet--compose svg{stroke:#3b1d00;filter:drop-shadow(0 0 2px rgba(255,251,230,.8))}
+/* Messages: an ocean world with drifting clouds */
+.orbit .mw-planet--messages{--mw-planet-glow:rgba(45,212,191,.5);--mw-planet-surface:radial-gradient(ellipse 60% 22% at 62% 34%,rgba(255,255,255,.4),transparent 70%),radial-gradient(ellipse 50% 18% at 32% 70%,rgba(255,255,255,.28),transparent 70%),radial-gradient(circle at 30% 28%,#e6fffb 0 8%,#2dd4bf 30%,#0e7490 62%,#062a3a 90%)}
+/* Alerts: a red desert planet */
+.orbit .mw-planet--notifications{--mw-planet-glow:rgba(251,146,60,.5);--mw-planet-surface:radial-gradient(circle at 68% 64%,rgba(67,20,7,.55) 0 9%,transparent 11%),radial-gradient(circle at 36% 70%,rgba(67,20,7,.4) 0 6%,transparent 8%),radial-gradient(circle at 32% 28%,#ffe4cc 0 8%,#fb923c 30%,#c2410c 60%,#431407 92%)}
+/* My Account: a ringed violet world, replaced by the member's photo once signed in */
+.orbit .mw-planet--profile{--mw-planet-glow:rgba(232,121,249,.5);--mw-planet-surface:repeating-linear-gradient(8deg,transparent 0 4px,rgba(255,255,255,.08) 4px 6px),radial-gradient(circle at 32% 28%,#fdf4ff 0 8%,#e879f9 30%,#7e22ce 62%,#2e1065 92%);--mw-planet-ring:radial-gradient(closest-side,transparent 72%,rgba(253,224,71,.95) 77%,rgba(250,204,21,.35) 90%,transparent)}
+html[data-mw-appearance] .orbit .orb>span.mw-planet--profile.has-avatar.has-avatar{overflow:visible;box-shadow:0 0 0 2px rgba(253,224,71,.85),0 0 12px rgba(232,121,249,.55)!important}
+.orbit .mw-planet--profile.has-avatar img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block}
+.orbit .mw-planet--profile.is-initial{font-size:1rem;letter-spacing:0;text-shadow:0 1px 2px rgba(0,0,0,.6)!important}
+
+/* Active tab: the body lifts, brightens and gains an accent halo; the galaxy turns slowly */
+html[data-mw-appearance] .orbit .orb.on>span.mw-planet.mw-planet{transform:translateY(-2px) scale(1.1);box-shadow:inset -5px -6px 9px rgba(0,0,0,.4),inset 2px 2px 5px rgba(255,255,255,.34),0 0 0 2px var(--mw-accent,#FACC15),0 0 16px var(--mw-planet-glow)!important}
+html[data-mw-appearance] .orbit .orb.on>span.mw-planet--profile.has-avatar.has-avatar{box-shadow:0 0 0 2px var(--mw-accent,#FACC15),0 0 16px rgba(232,121,249,.65)!important}
+html[data-mw-appearance] .orbit .orb.on{color:var(--mw-accent,#FACC15)!important;background:transparent!important}
+.orbit .orb:active>span.mw-planet{transform:scale(.94)}
+@media(prefers-reduced-motion:no-preference){.orbit .orb.on>span.mw-planet--feed:before{animation:mwGalaxySpin 14s linear infinite}.orbit .orb.on>span.mw-planet--compose{animation:mwStarPulse 2.8s ease-in-out infinite}}
+@keyframes mwGalaxySpin{to{transform:rotate(360deg)}}
+@keyframes mwStarPulse{50%{filter:brightness(1.12) drop-shadow(0 0 6px rgba(250,204,21,.6))}}
+@media(max-width:390px){html[data-mw-appearance] .orbit .orb>span.mw-planet.mw-planet{width:32px;height:32px}.orbit .orb>span.mw-planet svg{width:15px;height:15px}}
+.orbit .orb .badge{z-index:4}
+
+
+/* ---------- Polish: one corner, padding and focus language for containers, menus and buttons ---------- */
+:root{--mw-r-control:14px;--mw-r-card:22px;--mw-r-popover:18px}
+.post,.mw-ad-slot,.creative-main-btn,.creative-choice,.story-card,.mw-business-placement{border-radius:var(--mw-r-card)!important}
+.sheet-bg .sheet,.modal-bg .sheet{border-radius:26px!important}
+.mw-menu-panel{border-radius:24px!important;padding:18px!important}
+.toast{border-radius:16px!important;padding:12px 16px!important}
+:is(.btn,.act,.tab,.icon-btn,.share-option,#accountTopBtn){border-radius:var(--mw-r-control)!important}
+:is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]),textarea){border-radius:var(--mw-r-control)!important}
+select:not(.mw-language-native){-webkit-appearance:none;appearance:none;min-height:44px;padding:10px 38px 10px 14px!important;border-radius:var(--mw-r-control)!important;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23a8b8d8' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")!important;background-repeat:no-repeat!important;background-position:right 14px center!important;background-size:12px 8px!important;cursor:pointer}
+html:not(:is([data-mw-appearance="light"],[data-mw-appearance="sunlight"])) select option{background:#0F172A;color:#F8FAFC}
+
+/* Dropdown popovers (Language, Appearance, Guest seats) */
+.mw-language-trigger{border-radius:var(--mw-r-control)!important}
+.mw-language-options{padding:6px!important;gap:3px;border-radius:var(--mw-r-popover)!important;border-color:var(--mw-glass-line,rgba(153,187,226,.4))!important;box-shadow:0 14px 34px rgba(2,6,23,.5),0 0 0 1px rgba(255,255,255,.03) inset!important;animation:mwPopoverIn .16s var(--mw-ease,ease)}
+.mw-language-options button{border-radius:12px!important;padding:10px 14px!important}
+.mw-language-options button[aria-selected="true"]{background:var(--mw-accent-soft,rgba(65,136,227,.22))!important;border-color:color-mix(in srgb,var(--mw-accent,#99bbe2) 45%,transparent)!important;color:var(--mw-accent,#a9d5ff)!important}
+.mw-language-options button:hover{background:rgba(148,163,184,.14)}
+@keyframes mwPopoverIn{from{opacity:0;transform:translateY(-4px) scale(.98)}}
+html:is([data-mw-appearance="light"],[data-mw-appearance="sunlight"]) .mw-language-options{background:rgba(255,255,255,.97)!important}
+html:is([data-mw-appearance="light"],[data-mw-appearance="sunlight"]) .mw-language-options button{color:var(--mw-ink)!important}
+html:is([data-mw-appearance="light"],[data-mw-appearance="sunlight"]) .mw-language-trigger{background:#fff!important;color:var(--mw-ink)!important;border-color:var(--line)!important}
+/* Settings: the Appearance picker uses the same floating menu, aligned to the right edge of its row */
+.setting-row .mw-select-dropdown{margin-left:auto}
+.setting-row .mw-select-trigger{min-width:170px;justify-content:space-between;padding:9px 14px!important;background:var(--mw-glass-strong,rgba(12,25,48,.82))!important;color:var(--mw-ink,#e8f2ff)!important;border-color:var(--mw-glass-line,rgba(153,187,226,.36))!important}
+.setting-row .mw-select-caret{opacity:.8;font-size:.8rem;transition:transform .2s}
+.setting-row .mw-select-trigger[aria-expanded="true"] .mw-select-caret{transform:rotate(180deg)}
+.setting-row .mw-select-options{left:auto!important;right:0;width:auto!important;min-width:210px;max-height:min(320px,55vh,var(--mw-popover-room,55vh));overflow-y:auto;background:var(--mw-glass-strong,rgba(8,20,40,.96))!important}
+.setting-row .mw-select-options.open-up{top:auto;bottom:calc(100% + 7px)}
+html[dir="rtl"] .setting-row .mw-select-dropdown{margin-left:0;margin-right:auto}
+html[dir="rtl"] .setting-row .mw-select-options{right:auto;left:0!important}
+@media(prefers-reduced-motion:reduce){.mw-language-options{animation:none}}
+html[data-mw-appearance] :is(input[type="checkbox"],input[type="radio"],input[type="range"]){accent-color:var(--mw-accent,#0a84ff)}
+
+/* My Account bottom button: show the signed-in member's avatar and name without clipping the navigation. */
+html body .orbit .orb[data-tab="profile"]{min-width:0;max-width:104px;padding-inline:2px}
+html body .orbit .orb[data-tab="profile"] b{display:block;max-width:94px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.68rem;line-height:1.15;text-align:center}
+html body .orbit .mw-planet--profile.has-avatar{overflow:hidden!important}
+html body .orbit .mw-planet--profile.has-avatar:before{opacity:0}
+html body .orbit .mw-planet--profile.has-avatar:after{display:none}
+html body .orbit .mw-planet--profile.has-avatar img{position:relative;z-index:1;width:100%;height:100%;border-radius:50%;object-fit:cover}

@@ -1,0 +1,13 @@
+name = "milkyway"
+pages_build_output_dir = "dist"
+compatibility_date = "2025-09-01"
+# Gives the api/ handlers process.env, Buffer and node:crypto.
+compatibility_flags = ["nodejs_compat"]
+
+# Public values only. Set the secrets with:
+#   wrangler pages secret put LIVEKIT_API_KEY --project-name milkyway
+#   wrangler pages secret put LIVEKIT_API_SECRET --project-name milkyway
+#   wrangler pages secret put SUPABASE_ANON_KEY --project-name milkyway
+[vars]
+LIVEKIT_URL = "wss://masiyatunda-milkyway-live-mgh6b1np.livekit.cloud"
+SUPABASE_URL = "https://wpclkhgizbvxuvbhbwzs.supabase.co"

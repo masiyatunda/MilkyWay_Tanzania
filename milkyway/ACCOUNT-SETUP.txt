@@ -1,0 +1,71 @@
+MILKYWAY PLATFORM V4 — SETUP
+
+1. Upload this entire website package to your hosting, preserving:
+   /milkyway/index.html
+   /milkyway/moderation.html
+   /milkyway/platform.sql
+   /milkyway/manifest.json
+   /milkyway/sw.js
+   icons and splash files.
+
+2. Supabase:
+   Open SQL Editor in the same project used by MilkyWay.
+   Run the ENTIRE file: milkyway/platform.sql
+   Do not use an old mw_posts SQL instead of this file.
+
+3. Authentication:
+   Supabase Dashboard -> Authentication -> Providers -> Email.
+   Enable Email provider.
+   Email confirmation is intentionally disabled in this version; users can register and sign in immediately. Keep the Email provider enabled.
+   Add https://masiyatunda.com/milkyway/ to the allowed redirect/site URLs if required by your Auth settings.
+
+4. Storage:
+   The app uses the existing public bucket named "portfolio".
+   User media paths:
+     milkyway/<user-id>/...
+   Profile pictures:
+     milkyway-avatars/<user-id>/...
+   The SQL includes authenticated upload/update/delete policies for these paths.
+
+5. Admin:
+   After your own account is created, run this in Supabase SQL Editor, replacing the email:
+
+   update public.mw_profiles p
+   set is_admin = true
+   from auth.users u
+   where p.id = u.id and u.email = 'YOUR-ADMIN-EMAIL@example.com';
+
+   Then open:
+   https://masiyatunda.com/milkyway/moderation.html
+
+6. Platform features included:
+   - Email/password registration and login
+   - Logout and password reset
+   - Personal profile
+   - Username and bio
+   - Profile photo
+   - Public user profiles
+   - User search
+   - Follow / unfollow
+   - Following feed
+   - Image and video posts
+   - Light / Truth / Freedom signals
+   - Echo comments
+   - Saved posts
+   - Share links
+   - Notifications for follows, signals and echoes
+   - Block / unblock
+   - Report posts/users
+   - Edit and delete your own posts
+   - Change email and password
+   - Admin moderation page
+   - PWA install support
+
+7. Existing Masiyatunda website:
+   The main website is preserved. MilkyWay remains under /milkyway/ and uses the same Supabase project.
+
+8. Security:
+   Never put a Supabase service_role/secret key in the HTML. The browser must use only the publishable/anon key. RLS policies protect user-owned data.
+
+
+VERSION 9: Upload the contents of this deploy folder to your hosting root. The milkyway folder must be directly under the website root. Email confirmation is intentionally disabled in the app UI. Run platform.sql once in Supabase SQL Editor before using the feed.

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1800" viewBox="0 0 1600 1800">
+  <defs>
+    <radialGradient id="blue"><stop stop-color="#3469dd" stop-opacity=".45"/><stop offset=".4" stop-color="#233b83" stop-opacity=".3"/><stop offset="1" stop-color="#091327" stop-opacity="0"/></radialGradient>
+    <radialGradient id="violet"><stop stop-color="#8260c4" stop-opacity=".4"/><stop offset=".4" stop-color="#3c296e" stop-opacity=".3"/><stop offset="1" stop-color="#091327" stop-opacity="0"/></radialGradient>
+    <radialGradient id="silver"><stop stop-color="#899be0" stop-opacity=".24"/><stop offset=".35" stop-color="#455fbd" stop-opacity=".14"/><stop offset="1" stop-color="#091327" stop-opacity="0"/></radialGradient>
+    <radialGradient id="shadow"><stop stop-color="#020612" stop-opacity=".9"/><stop offset="1" stop-color="#030818" stop-opacity="0"/></radialGradient>
+    <filter id="clouds" x="0" y="0" width="1600" height="1800" filterUnits="userSpaceOnUse">
+      <feTurbulence type="fractalNoise" baseFrequency=".006 .012" numOctaves="2" seed="17" result="texture"/>
+      <feColorMatrix in="texture" type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 1.8 0 0 0 -.35" result="density"/>
+      <feComposite in="SourceGraphic" in2="density" operator="in"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="1800" fill="#030818"/>
+  <g filter="url(#clouds)">
+    <g transform="rotate(-32 800 900)">
+      <ellipse cx="780" cy="720" rx="1100" ry="380" fill="url(#blue)"/>
+      <ellipse cx="480" cy="850" rx="600" ry="260" fill="url(#violet)"/>
+      <ellipse cx="1110" cy="500" rx="560" ry="280" fill="url(#blue)"/>
+      <ellipse cx="1040" cy="700" rx="610" ry="150" fill="url(#silver)"/>
+      <ellipse cx="300" cy="1190" rx="550" ry="380" fill="url(#violet)"/>
+      <ellipse cx="1140" cy="1030" rx="620" ry="230" fill="url(#violet)"/>
+      <ellipse cx="480" cy="510" rx="490" ry="180" fill="url(#silver)"/>
+    </g>
+  </g>
+  <ellipse cx="780" cy="660" rx="280" ry="90" fill="url(#shadow)" transform="rotate(-32 780 660)"/>
+  <ellipse cx="1020" cy="1130" rx="380" ry="120" fill="url(#shadow)" transform="rotate(-25 1020 1130)"/>
+</svg>

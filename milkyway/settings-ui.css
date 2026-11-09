@@ -1,0 +1,60 @@
+/* Settings sheet: grouped glass cards, switch toggles, styled slider and a sticky Close/Save bar. Follows the active theme accent. */
+#settingsSheet .sheet.mws-sheet{position:relative;padding:0 16px!important;display:flex;flex-direction:column;gap:14px;scrollbar-width:thin}
+#settingsSheet .mws-sheet>.close{position:absolute;top:14px;right:14px;margin:0;z-index:3;width:36px;height:36px;min-height:36px;border-radius:50%;display:grid;place-items:center;background:var(--card)!important;border:1px solid var(--line)!important;color:var(--text)!important;font-size:1.25rem;line-height:1}
+#settingsSheet .mws-head{padding:18px 48px 0 2px}
+html[dir="rtl"] #settingsSheet .mws-head{padding:18px 2px 0 48px}
+html[dir="rtl"] #settingsSheet .mws-sheet>.close{right:auto;left:14px}
+#settingsSheet .mws-head h2{margin:0 0 4px!important;font-size:1.3rem!important;letter-spacing:-.01em}
+#settingsSheet .mws-head p{margin:0;font-size:.8rem;color:var(--muted)}
+#settingsSheet .mws-group h3{margin:0 4px 7px!important;font-size:.7rem!important;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)!important}
+#settingsSheet .mws-card{border-radius:18px;padding:2px 14px;background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.025));border:1px solid var(--mw-glass-line,var(--line));box-shadow:inset 0 1px rgba(255,255,255,.06);-webkit-backdrop-filter:blur(14px) saturate(120%);backdrop-filter:blur(14px) saturate(120%)}
+html:is([data-mw-appearance="light"],[data-mw-appearance="sunlight"]) #settingsSheet .mws-card{background:rgba(255,255,255,.72);box-shadow:0 6px 20px rgba(16,48,74,.06)}
+#settingsSheet .mws-card>.setting-row{flex-wrap:nowrap!important;align-items:center!important;min-height:54px;padding:10px 0!important;border-bottom:1px solid var(--line)!important;font-size:.9rem!important;font-weight:600;cursor:pointer}
+#settingsSheet .mws-card>.setting-row:last-child{border-bottom:0!important}
+#settingsSheet .mws-card>.setting-row>span:first-child{flex:1;min-width:0}
+#settingsSheet .mws-card>.mws-slider-row{flex-direction:column;align-items:stretch!important;gap:10px;cursor:default}
+#settingsSheet .mws-help{margin:-4px 0 12px!important;font-size:.76rem!important;line-height:1.45;color:var(--muted)!important}
+#settingsSheet .mws-subhead{margin:4px 0 8px;font-size:.7rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+#settingsSheet .mws-card>.mws-help:first-child{margin-top:12px!important}
+#settingsSheet .mws-links{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+#settingsSheet .mws-links .btn{flex:1 1 auto;min-height:38px!important;padding:7px 14px!important;border-radius:999px!important;font-size:.8rem;font-weight:700;background:var(--mw-accent-soft,rgba(255,255,255,.08))!important;border:1px solid var(--line)!important;color:var(--text)!important}
+
+/* Switch toggles */
+#settingsSheet .setting-row input[type=checkbox]{-webkit-appearance:none;appearance:none;flex:0 0 auto;position:relative;width:48px!important;height:28px!important;margin:0;padding:0!important;border-radius:999px!important;background:rgba(148,163,184,.28)!important;border:1px solid rgba(255,255,255,.14)!important;box-shadow:inset 0 1px 3px rgba(0,0,0,.25);cursor:pointer;transition:background .22s ease,border-color .22s ease}
+#settingsSheet .setting-row input[type=checkbox]::before{content:"";position:absolute;top:2px;left:2px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.3);transition:transform .22s cubic-bezier(.3,.7,.4,1.2)}
+#settingsSheet{--mws-on:var(--mw-accent,#3d9cff)}
+html:is([data-mw-appearance="light"],[data-mw-appearance="sunlight"]) #settingsSheet{--mws-on:var(--mw-electric,#0a84ff)}
+html:is([data-mw-appearance="light"],[data-mw-appearance="sunlight"]) #settingsSheet .setting-row input[type=checkbox]{background:rgba(100,116,139,.22)!important;border-color:rgba(100,116,139,.18)!important}
+html #settingsSheet .setting-row input[type=checkbox]:checked{background:var(--mws-on)!important;border-color:transparent!important}
+html:is([data-mw-appearance="light"],[data-mw-appearance="sunlight"]) #settingsSheet .setting-row input[type=checkbox]:checked{background:var(--mws-on)!important}
+
+#settingsSheet .setting-row input[type=checkbox]:checked::before{transform:translateX(20px)}
+html[dir="rtl"] #settingsSheet .setting-row input[type=checkbox]:checked::before{transform:translateX(-20px)}
+html[dir="rtl"] #settingsSheet .setting-row input[type=checkbox]::before{left:auto;right:2px}
+#settingsSheet .setting-row input[type=checkbox]:focus-visible{outline:2px solid var(--mws-on);outline-offset:3px}
+#settingsSheet .setting-row input[type=checkbox]:disabled{opacity:.45;cursor:not-allowed}
+
+/* Volume slider */
+#settingsSheet input[type=range]{-webkit-appearance:none;appearance:none;width:100%!important;height:6px;margin:4px 0 6px;padding:0!important;border:0!important;border-radius:999px;background:linear-gradient(90deg,var(--mws-on) var(--mws-fill,70%),rgba(148,163,184,.28) var(--mws-fill,70%))!important;cursor:pointer}
+#settingsSheet input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#fff;border:0;box-shadow:0 0 0 4px var(--mw-accent-soft,rgba(61,156,255,.25)),0 2px 8px rgba(0,0,0,.35)}
+#settingsSheet input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:#fff;border:0;box-shadow:0 0 0 4px var(--mw-accent-soft,rgba(61,156,255,.25)),0 2px 8px rgba(0,0,0,.35)}
+#settingsSheet input[type=range]::-moz-range-track{background:transparent}
+html[dir="rtl"] #settingsSheet input[type=range]{background:linear-gradient(270deg,var(--mws-on) var(--mws-fill,70%),rgba(148,163,184,.28) var(--mws-fill,70%))!important}
+
+/* Dropdowns inside rows: the open menu sits above the following glass cards */
+#settingsSheet .mws-group:has(.mw-select-options:not([hidden]),.mw-language-options:not([hidden])){position:relative;z-index:6}
+#settingsSheet .mws-card .mw-select-trigger,#settingsSheet .mws-card .mw-language-trigger{min-height:38px!important;border-radius:999px!important}
+#settingsSheet .mws-card .mw-select-trigger{min-width:150px}
+
+/* Messages and the sticky action bar */
+#settingsSheet .mws-message{margin:0!important;padding:10px 14px;border-radius:14px;font-size:.8rem;background:var(--card);border:1px solid var(--line)}
+#settingsSheet .mws-message[hidden]{display:none!important}
+#settingsSheet .mws-message[data-tone="error"]{color:#fecaca!important;background:rgba(244,63,94,.12);border-color:rgba(244,63,94,.35)}
+html:is([data-mw-appearance="light"],[data-mw-appearance="sunlight"]) #settingsSheet .mws-message[data-tone="error"]{color:#9f1239!important}
+#settingsSheet .mws-actions{position:sticky;bottom:0;z-index:2;display:grid!important;grid-template-columns:1fr 1.4fr;gap:10px;margin:2px -16px 0!important;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(180deg,transparent,var(--mw-glass-strong,rgba(10,20,40,.94)) 28%);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+#settingsSheet .mws-actions .btn{min-height:46px;border-radius:14px!important}
+/* Rows that open an existing screen (Edit profile, Change profile picture, Galaxy Settings). */
+#settingsSheet .mws-card>.mws-nav-row{width:100%;background:transparent!important;border:0;border-bottom:1px solid var(--line)!important;border-radius:0!important;box-shadow:none!important;color:var(--text)!important;font:inherit;text-align:start}
+#settingsSheet .mws-card>.mws-nav-row:focus-visible{outline:2px solid var(--mw-accent,#3d9cff);outline-offset:2px}
+#settingsSheet .mws-nav-chevron{width:18px;height:18px;flex:0 0 18px;fill:none;stroke:var(--muted);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+html[dir="rtl"] #settingsSheet .mws-nav-chevron{transform:scaleX(-1)}

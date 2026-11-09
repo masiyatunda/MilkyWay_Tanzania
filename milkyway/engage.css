@@ -1,0 +1,123 @@
+/* Inline comments, emoji and tag pickers, composer extras, ad cards, account sheets and the clean toolbar. Uses theme.css tokens. */
+
+.mw-clean-top.mw-signed-in #accountTopBtn{display:none!important}
+.top .top-actions{align-items:center;gap:6px}
+.mw-top-live{display:inline-flex;align-items:center;gap:6px;max-width:44vw;height:36px;padding:0 12px 0 4px;border-radius:var(--mw-r-pill);border:1px solid rgba(229,56,79,.35);background:var(--mw-glass-strong);color:var(--mw-ink);font-weight:800;font-size:.75rem;cursor:pointer;box-shadow:0 4px 14px rgba(229,56,79,.18)}
+.mw-top-live[hidden]{display:none}
+.mw-top-live .mw-live-avatar{width:28px!important;height:28px!important;min-width:28px;border-radius:50%;overflow:hidden;margin:0!important;border:2px solid var(--mw-danger)}
+.mw-top-live .mw-live-avatar img{width:100%;height:100%;object-fit:cover}
+.mw-top-live .dot{width:10px;height:10px;margin-left:8px;border-radius:50%;background:var(--mw-danger);animation:mwPulse 1.4s infinite}
+.mw-top-live b{white-space:nowrap;flex:none;background:var(--mw-danger);color:#fff;border-radius:6px;padding:2px 6px;font-size:.62rem;letter-spacing:.06em}
+.mw-top-live span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+@keyframes mwPulse{50%{opacity:.35}}
+
+
+
+
+
+
+
+.mw-inline-comments{display:flex;flex-direction:column;min-height:0;flex:1}
+.mw-inline-comments>header{position:relative;display:flex;align-items:center;justify-content:space-between;padding:14px 0 8px;margin-bottom:4px;border-bottom:1px solid var(--line);color:var(--mw-electric-deep)}
+
+.mw-inline-close{border:0;background:transparent;font-size:1.5rem;line-height:1;cursor:pointer;color:var(--muted);padding:4px 10px;min-height:40px}
+.mw-comment-list{flex:1;min-height:90px;max-height:none;overflow:auto;overscroll-behavior:contain;display:grid;align-content:start;gap:8px;padding:6px 2px}
+
+.mw-comment{background:var(--mw-glass);border:1px solid var(--line);border-radius:var(--mw-r-sm);padding:8px 10px}
+.mw-comment.mw-reply{margin-left:18px;border-left:3px solid var(--mw-sky)}
+.mw-comment header{display:flex;gap:8px;align-items:baseline}
+.mw-comment header small{color:var(--muted);font-size:.7rem}
+.mw-comment-body{margin:4px 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.mw-comment-media,.mw-post-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:6px;margin:6px 0}
+.mw-comment-media img,.mw-comment-media video{width:100%;max-height:220px;object-fit:cover;border-radius:10px;background:var(--mw-platinum)}
+.mw-comment-tools{display:flex;gap:4px;flex-wrap:wrap}
+.mw-comment-tools button{border:0;background:transparent;color:var(--mw-electric-deep);font-weight:700;font-size:.74rem;padding:4px 6px;border-radius:8px;cursor:pointer}
+.mw-comment-tools button.danger{color:var(--danger)}
+.mw-comment-edit textarea{width:100%;box-sizing:border-box}
+.mw-mention{border:0;background:transparent;padding:0;color:var(--mw-electric-deep);font-weight:800;cursor:pointer;font:inherit}
+.mw-comment-composer{position:sticky;bottom:0;margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);background:var(--mw-glass-strong);border-radius:var(--mw-r-sm)}
+.mw-comment-input{width:100%;box-sizing:border-box;min-height:56px;resize:vertical;border-radius:var(--mw-r-sm);border:1px solid var(--line);padding:10px;font:inherit}
+.mw-comment-actions{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:6px}
+.mw-tool{border:1px solid var(--line);background:var(--mw-ice);color:var(--mw-ink);border-radius:var(--mw-r-pill);padding:7px 11px;font-weight:700;font-size:.78rem;cursor:pointer;min-height:36px}
+.mw-comment-send{margin-left:auto;min-height:38px}
+.mw-comment-send:disabled{opacity:.6}
+.mw-comment-status{margin:4px 0 0;font-size:.78rem;color:var(--muted)}
+.mw-reply-bar{display:flex;justify-content:space-between;align-items:center;font-size:.78rem;color:var(--mw-electric-deep);background:var(--mw-ice);border-radius:8px;padding:4px 8px;margin-bottom:6px}
+.mw-reply-bar[hidden]{display:none}
+.mw-reply-bar button{border:0;background:transparent;cursor:pointer;font-size:1rem}
+.mw-attach-previews{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.mw-attach-preview,.mw-compose-preview{position:relative}
+.mw-attach-preview img,.mw-attach-preview video{width:72px;height:72px;object-fit:cover;border-radius:10px}
+.mw-attach-preview button,.mw-attach-remove{position:absolute;top:4px;right:4px;width:26px;height:26px;border-radius:50%;border:0;background:rgba(6,20,51,.75);color:#fff;cursor:pointer;line-height:1}
+
+/* Emoji and people pickers */
+.mw-emoji-panel,.mw-tag-panel{margin-top:6px;border:1px solid var(--mw-glass-line);border-radius:var(--mw-r-md);background:var(--mw-glass-strong);box-shadow:var(--mw-glow);padding:8px}
+.mw-emoji-panel[hidden],.mw-tag-panel[hidden]{display:none}
+.mw-emoji-search,.mw-tag-panel input{width:100%;box-sizing:border-box;border-radius:var(--mw-r-pill);border:1px solid var(--line);padding:8px 12px;margin-bottom:6px}
+.mw-emoji-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(40px,1fr));gap:2px;max-height:200px;overflow:auto}
+.mw-emoji-grid button{font-size:1.5rem;line-height:1;border:0;background:transparent;border-radius:10px;padding:6px 0;cursor:pointer;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
+.mw-emoji-grid button:hover,.mw-emoji-grid button:focus-visible{background:var(--mw-ice)}
+.mw-tag-results{display:grid;gap:4px;max-height:200px;overflow:auto}
+.mw-tag-result{display:flex;gap:8px;align-items:baseline;text-align:left;border:0;background:var(--mw-platinum);border-radius:10px;padding:8px 10px;cursor:pointer}
+.mw-tag-result small{color:var(--muted)}
+.mw-tag-chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.mw-tag-chip{display:inline-flex;align-items:center;gap:4px;background:var(--mw-ice);border:1px solid var(--mw-glass-line);color:var(--mw-electric-deep);border-radius:var(--mw-r-pill);padding:3px 4px 3px 10px;font-size:.76rem;font-weight:700}
+.mw-tag-chip button{border:0;background:transparent;cursor:pointer;font-size:.95rem;padding:0 4px}
+
+/* Post extras */
+.mw-post-extras{padding:0 14px}
+.mw-post-gallery img,.mw-post-gallery video{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;background:var(--mw-platinum)}
+.mw-post-location,.mw-post-tags{margin:6px 0;font-size:.82rem;color:var(--muted)}
+
+/* Composer */
+.mw-composer-extras{margin:8px 0;display:grid;gap:6px}
+.mw-composer-extras label{display:grid;gap:4px}
+
+#mediaPreview.mw-compose-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
+.mw-compose-preview img,.mw-compose-preview video{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;background:var(--mw-platinum)}
+.mw-attach-state{position:absolute;left:6px;bottom:6px;background:rgba(255,255,255,.9);border-radius:8px;padding:2px 6px;font-size:.68rem;max-width:calc(100% - 12px)}
+.mw-attach-state:empty{display:none}
+
+/* Sponsored cards */
+.mw-ad-slot>header{display:flex!important;align-items:center;gap:8px}
+.mw-ad-badge{background:linear-gradient(135deg,var(--mw-gold),#ffd889);color:#4a3205;border-radius:8px;padding:3px 8px;font-size:.66rem;letter-spacing:.04em;text-transform:uppercase}
+.mw-ad-business{color:var(--mw-ink);font-size:.82rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mw-ad-dismiss{margin-left:auto;width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:var(--mw-glass-strong);cursor:pointer;font-size:1.1rem;color:var(--muted)}
+.mw-campaign-row{flex-wrap:wrap;gap:6px}
+.mw-campaign-row span{flex:1 1 100%}
+
+/* Account sheets */
+.mw-danger-box{border:1px solid rgba(229,56,79,.35);background:#fff5f6;border-radius:var(--mw-r-md);padding:10px 14px;margin-bottom:10px}
+.mw-danger-box ul,.mw-help-list{margin:6px 0 0 18px;padding:0;line-height:1.5}
+
+/* Post action bar: Comments, Share and the ••• options sit together on one compact line. */
+#feed .post .actions{display:flex;flex-wrap:nowrap;align-items:center;gap:6px;padding:6px 10px 10px;min-width:0}
+#feed .post .actions>.act{flex:0 1 auto;min-width:0;min-height:38px;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:6px 14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border:1px solid var(--line)!important;border-radius:999px!important;font-size:.8rem;line-height:1}
+#feed .post .actions>.act[data-share]::before{content:"↗";font-weight:900}
+#feed .post .actions>.mw-message-menu{flex:0 0 auto;margin-left:auto;position:relative;padding:0!important;background:none!important;border:0!important;box-shadow:none!important}
+#feed .post .actions>.mw-message-menu>summary{display:grid;place-items:center;min-width:46px;min-height:38px;padding:0 12px;box-sizing:border-box;border:1px solid var(--line);border-radius:999px;background:var(--mw-glass,transparent);color:var(--text);font-weight:900;letter-spacing:.1em;line-height:1}
+#feed .post .actions>.mw-message-menu[open]>summary{border-color:var(--mw-accent,var(--blue))}
+#feed .post .actions .mw-message-menu-items{position:absolute;right:0;bottom:calc(100% + 6px);z-index:6;min-width:200px;max-width:min(280px,calc(100vw - 40px));max-height:min(60vh,420px);overflow:auto;padding:5px;border:1px solid var(--line);border-radius:16px;background:var(--mw-glass-strong,var(--panel));box-shadow:0 14px 34px rgba(2,4,18,.55)}
+#feed .post .actions .mw-message-menu-items>button{display:block;width:100%;flex:none}
+/* Let the options popover rise above short posts instead of being clipped by the card. */
+#feed .post:has(.mw-message-menu[open]){overflow:visible;z-index:7}
+
+/* Post upload progress: a live 0–100% bar so a large upload never looks frozen. */
+.mw-upload-progress{margin:12px 0 2px;padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:var(--mw-glass,rgba(255,255,255,.04))}
+.mw-upload-progress[hidden]{display:none}
+.mw-upload-progress-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:7px;font-size:.8rem;color:var(--muted)}
+.mw-upload-progress-value{color:var(--text);font-size:.95rem;font-variant-numeric:tabular-nums}
+.mw-upload-progress-track{height:8px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden}
+.mw-upload-progress-fill{display:block;height:100%;width:0;border-radius:inherit;background:var(--mw-gradient,linear-gradient(90deg,#8B5CF6,#38BDF8));box-shadow:0 0 12px rgba(138,180,255,.55);transition:width .2s linear}
+.mw-attach-state{color:#0b1020;font-weight:800;font-variant-numeric:tabular-nums}
+@media(prefers-reduced-motion:reduce){.mw-upload-progress-fill{transition:none}}
+
+/* Offline: media not saved on the device yet gets one quiet line instead of an error */
+.post .mw-uncached{opacity:.55;filter:saturate(.6)}
+.post .mw-uncached-note{margin:6px 14px 0;padding:0;font-size:.74rem;line-height:1.35;color:var(--muted,#9fb0c8);text-align:center}
+/* Likes, saves, follows and comments made offline: shown at once, with a small dot until they have synced */
+[data-mw-pending]{position:relative}
+[data-mw-pending]::after{content:"";position:absolute;top:3px;right:3px;width:6px;height:6px;border-radius:50%;background:#f4c64e;opacity:.85;pointer-events:none}
+.mw-comment-pending,.echo.mw-comment-pending{opacity:.7}
+.mw-comment-pending header small,.echo.mw-comment-pending small{font-style:italic}

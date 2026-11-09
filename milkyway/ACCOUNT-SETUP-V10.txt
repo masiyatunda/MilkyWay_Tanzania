@@ -1,0 +1,13 @@
+MILKYWAY V10 — SETUP
+
+1. Deploy the package preserving /milkyway/.
+2. In the SAME Supabase project, run milkyway/platform-v10.sql. Keep messages.sql available only if your database does not already contain mw_messages; platform-v10 expects mw_messages to exist.
+3. Authentication: Email provider ON; Email Confirmations OFF. The app has no email-verification/resend flow.
+4. Storage: existing public bucket "portfolio". User media: milkyway/<user-id>/... and avatars: milkyway-avatars/<user-id>/....
+5. Admin: create your account, then set is_admin=true for your profile in SQL. Never put service_role in HTML.
+6. Admin moderation: moderation.html now supports report review plus account suspension/ban/deletion-request handling when the corresponding controls are enabled in the page.
+7. V10 hardening includes safer ID migration when legacy text IDs are valid UUIDs, RLS ownership checks, block-aware messaging/feed behavior, unread message state, rate limiting, upload limits, edit/delete own posts, media cleanup, account deletion requests, and search for users/posts.
+8. Actual deletion of auth.users must be done server-side (Edge Function/service-role) after an admin approves the request. The browser intentionally does not receive service_role.
+9. Backups/recovery and video transcoding are infrastructure tasks and should be configured separately in Supabase/hosting before large public-scale use.
+
+V11 additions: run platform-v10.sql again after deploying this build to create mw_stories and its RLS policies. Stories expire after 24 hours.

@@ -1,0 +1,7 @@
+{
+  "versionCode": 34,
+  "versionName": "34.0.0",
+  "url": "/milkyway/download/MilkyWay.apk",
+  "required": false,
+  "notes": "Rebuilt Capacitor Android app with canonical HTTPS loading and Back/Exit controls."
+}

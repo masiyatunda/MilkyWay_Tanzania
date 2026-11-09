@@ -1,0 +1,155 @@
+/* Portrait video cards use an immersive feed layout while every other post keeps its normal flow. */
+#feed>.post:has(>.mw-media-frame[data-kind="video"]){
+  position:relative;
+  isolation:isolate;
+  width:100%;
+  height:min(78dvh,780px);
+  min-height:460px;
+  margin-inline:auto;
+  overflow:hidden;
+  border:0;
+  border-radius:22px;
+  background:#05070c;
+  box-shadow:0 12px 34px rgba(0,0,0,.3);
+  color:#fff;
+}
+#feed>.post:has(>.mw-media-frame[data-kind="video"])::after{
+  position:absolute;
+  z-index:1;
+  inset:0;
+  background:linear-gradient(180deg,rgba(0,0,0,.44),transparent 25%,transparent 54%,rgba(0,0,0,.72));
+  content:"";
+  pointer-events:none;
+}
+#feed>.post:has(>.mw-media-frame[data-kind="video"])>.mw-media-frame{
+  position:absolute;
+  z-index:0;
+  inset:0;
+  width:100%;
+  height:100%;
+  margin:0!important;
+  border-radius:0!important;
+  background:#05070c;
+}
+#feed>.post:has(>.mw-media-frame[data-kind="video"])>.mw-media-frame>.post-media{
+  width:100%;
+  height:100%;
+  max-height:none;
+  border-radius:0!important;
+  object-fit:cover;
+}
+#feed>.post:has(>.mw-media-frame[data-kind="video"])>.post-head{
+  position:absolute;
+  z-index:2;
+  top:0;
+  left:0;
+  right:0;
+  min-width:0;
+  padding:calc(14px + env(safe-area-inset-top,0px)) 14px 12px;
+  color:#fff;
+}
+#feed>.post:has(>.mw-media-frame[data-kind="video"])>.post-head .post-meta strong,
+#feed>.post:has(>.mw-media-frame[data-kind="video"])>.post-head .post-meta span{
+  color:#fff!important;
+  text-shadow:0 1px 5px rgba(0,0,0,.75);
+}
+#feed>.post:has(>.mw-media-frame[data-kind="video"])>.post-head .follow-mini{
+  border-color:rgba(255,255,255,.55);
+  background:rgba(0,0,0,.32);
+  color:#fff;
+}
+#feed>.post:has(>.mw-media-frame[data-kind="video"])>.post-body{
+  position:absolute;
+  z-index:2;
+  right:74px;
+  bottom:72px;
+  left:14px;
+  max-height:34%;
+  overflow:hidden;
+  padding:0;
+  color:#fff;
+  text-shadow:0 1px 5px rgba(0,0,0,.8);
+}
+#feed>.post:has(>.mw-media-frame[data-kind="video"])>.post-body p{
+  display:-webkit-box;
+  overflow:hidden;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:4;
+  line-height:1.45;
+}
+#feed>.post:has(>.mw-media-frame[data-kind="video"])>.signals{
+  position:absolute;
+  z-index:3;
+  top:50%;
+  right:10px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:12px;
+  padding:0;
+  transform:translateY(-50%);
+}
+#feed>.post:has(>.mw-media-frame[data-kind="video"])>.signals>.sig{
+  display:grid;
+  width:46px;
+  min-height:46px;
+  place-items:center;
+  padding:5px;
+  border:1px solid rgba(255,255,255,.3);
+  border-radius:50%;
+  background:rgba(0,0,0,.32);
+  color:#fff;
+}
+#feed>.post:has(>.mw-media-frame[data-kind="video"])>.signals>.sig.on{
+  border-color:#ffd86b;
+  color:#ffd86b;
+}
+#feed>.post:has(>.mw-media-frame[data-kind="video"])>.actions{
+  position:absolute;
+  z-index:3;
+  right:8px;
+  bottom:8px;
+  left:8px;
+  display:flex;
+  align-items:center;
+  gap:4px;
+  min-height:48px;
+  padding:4px;
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:16px;
+  background:rgba(0,0,0,.42);
+  color:#fff;
+  -webkit-backdrop-filter:blur(12px);
+  backdrop-filter:blur(12px);
+}
+#feed>.post:has(>.mw-media-frame[data-kind="video"])>.actions>.act{
+  min-width:0;
+  color:#fff;
+}
+#feed>.post:has(>.mw-media-frame[data-kind="video"])>.actions .mw-message-menu{
+  flex:0 0 auto;
+  color:#fff;
+}
+#feed>.post:has(>.mw-media-frame[data-kind="video"])>.actions .mw-message-menu summary{
+  color:#fff;
+}
+@media(max-width:600px){
+  html body #feed.feed{
+    gap:14px;
+    padding:8px 8px 18px;
+  }
+  #feed>.post:has(>.mw-media-frame[data-kind="video"]){
+    height:min(76dvh,740px);
+    min-height:min(520px,68dvh);
+    border-radius:20px;
+  }
+}
+@media(min-width:700px){
+  #feed>.post:has(>.mw-media-frame[data-kind="video"]){
+    max-width:440px;
+    height:min(78dvh,780px);
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  #feed>.post:has(>.mw-media-frame[data-kind="video"]){scroll-behavior:auto}
+}

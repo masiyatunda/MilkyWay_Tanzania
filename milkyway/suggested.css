@@ -1,0 +1,61 @@
+/* Suggested for you: horizontal row of account cards inside the home feed. */
+.suggested-strip { margin: 14px 0; }
+.suggested-strip h3 { margin: 0 4px 10px; font-size: .95rem; color: var(--text, #fff); }
+.suggested-row { display: flex; gap: 12px; overflow-x: auto; padding: 2px 4px 10px; scroll-snap-type: x mandatory; scrollbar-width: none; }
+.suggested-row::-webkit-scrollbar { display: none; }
+
+/* Suggested User Card Styling */
+.suggested-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 16px;
+  width: 160px;
+  flex: 0 0 160px;
+  box-sizing: border-box;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  scroll-snap-align: start;
+}
+
+/* Close (X) button positioned at the top right of the card */
+.suggested-card .close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.suggested-card .suggested-who { display: flex; flex-direction: column; align-items: center; gap: 2px; width: 100%; background: none; border: 0; padding: 0; color: inherit; cursor: pointer; font: inherit; }
+.suggested-card .suggested-avatar { width: 64px; height: 64px; margin: 4px auto 8px; font-size: 1.2rem; }
+.suggested-card .suggested-who strong { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .9rem; }
+.suggested-card .suggested-who span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .75rem; opacity: .7; }
+
+/* Reduced size Follow button with a clean pill shape
+   (!important beats the app-wide .primary/.ghost styles the shared follow flow adds). */
+.suggested-card .follow-btn {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border: none !important;
+  border-radius: 20px !important;
+  padding: 6px 20px !important;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 12px;
+  width: 100%;
+  transition: background 0.2s;
+}
+
+.suggested-card .follow-btn:hover {
+  background-color: #e0e0e0 !important;
+}
+
+/* Once followed, the pill stays clean but reads as "Following". */
+.suggested-card .follow-btn.following { background-color: transparent !important; color: #fff !important; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .45); }

@@ -1,0 +1,10 @@
+/* MilkyWay Android app download pill under the header brand */
+.top .brand>div{display:flex;flex-direction:column;align-items:flex-start;min-width:0}
+.top .brand .mw-apk-link{display:inline-flex;align-items:center;gap:4px;margin-top:3px;padding:2px 9px 2px 6px;min-height:20px;border-radius:999px;border:1px solid rgba(250,204,21,.55);background:linear-gradient(135deg,rgba(0,210,255,.18),rgba(212,175,55,.24));color:#fff;-webkit-text-fill-color:#fff;font-size:.62rem;font-weight:800;line-height:1.1;letter-spacing:.02em;text-decoration:none;white-space:nowrap;box-shadow:0 0 10px rgba(0,210,255,.18);transition:transform .15s ease,background .15s ease}
+.top .brand .mw-apk-link svg{width:12px;height:12px;flex:0 0 12px;color:#FACC15}
+.top .brand .mw-apk-link:hover,.top .brand .mw-apk-link:focus-visible{background:linear-gradient(135deg,rgba(0,210,255,.32),rgba(212,175,55,.4));outline:none}
+.top .brand .mw-apk-link:active{transform:scale(.96)}
+.top .brand .mw-apk-link[hidden]{display:none!important}
+:is([data-mw-appearance="light"],[data-mw-appearance="sunlight"]) .top .brand .mw-apk-link{color:#0b2545;-webkit-text-fill-color:#0b2545;background:linear-gradient(135deg,rgba(10,103,214,.12),rgba(212,175,55,.22));border-color:rgba(10,103,214,.4)}
+:is([data-mw-appearance="light"],[data-mw-appearance="sunlight"]) .top .brand .mw-apk-link svg{color:#0a67d6}
+@media (max-width:380px){.top .brand .mw-apk-link{font-size:.56rem;padding:2px 7px 2px 5px}}

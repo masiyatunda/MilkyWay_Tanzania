@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="sw">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MilkyWay Moderation</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+body{margin:0;background:#030712;color:#eef5ff;font-family:system-ui;padding:16px}
+.wrap{max-width:720px;margin:auto}
+.card{background:#0d1b31;border:1px solid #1d3a61;border-radius:16px;padding:14px;margin:12px 0}
+.muted{color:#8fa7ca;font-size:.85rem}
+input{width:100%;box-sizing:border-box;padding:11px;border-radius:10px;border:1px solid #1d3a61;background:#08152a;color:#fff;margin:6px 0}
+button{border:0;border-radius:10px;padding:10px 12px;font-weight:800;cursor:pointer}
+.ok{background:#34d399}.warn{background:#f4c64e}.danger{background:#fb7185;color:#fff}.ghost{background:#1d3a61;color:#fff}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.err{color:#fb7185}
+</style>
+<link rel="stylesheet" href="galaxy.css">
+<link rel="stylesheet" href="shared-shell.css"><link rel="stylesheet" href="theme.css"><link rel="icon" href="favicon.ico" sizes="any">
+<link rel="stylesheet" href="/milkyway/theme.css"><link rel="stylesheet" href="/milkyway/release.css"><link rel="stylesheet" href="/milkyway/themes.css?v=4"><script src="/milkyway/shared-theme.js?v=5"></script><link rel="stylesheet" href="/milkyway/mw-dialog.css"><link rel="stylesheet" href="/milkyway/live-themes.css?v=4"><script src="/milkyway/mw-dialog.js"></script><link rel="stylesheet" href="/milkyway/app-theme-system.css?v=60">
+<link rel="stylesheet" href="/milkyway/light-glass-lock.css?v=61">
+</head>
+<body>
+<div class="wrap">
+  <h1>MilkyWay Moderation</h1>
+  <p class="muted">Admin tu. Ingia hapa hapa ikiwa ukurasa haujakagua akaunti.</p>
+  <div id="status" class="card">Inakagua akaunti…</div>
+  <div id="login" class="card" style="display:none">
+    <h2>Ingia</h2>
+    <input id="email" type="email" placeholder="email" value="masiyatunda@gmail.com">
+    <input id="pass" type="password" placeholder="password">
+    <button class="ok" id="go">Ingia</button>
+    <p id="loginMsg" class="err"></p>
+  </div>
+  <div id="tools" style="display:none">
+    <div class="card">
+      <h2>Watumiaji wa MilkyWay</h2>
+      <div class="row">
+        <div class="card" style="flex:1;margin:0;background:#08152a"><div class="muted">Jumla ya waliosajiliwa</div><div id="userTotal" style="font-size:2rem;font-weight:900">0</div></div>
+        <div class="card" style="flex:1;margin:0;background:#08152a"><div class="muted">Waliosajiliwa leo</div><div id="userToday" style="font-size:2rem;font-weight:900">0</div></div>
+      </div>
+      <button class="warn" id="refreshUsers" style="margin-top:10px">↻ Refresh</button>
+    </div>
+    <div class="card">
+      <h2>Tafuta akaunti</h2>
+      <input id="q" placeholder="jina au username">
+      <button class="warn" id="find">Tafuta</button>
+      <div id="accounts"></div>
+    </div>
+    <div class="card"><button class="ghost" id="out">Toka</button> <a class="ghost" href="./" style="padding:10px 12px;border-radius:10px;text-decoration:none">Orbit</a></div>
+  </div>
+</div>
+<script>
+const sb=supabase.createClient('https://wpclkhgizbvxuvbhbwzs.supabase.co','sb_publishable_GCFJ3Is8t8mdia4gLeHApg_M_3ez9xb');
+const $=id=>document.getElementById(id);
+function esc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&','<':'<','>':'>','"':'"'}[c]))}
+async function withTimeout(p,ms){
+  return Promise.race([p, new Promise((_,rej)=>setTimeout(()=>rej(new Error('Muda umeisha. Ingia hapa.')),ms))]);
+}
+async function showAdmin(user){
+  const {data,error}=await sb.from('mw_profiles').select('is_admin,display_name,username').eq('id',user.id).maybeSingle();
+  if(error){$('status').textContent=error.message;$('login').style.display='block';return}
+  if(!data||!data.is_admin){$('status').textContent='Umeingia, lakini si admin.';$('login').style.display='block';return}
+  $('status').textContent='Admin: '+(data.display_name||data.username||user.email);
+  $('login').style.display='none';
+  $('tools').style.display='block';
+  await loadUserStats();
+  setInterval(loadUserStats,15000);
+}
+async function boot(){
+  try{
+    const {data}=await withTimeout(sb.auth.getSession(),8000);
+    if(!data.session){$('status').textContent='Hujaingia. Tumia fomu hapa chini.';$('login').style.display='block';return}
+    await showAdmin(data.session.user);
+  }catch(e){
+    $('status').textContent=e.message||'Imeshindwa kukagua.';
+    $('login').style.display='block';
+  }
+}
+$('go').onclick=async()=>{
+  $('loginMsg').textContent='Inaingia…';
+  const {data,error}=await sb.auth.signInWithPassword({email:$('email').value.trim(),password:$('pass').value});
+  if(error){$('loginMsg').textContent=error.message;return}
+  $('loginMsg').textContent='';
+  showAdmin(data.user);
+};
+$('out').onclick=async()=>{await sb.auth.signOut();location.reload()};
+async function loadUserStats(){
+  const total=await sb.from('mw_profiles').select('id',{count:'exact',head:true});
+  $('userTotal').textContent=String(total.count||0);
+  const d=new Date(); d.setHours(0,0,0,0);
+  const today=await sb.from('mw_profiles').select('id',{count:'exact',head:true}).gte('created_at',d.toISOString());
+  $('userToday').textContent=String(today.count||0);
+}
+$('refreshUsers').onclick=loadUserStats;
+$('find').onclick=async()=>{
+  const q=$('q').value.trim();
+  if(!q)return;
+  const {data,error}=await sb.from('mw_profiles').select('id,display_name,username,is_banned,suspended_until').or(`display_name.ilike.%${q}%,username.ilike.%${q}%`).limit(20);
+  if(error){$('accounts').innerHTML='<p class="err">'+esc(error.message)+'</p>';return}
+  $('accounts').innerHTML=(data||[]).map(x=>`<div class="card"><b>${esc(x.display_name)}</b> @${esc(x.username||'')}<div class="row" style="margin-top:8px"><button class="danger" data-ban="${x.id}" data-v="${!x.is_banned}">${x.is_banned?'Ondoa ban':'Ban'}</button></div></div>`).join('')||'<p>Hakuna.</p>';
+  $('accounts').querySelectorAll('[data-ban]').forEach(b=>b.onclick=async()=>{
+    const {error}=await sb.from('mw_profiles').update({is_banned:b.dataset.v==='true'}).eq('id',b.dataset.ban);
+    if(error) alert(error.message); else $('find').click();
+  });
+};
+boot();
+</script>
+<script src="/milkyway/locale-catalogs.js"></script><script src="/milkyway/german-locale.js"></script><script src="translations.js"></script><script src="shared-language.js"></script>
+</body>
+</html>

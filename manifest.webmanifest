@@ -1,0 +1,9 @@
+{
+  "name": "Masiyatunda Co. Ltd",
+  "short_name": "Masiyatunda",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#051329",
+  "theme_color": "#051329",
+  "description": "Global Technology & Security Solutions"
+}

@@ -1,0 +1,24 @@
+
+/* Phase A: contrast, empty states */
+html[data-mw-appearance="light"] button,
+html[data-mw-appearance="light"] .btn,
+html[data-mw-appearance="light"] .act{
+  color:#17344d;
+}
+html[data-mw-appearance="light"] .btn.primary,
+html[data-mw-appearance="light"] .act.primary,
+html[data-mw-appearance="light"] button.primary{
+  background:#087bd3!important;
+  color:#fff!important;
+}
+html:not([data-mw-appearance="light"]) .btn.primary,
+html:not([data-mw-appearance="light"]) .act.primary{
+  color:#fff!important;
+}
+.empty,.mw-feed-retry{
+  padding:28px 16px;
+  text-align:center;
+  color:#5d7891;
+}
+.empty h3{color:#17344d;margin:0 0 6px}
+html:not([data-mw-appearance="light"]) .empty h3{color:#edf4ff}

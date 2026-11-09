@@ -1,0 +1,220 @@
+/* MilkyWay Light Glass — fixed, self-contained palette (v60).
+   This theme deliberately ignores Android/iOS dark-mode preferences.
+   It is scoped only to data-mw-appearance="light"; other themes retain their own palettes. */
+html[data-mw-appearance="light"]{
+  color-scheme:light!important;
+  --mw-app-bg:#f4f9ff;
+  --mw-app-surface:rgba(255,255,255,.94);
+  --mw-app-surface-solid:#ffffff;
+  --mw-app-raised:#eef7ff;
+  --mw-app-line:#cfe5f7;
+  --mw-app-text:#17344d;
+  --mw-app-muted:#5d7891;
+  --mw-app-accent:#087bd3;
+  --mw-app-accent-text:#ffffff;
+  --mw-app-soft:#e6f3ff;
+  --mw-app-shadow:0 8px 24px rgba(33,105,160,.10);
+  --bg:#f4f9ff; --panel:#fff; --card:#fff; --line:#cfe5f7;
+  --text:#17344d; --muted:#5d7891; --blue:#087bd3; --cyan:#3dbbe8;
+  --mw-ink:#17344d; --mw-ink-soft:#5d7891; --mw-glass:rgba(255,255,255,.88);
+  --mw-glass-strong:rgba(255,255,255,.96); --mw-glass-line:#cfe5f7;
+  --mw-chrome-glass:rgba(255,255,255,.94); --mw-dark-glass:rgba(255,255,255,.88);
+  --mw-dark-glass-line:#cfe5f7;
+  background:var(--mw-app-bg)!important;
+}
+html[data-mw-appearance="light"] body,
+html[data-mw-appearance="light"] body::before,
+html[data-mw-appearance="light"] body::after{
+  color-scheme:light!important;
+  background:radial-gradient(ellipse at 15% 10%,rgba(210,235,255,.34),transparent 48%)!important;
+  opacity:1!important;
+}
+html[data-mw-appearance="light"] body::after{display:none!important;content:none!important}
+html[data-mw-appearance="light"] .stars{display:none!important}
+html[data-mw-appearance="light"] body{
+  background:
+    radial-gradient(ellipse at 12% 0%,rgba(206,232,255,.58),transparent 42%),
+    radial-gradient(ellipse at 92% 30%,rgba(222,239,255,.48),transparent 38%),
+    linear-gradient(180deg,#f7fbff 0%,#eff7ff 58%,#ffffff 100%)!important;
+  background-color:#f4f9ff!important;
+  color:#17344d!important;
+}
+/* Common chrome and app surfaces */
+html[data-mw-appearance="light"] :is(
+ .top,.orbit,.sheet,.sheet-bg .sheet,.modal-bg .sheet,.mws-card,.mws-group,
+ .menu-panel,.menu-sheet,.dropdown-menu,.language-menu,.language-dropdown,
+ .settings-panel,.settings-card,.chat-panel,.chat-list,.chat-item,.message-list,
+ .mw-live-glass,.mw-live-card,.mw-live-launcher,.mw-call-sheet,.mw-dialog,.mw-modal,
+ .toast,.post,.story-card,.account-panel,.profile-panel,.admin-card,.admin-panel,
+ .form-card,.panel,.card,.section-card,.mws-sheet,.mws-actions,.bottom-sheet-actions,
+ #settingsSheet .mws-card,#menuSheet,.menu-content,.chat-header,.chat-toolbar,
+ .conversation-header,.message-composer,.live-card,.live-panel,.live-session-card
+){
+  color:#17344d!important;
+  border-color:#cfe5f7!important;
+  box-shadow:0 8px 24px rgba(33,105,160,.10);
+}
+html[data-mw-appearance="light"] :is(
+ .top,.orbit,.sheet,.sheet-bg .sheet,.modal-bg .sheet,.mws-card,.mws-group,
+ .menu-panel,.menu-sheet,.dropdown-menu,.language-menu,.language-dropdown,
+ .settings-panel,.settings-card,.chat-panel,.chat-list,.message-list,.mw-live-glass,
+ .mw-live-card,.mw-call-sheet,.mw-dialog,.mw-modal,.account-panel,.profile-panel,
+ .admin-card,.admin-panel,.form-card,.panel,.card,.section-card,.mws-sheet
+){
+  -webkit-backdrop-filter:blur(16px) saturate(112%);
+  backdrop-filter:blur(16px) saturate(112%);
+}
+html[data-mw-appearance="light"] :is(
+ .top,.orbit,.sheet,.sheet-bg .sheet,.modal-bg .sheet,.mws-card,.mws-group,
+ .menu-panel,.menu-sheet,.dropdown-menu,.language-menu,.language-dropdown,
+ .settings-panel,.settings-card,.chat-panel,.chat-list,.chat-item,.message-list,
+ .mw-live-glass,.mw-live-card,.mw-live-launcher,.mw-call-sheet,.mw-dialog,.mw-modal,
+ .toast,.account-panel,.profile-panel,.admin-card,.admin-panel,.form-card,.panel,
+ .card,.section-card,.mws-sheet,.mws-actions,.bottom-sheet-actions
+){
+  background:rgba(255,255,255,.94)!important;
+}
+/* Text contrast: do not recolour post photos, avatars, logos or decorative artwork. */
+html[data-mw-appearance="light"] :is(
+ h1,h2,h3,h4,h5,h6,p,label,legend,strong,b,small,.setting-row,.menu-item,.nav-item,
+ .chat-preview,.message-preview,.empty-state,.description,.menu-label,.mws-help,
+ .profile-name,.account-name,.chat-name,.conversation-title,.section-title,.setting-label
+){
+  color:#17344d;
+  -webkit-text-fill-color:currentColor;
+}
+html[data-mw-appearance="light"] :is(
+ .muted,.who,.mws-help,.post-meta,.secondary-text,.hint,.subtle,.chat-preview,
+ .message-preview,.empty-state,.description,.timestamp,.last-seen,.helper-text
+){color:#5d7891!important;-webkit-text-fill-color:currentColor}
+html[data-mw-appearance="light"] :is(input,textarea,select,.searchbox input,.searchbox textarea,[role="combobox"],[contenteditable="true"]){
+  background:#fff!important;color:#17344d!important;border-color:#cfe5f7!important;
+  -webkit-text-fill-color:#17344d!important;caret-color:#087bd3;
+}
+html[data-mw-appearance="light"] :is(input,textarea,select,[contenteditable="true"])::placeholder{
+  color:#718ba0!important;opacity:1!important;-webkit-text-fill-color:#718ba0!important;
+}
+html[data-mw-appearance="light"] select option{
+  background:#fff!important;color:#17344d!important;
+}
+html[data-mw-appearance="light"] :is(
+ button,.btn,.act,.tab,.icon-btn,.setting-row,.menu-item,.nav-item,.dropdown-item,
+ [role="button"],[role="option"],[role="menuitem"],[role="switch"],[role="combobox"]
+){
+  border-color:#cfe5f7;
+}
+html[data-mw-appearance="light"] :is(
+ .btn,.act,.tab,.icon-btn,.setting-row,.menu-item,.nav-item,.dropdown-item,
+ [role="button"],[role="option"],[role="menuitem"],[role="combobox"]
+):not(.primary):not(.btn-primary):not(.on):not(.selected):not([aria-pressed="true"]){
+  background-color:rgba(255,255,255,.92);
+  color:#17344d!important;
+  -webkit-text-fill-color:currentColor;
+}
+html[data-mw-appearance="light"] :is(.primary,.btn.primary,.btn-primary,.mw-live-launch,.tab.on,.selected,[aria-pressed="true"]){
+  background:linear-gradient(135deg,#087bd3,#168aa8)!important;
+  color:#fff!important;-webkit-text-fill-color:#fff!important;border-color:transparent!important;
+}
+html[data-mw-appearance="light"] :is(.sheet-bg,.modal-bg){background:rgba(23,52,77,.24)!important}
+html[data-mw-appearance="light"] :is(.sheet-bg .sheet,.modal-bg .sheet){background:rgba(255,255,255,.98)!important}
+html[data-mw-appearance="light"] :is(.close,.close-btn,.icon-close){background:#fff!important;color:#17344d!important}
+html[data-mw-appearance="light"] :focus-visible{outline:2px solid #087bd3!important;outline-offset:2px}
+html[data-mw-appearance="light"] .top .brand h1{
+  background:linear-gradient(90deg,#50728d 0 44%,#087bd3 44% 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent!important;-webkit-text-fill-color:transparent;
+}
+/* Prevent device dark-mode media rules from changing this theme. */
+@media(prefers-color-scheme:dark){
+ html[data-mw-appearance="light"]{color-scheme:light!important}
+ html[data-mw-appearance="light"] body{color:#17344d!important;background-color:#f4f9ff!important}
+ html[data-mw-appearance="light"] :is(input,textarea,select){background:#fff!important;color:#17344d!important}
+}
+/* Keep the native browser status bar coordinated with the chosen Light Glass palette. */
+
+
+/* v61: force the reference Light Glass palette across legacy overlays and forms.
+   Deliberately scoped to the selected Light Glass theme; ignores OS dark mode. */
+html[data-mw-appearance="light"]{
+  color-scheme:light!important;
+  --bg:#f5faff!important;--panel:#ffffff!important;--card:#ffffff!important;
+  --text:#102f50!important;--muted:#5c7da0!important;--line:#cfe4fb!important;
+  --blue:#086dff!important;--cyan:#26b8ed!important;--gold:#dba928!important;
+  --mw-app-bg:#f5faff!important;--mw-app-surface:#ffffff!important;
+  --mw-app-surface-solid:#ffffff!important;--mw-app-raised:#edf7ff!important;
+  --mw-app-line:#cfe4fb!important;--mw-app-text:#102f50!important;
+  --mw-app-muted:#5c7da0!important;--mw-app-accent:#086dff!important;
+  --mw-app-soft:#e8f4ff!important;
+}
+html[data-mw-appearance="light"] body{
+  color:#102f50!important;
+  background:radial-gradient(ellipse at 15% 12%,rgba(205,233,255,.7),transparent 45%),
+             radial-gradient(ellipse at 90% 65%,rgba(222,241,255,.65),transparent 40%),
+             linear-gradient(180deg,#f7fbff 0%,#eef7ff 60%,#ffffff 100%)!important;
+}
+/* Common full-screen sheets, profile panels, publish composer and chat views */
+html[data-mw-appearance="light"] :is(
+  .sheet,.sheet-bg .sheet,.modal-bg .sheet,.modal,.modal-content,.modal-panel,
+  .publish-modal,.publish-sheet,.post-modal,.composer-modal,.create-post-modal,
+  .profile-modal,.profile-sheet,.account-modal,.account-sheet,.supernova-modal,
+  .super-nova,.supernova-panel,.settings-modal,.settings-sheet,.chat-page,
+  .chat-screen,.chat-panel,.conversation-panel,#publishModal,#createPostModal,
+  #profileModal,#superNovaModal,#settingsSheet,#mwPublishSheet,#mwProfileSheet,
+  #mwLivePage,.mw-live-glass,.mw-live-card,.mw-dialog,.mw-modal,.mw-sheet,
+  .bottom-sheet,.bottom-sheet-content,[role="dialog"]
+){
+  background-color:rgba(255,255,255,.97)!important;
+  background-image:linear-gradient(145deg,rgba(255,255,255,.98),rgba(239,248,255,.96))!important;
+  color:#102f50!important;
+  border-color:#cfe4fb!important;
+  box-shadow:0 14px 38px rgba(32,105,170,.14)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(115%)!important;
+  backdrop-filter:blur(18px) saturate(115%)!important;
+}
+/* Ensure nested labels and headings do not inherit old dark-theme navy-on-navy colours. */
+html[data-mw-appearance="light"] :is(
+  .sheet,.modal-bg .sheet,.modal,.modal-content,.modal-panel,.publish-modal,
+  .publish-sheet,.post-modal,.composer-modal,.create-post-modal,.profile-modal,
+  .profile-sheet,.account-modal,.account-sheet,.supernova-modal,.super-nova,
+  .supernova-panel,.settings-modal,.settings-sheet,.chat-page,.chat-screen,
+  .chat-panel,.conversation-panel,#publishModal,#createPostModal,#profileModal,
+  #superNovaModal,#settingsSheet,#mwPublishSheet,#mwProfileSheet,#mwLivePage,
+  .mw-live-glass,.mw-live-card,.mw-dialog,.mw-modal,.mw-sheet,.bottom-sheet,
+  .bottom-sheet-content,[role="dialog"]
+) :is(h1,h2,h3,h4,h5,h6,p,label,span,strong,b,small,legend,li,.title,.label,.hint,.muted){
+  color:#102f50!important;
+  -webkit-text-fill-color:currentColor!important;
+}
+html[data-mw-appearance="light"] :is(
+  .sheet,.modal-bg .sheet,.modal,.modal-content,.modal-panel,.publish-modal,
+  .publish-sheet,.post-modal,.composer-modal,.create-post-modal,.profile-modal,
+  .profile-sheet,.account-modal,.account-sheet,.supernova-modal,.super-nova,
+  .supernova-panel,.settings-modal,.settings-sheet,.chat-page,.chat-screen,
+  .chat-panel,.conversation-panel,#publishModal,#createPostModal,#profileModal,
+  #superNovaModal,#settingsSheet,#mwPublishSheet,#mwProfileSheet,#mwLivePage,
+  .mw-live-glass,.mw-live-card,.mw-dialog,.mw-modal,.mw-sheet,.bottom-sheet,
+  .bottom-sheet-content,[role="dialog"]
+) :is(button,.btn,.act,.tab,[role="button"],[role="option"],[role="menuitem"]):not(.primary):not(.btn-primary):not(.selected):not(.on){
+  background:rgba(255,255,255,.94)!important;color:#12385e!important;
+  border:1px solid #c8e0fb!important;-webkit-text-fill-color:#12385e!important;
+}
+html[data-mw-appearance="light"] :is(button,.btn,.act,.tab,.icon-btn,[role="button"]):is(.primary,.btn-primary,.selected,.on,[aria-pressed="true"],#publishButton){
+  background:linear-gradient(110deg,#087bff,#12b8df)!important;color:#fff!important;
+  -webkit-text-fill-color:#fff!important;border-color:transparent!important;
+}
+html[data-mw-appearance="light"] :is(input,textarea,select,[contenteditable="true"],.file-picker){
+  color:#183957!important;background:#fff!important;border:1px solid #cfe4fb!important;
+  -webkit-text-fill-color:#183957!important;caret-color:#087bff!important;
+}
+html[data-mw-appearance="light"] :is(input,textarea,select,[contenteditable="true"])::placeholder{
+  color:#6e8ba8!important;-webkit-text-fill-color:#6e8ba8!important;opacity:1!important;
+}
+html[data-mw-appearance="light"] :is(.sheet-bg,.modal-bg,.overlay,.modal-overlay,.backdrop){
+  background:rgba(48,94,135,.18)!important;
+}
+@media(prefers-color-scheme:dark){
+ html[data-mw-appearance="light"]{color-scheme:light!important}
+ html[data-mw-appearance="light"] body{color:#102f50!important}
+ html[data-mw-appearance="light"] :is(.sheet,.modal,.modal-content,.modal-panel,.publish-modal,.publish-sheet,.profile-modal,.profile-sheet,.settings-modal,.settings-sheet,.chat-page,.chat-screen,.mw-dialog,.mw-modal,.mw-sheet,[role="dialog"]){
+   background-color:#fff!important;color:#102f50!important;
+ }
+}
