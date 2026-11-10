@@ -1234,7 +1234,7 @@
     $('mwLiveFlip').innerHTML = ICONS.flip;
     $('mwLiveSound').setAttribute('aria-label', t('soundMute'));
     $('mwLiveSettingsBtn').setAttribute('aria-label', t('settings'));
-    document.querySelector('.lv-control-panel')?.setAttribute('aria-label', t('liveControls'));
+    document.querySelector('.lv-floating-controls')?.setAttribute('aria-label', t('liveControls'));
     if (typeof ResizeObserver === 'function') new ResizeObserver(() => layoutTiles()).observe($('mwLiveGrid'));
     page.addEventListener('pointerdown', () => { if (S.room && S.room.canPlaybackAudio === false) S.room.startAudio().catch(() => {}); }, { passive: true });
     page.addEventListener('click', event => {
