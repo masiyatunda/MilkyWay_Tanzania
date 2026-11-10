@@ -244,7 +244,7 @@
       #feed.mw-tiktok-feed .post-body {
         position: absolute;
         left: 12px;
-        right: 82px;
+        right: calc(82px + env(safe-area-inset-right, 0px));
         bottom: 72px;
         z-index: 5;
         padding: 0;
@@ -270,7 +270,7 @@
       }
       #feed.mw-tiktok-feed .actions {
         position: absolute;
-        right: 10px;
+        right: max(16px, calc(env(safe-area-inset-right, 0px) + 12px));
         bottom: 14px;
         display: flex;
         flex-direction: column;
@@ -278,11 +278,13 @@
         border-top: none;
         background: transparent;
         z-index: 6;
-        width: 62px;
+        width: min(62px, calc(100vw - env(safe-area-inset-right, 0px) - 32px));
       }
       #feed.mw-tiktok-feed .actions .act {
-        width: 62px;
+        width: 100%;
+        min-width: 0;
         min-height: 44px;
+        box-sizing: border-box;
         border-radius: 16px;
         background: rgba(15,23,42,.7);
         border: 1px solid rgba(148,163,184,.3);
