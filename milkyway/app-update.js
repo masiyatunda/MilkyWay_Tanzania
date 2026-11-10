@@ -6,11 +6,15 @@
     ? cap.Plugins?.MilkyWayNative || cap.registerPlugin?.('MilkyWayNative')
     : null;
   if (!native) return;
+  const appBase = new URL('.', document.baseURI || location.href);
+  const rootBase = new URL('/', location.origin);
+  const resolveApp = path => new URL(String(path || '').replace(/^\/+/, ''), appBase).href;
+  const resolveRoot = path => new URL(String(path || '').replace(/^\/+/, ''), rootBase).href;
   (async () => {
     try {
       const [info, latest] = await Promise.all([
         native.getInfo(),
-        fetch('/milkyway/download/version.json', { cache: 'no-store' }).then(response => response.ok ? response.json() : null),
+        fetch(resolveRoot('milkyway/download/version.json'), { cache: 'no-store' }).then(response => response.ok ? response.json() : null),
       ]);
       if (!latest || !(Number(latest.versionCode) > Number(info.versionCode))) return;
       const skipKey = `mw_skip_apk_${latest.versionCode}`;
@@ -21,8 +25,9 @@
       const text = document.createElement('span');
       text.style.flex = '1';
       text.textContent = `Toleo jipya la MilkyWay (${latest.versionName || latest.versionCode}) lipo tayari. / A new app version is available.`;
+      const target = latest.url ? new URL(String(latest.url).replace(/^\/+/, ''), rootBase).href : resolveApp('download/MilkyWay.apk');
       const get = document.createElement('a');
-      get.href = latest.url || '/milkyway/download/MilkyWay.apk';
+      get.href = target;
       get.textContent = 'Pakua / Update';
       get.style.cssText = 'background:#d4af37;color:#030A20;padding:8px 12px;border-radius:10px;text-decoration:none;font-weight:800;white-space:nowrap';
       get.onclick = event => {

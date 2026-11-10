@@ -313,8 +313,13 @@
   function activateTikTokFeed(force = false) {
     const feed = document.getElementById('feed');
     if (!feed) return;
+    const prefersCompactFeed = window.matchMedia && window.matchMedia('(max-width: 820px)').matches;
     const hasVideo = [...feed.querySelectorAll('video.post-media')].length > 0;
     if (!hasVideo && !force) {
+      feed.classList.remove('mw-tiktok-feed');
+      return;
+    }
+    if (!force && !prefersCompactFeed && !('ontouchstart' in window || navigator.maxTouchPoints > 0)) {
       feed.classList.remove('mw-tiktok-feed');
       return;
     }
