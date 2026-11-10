@@ -47,7 +47,9 @@
     invalidToken: 'Huduma ya Live haikurudisha tokeni halali.',
     secure: 'Live inahitaji HTTPS na ruhusa ya kamera na maikrofoni.',
     guestSeat: 'Kiti cha mgeni',
-    openSeat: 'Kiti wazi'
+    openSeat: 'Kiti wazi',
+    guestBoxes: 'Viti vya wageni',
+    guestBoxesCount: '{n} viti vya wageni'
   };
   const english = {
     signIn: 'Sign in to use Live.',
@@ -67,14 +69,24 @@
     offline: 'No network connection. Try again.',
     invalidToken: 'The Live service returned an invalid token.',
     secure: 'Live requires HTTPS and camera and microphone access.',
-    guestSeat: 'Guest seat',
-    openSeat: 'Open seat'
+    guestSeat: 'Guest box',
+    openSeat: 'Open seat',
+    guestBoxes: 'Guest boxes',
+    guestBoxesCount: '{n} guest boxes'
   };
   const language = () => {
     try { return window.MilkyWayI18n?.language?.() || localStorage.getItem('mw_lang') || 'sw'; }
     catch { return 'sw'; }
   };
   const t = key => (language().startsWith('sw') ? text : english)[key] || key;
+  const guestBoxesText = count => (language().startsWith('sw') ? text : english).guestBoxesCount.replace('{n}', count);
+  const updateGuestSlotLabels = () => {
+    $('mwLiveGuestSlotsLabel').textContent = t('guestBoxes');
+    $('mwLiveStageGuestSlotsLabel').textContent = t('guestBoxes');
+    for (const select of [$('mwLiveGuestSlots'), $('mwLiveStageGuestSlots')]) {
+      for (const option of select.options) option.textContent = guestBoxesText(option.value);
+    }
+  };
   const currentUser = () => typeof user === 'undefined' ? null : user;
   const supabase = () => typeof sb === 'undefined' ? null : sb;
   const userId = () => currentUser()?.id || '';
@@ -280,6 +292,8 @@
     $('mwLiveStatus').textContent = t('connecting');
     $('mwLiveStage').dataset.mode = state.mode;
     $('mwLiveStage').classList.toggle('is-audio', state.mode === 'audio');
+    $('mwLiveGrid').dataset.slotCount = String(state.guestSlots + 1);
+    $('mwLiveGrid').classList.remove('has-comments');
     renderControls();
   }
 
@@ -289,6 +303,8 @@
     $('mwLiveLobby').hidden = false;
     $('mwLivePage').dataset.view = 'lobby';
     $('mwLiveGrid').replaceChildren();
+    $('mwLiveGrid').classList.remove('has-comments');
+    delete $('mwLiveGrid').dataset.slotCount;
     $('mwLiveComments').replaceChildren();
     $('mwLiveRemoteAudio').replaceChildren();
     $('mwLiveGuestBar').hidden = true;
@@ -462,11 +478,14 @@
     video.muted = local;
     const placeholder = document.createElement('div');
     placeholder.className = 'lv-placeholder';
+    const face = document.createElement('span');
+    face.className = 'lv-tile-avatar';
+    face.setAttribute('aria-hidden', 'true');
     const label = document.createElement('span');
     label.className = 'lv-tile-label';
     label.textContent = participant.name || (local ? userName() : 'MilkyWay');
-    element.append(video, placeholder, label);
-    tile = { element, video, track: null, local };
+    element.append(video, placeholder, face, label);
+    tile = { element, video, face, track: null, local };
     state.tiles.set(participant.identity, tile);
     grid.append(element);
     return tile;
@@ -477,8 +496,12 @@
     if (!room) return;
     const hostId = state.session.host_id;
     const speakerIds = [hostId];
+    const membersById = new Map();
     for (const member of state.roomState?.members || []) {
-      if (member.state === 'speaker' && !speakerIds.includes(member.userId)) speakerIds.push(member.userId);
+      if (member.roomName === state.session.room_name && member.state === 'speaker') {
+        membersById.set(member.userId, member);
+        if (!speakerIds.includes(member.userId)) speakerIds.push(member.userId);
+      }
     }
     const participantsById = new Map([room.localParticipant, ...room.remoteParticipants.values()]
       .map(participant => [participant.identity, participant]));
@@ -489,7 +512,21 @@
       visible.add(participant.identity);
       const tile = participantTile(participant, participant === room.localParticipant);
       tiles.push(tile.element);
-      tile.element.querySelector('.lv-tile-label').textContent = participant.name || (participant.identity === hostId ? state.session.host_name : 'Guest');
+      const member = membersById.get(participant.identity);
+      const name = member?.name || participant.name || (participant.identity === hostId ? state.session.host_name : 'Guest');
+      tile.element.querySelector('.lv-tile-label').textContent = name;
+      tile.element.classList.toggle('is-host', participant.identity === hostId);
+      tile.face.replaceChildren();
+      if (member?.avatar) {
+        const image = document.createElement('img');
+        image.src = member.avatar;
+        image.alt = '';
+        image.loading = 'lazy';
+        image.addEventListener('error', () => { tile.face.textContent = name.slice(0, 1).toUpperCase(); }, { once: true });
+        tile.face.append(image);
+      } else {
+        tile.face.textContent = name.slice(0, 1).toUpperCase();
+      }
       const publication = participant.getTrackPublication(state.sdk.Track.Source.Camera);
       const track = publication?.track && !publication.isMuted ? publication.track : null;
       if (tile.track !== track) {
@@ -608,6 +645,7 @@
     }
     while (list.children.length > 80) list.firstElementChild.remove();
     list.scrollTop = list.scrollHeight;
+    $('mwLiveGrid').classList.toggle('has-comments', list.childElementCount > 0);
   }
 
   function renderControls() {
@@ -865,6 +903,7 @@
     $('mwLiveSettingsBtn').innerHTML = icons.settings;
     $('mwLiveHeart').innerHTML = icons.heart;
     $('mwLiveCommentInput').placeholder = t('comment');
+    updateGuestSlotLabels();
     page.addEventListener('click', event => {
       const button = event.target.closest('[data-action]');
       if (!button) return;
@@ -914,6 +953,7 @@
     });
     window.addEventListener('mw-language-change', () => {
       $('mwLiveCommentInput').placeholder = t('comment');
+      updateGuestSlotLabels();
       renderList(state.records);
       renderControls();
     });

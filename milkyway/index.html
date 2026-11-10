@@ -127,7 +127,7 @@
 
 
 
-<script src="mw-dialog.js"></script><script src="shared-theme.js?v=6"></script><link rel="stylesheet" href="mw-bundle-live.css?v=5">
+<script src="mw-dialog.js"></script><script src="shared-theme.js?v=6"></script><link rel="stylesheet" href="mw-bundle-live.css?v=8">
 
 
 
@@ -337,7 +337,7 @@ nav.orbit .orbit-inner > #composeBtn{flex:1 1 0!important;width:auto!important;m
     <form id="mwLiveSetup" class="lv-setup" autocomplete="off">
       <label for="mwLiveTitle">Title</label>
       <input id="mwLiveTitle" maxlength="100" placeholder="What are you sharing?" aria-label="LIVE title">
-      <label for="mwLiveGuestSlots">Guest boxes</label>
+      <label id="mwLiveGuestSlotsLabel" for="mwLiveGuestSlots">Guest boxes</label>
       <select id="mwLiveGuestSlots" aria-label="Number of guest boxes">
         <option value="2">2 guest boxes</option>
         <option value="3" selected>3 guest boxes</option>
@@ -354,7 +354,7 @@ nav.orbit .orbit-inner > #composeBtn{flex:1 1 0!important;width:auto!important;m
     </section>
   </section>
   <section id="mwLiveStage" class="lv-stage" aria-label="Live broadcast" hidden>
-    <div id="mwLiveGrid" class="lv-grid" aria-label="Video participants"></div>
+    <div id="mwLiveGrid" class="lv-grid" aria-label="Live participants and guest boxes"></div>
     <div id="mwLiveRemoteAudio" hidden></div>
     <header class="lv-top">
       <div class="lv-host">
@@ -390,7 +390,7 @@ nav.orbit .orbit-inner > #composeBtn{flex:1 1 0!important;width:auto!important;m
     <section id="mwLiveSettings" class="lv-settings" aria-label="Live settings" hidden>
       <label for="mwLiveVolume">Speaker volume</label><input id="mwLiveVolume" type="range" min="0" max="100" value="100">
       <div id="mwLiveGuestSlotSetting" class="lv-settings-guest-slots" hidden>
-        <label for="mwLiveStageGuestSlots">Guest boxes</label>
+        <label id="mwLiveStageGuestSlotsLabel" for="mwLiveStageGuestSlots">Guest boxes</label>
         <select id="mwLiveStageGuestSlots" aria-label="Number of guest boxes">
           <option value="2">2 guest boxes</option>
           <option value="3">3 guest boxes</option>
@@ -1739,7 +1739,7 @@ if(AUTH_LINK_ERROR){history.replaceState(null,'',location.pathname+location.sear
 <script src="dm-calls.js"></script>
 <script src="chat.js"></script><script src="chat-settings.js"></script><script src="group-settings.js"></script>
 <script src="chat-search.js"></script><script src="account-country.js"></script><script src="account-details.js"></script>
-<script src="live-room.js?v=8"></script><script src="live-in-feed.js"></script>
+<script src="live-room.js?v=12"></script><script src="live-in-feed.js"></script>
 <script src="ui-language.js"></script>
 <script src="locale-loader.js?v=1"></script><script src="translations.js"></script><script src="live-globe.js"></script>
 <script src="premium.js"></script>

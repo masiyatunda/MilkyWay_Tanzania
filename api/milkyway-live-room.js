@@ -89,19 +89,19 @@ async function status(ctx, room) {
   const me = await whoAmI(ctx);
   const [settings, rows, messages, connected] = await Promise.all([
     loadSettings(ctx, room.roomName),
-    ctx.rest(`mw_live_room_members?room_name=eq.${encodeURIComponent(room.roomName)}&select=user_id,name,avatar,state,host_muted&order=updated_at.desc&limit=200`),
+    ctx.rest(`mw_live_room_members?room_name=eq.${encodeURIComponent(room.roomName)}&select=room_name,user_id,name,avatar,state,host_muted&order=updated_at.desc&limit=200`),
     ctx.rest(`mw_live_room_messages?room_name=eq.${encodeURIComponent(room.roomName)}&select=id,user_id,name,avatar,kind,body,deleted,created_at&order=created_at.desc&limit=100`),
     connectedIds(room.roomName),
   ]);
   let own = (rows || []).find(row => row.user_id === ctx.user.id);
   if (!room.host && !own) {
     await upsertMember(ctx, room.roomName, ctx.user.id, { name: me.name, avatar: me.avatar, state: 'viewer' }).catch(() => {});
-    own = { user_id: ctx.user.id, name: me.name, avatar: me.avatar, state: 'viewer', host_muted: false };
+    own = { room_name: room.roomName, user_id: ctx.user.id, name: me.name, avatar: me.avatar, state: 'viewer', host_muted: false };
   }
   if (room.host && !(await ctx.rest(`mw_live_room_settings?room_name=eq.${encodeURIComponent(room.roomName)}&select=room_name&limit=1`).catch(() => [null]))?.length) {
     await ctx.rest('mw_live_room_settings', { method: 'POST', prefer: 'resolution=ignore-duplicates', body: { room_name: room.roomName, host_id: ctx.user.id, settings: DEFAULTS } }).catch(() => {});
   }
-  const toMember = row => ({ userId: row.user_id, name: row.name, avatar: row.avatar, state: row.state, hostMuted: !!row.host_muted });
+  const toMember = row => ({ roomName: row.room_name, userId: row.user_id, name: row.name, avatar: row.avatar, state: row.state, hostMuted: !!row.host_muted });
   const self = room.host ? { userId: ctx.user.id, name: me.name, avatar: me.avatar, state: 'speaker', hostMuted: false } : toMember(own);
   return {
     settings, self,
