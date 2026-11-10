@@ -21,7 +21,7 @@
   const banner = node('div', { className: 'mw-broadcast', hidden: true });
   banner.setAttribute('role', 'status');banner.setAttribute('aria-live', 'polite');
   document.body.append(banner);
-  let current = null, timer = 0, records = [];
+  let current = null, timer = 0, records = [], activeLivesCount = 0;
   const hide = () => { clearTimeout(timer);banner.hidden = true;banner.classList.remove('is-in');current = null; };
   function show(record, others) {
     current = record;
@@ -40,6 +40,7 @@
     clearTimeout(timer);timer = setTimeout(() => { markSeen(record.room_name);hide(); }, 15000);
   }
   function evaluate() {
+    if (activeLivesCount === 0 || !records.length) { hide();return; }
     const inLive = window.MilkyWayLive?.isActive?.() || !document.getElementById('mwLivePage')?.hidden;
     const candidates = records.filter(record => forEveryone(record) && record.host_id !== user?.id && !seen.has(record.room_name));
     if (current && !records.some(record => record.room_name === current.room_name)) hide();
@@ -47,7 +48,11 @@
     if (current || !candidates.length) return;
     show(candidates[0], records.filter(record => forEveryone(record) && record.host_id !== user?.id).length - 1);
   }
-  window.addEventListener('mw-live-discovery', event => { records = event.detail?.records || [];evaluate(); });
+  window.addEventListener('mw-live-discovery', event => {
+    records = Array.isArray(event.detail?.records) ? event.detail.records : [];
+    activeLivesCount = Number.isFinite(event.detail?.active_lives_count) ? event.detail.active_lives_count : records.length;
+    evaluate();
+  });
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') evaluate(); });
   window.MilkyWayBroadcast = { refresh: evaluate };
 })();

@@ -193,7 +193,7 @@
       }
       state.records = records;
       renderList(records);
-      window.dispatchEvent(new CustomEvent('mw-live-discovery', { detail: { records } }));
+      window.dispatchEvent(new CustomEvent('mw-live-discovery', { detail: { records, active_lives_count: records.length } }));
       return records;
     } catch (error) {
       console.error('[MilkyWay Live] discovery failed', error);
