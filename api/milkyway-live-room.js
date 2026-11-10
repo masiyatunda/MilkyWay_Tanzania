@@ -117,7 +117,10 @@ async function handle({ ctx, body, method }) {
   const room = await loadRoom(ctx, body);
   const target = () => requireUuid(typeof body.target === 'string' ? body.target.toLowerCase() : '', 'participant');
 
-  if (action === 'status') return status(ctx, room);
+  if (action === 'status') {
+    if (!room.record.is_live) throw new ApiError(404, 'This Live session has ended.');
+    return status(ctx, room);
+  }
   if (action === 'started') return { ok: true };
   if (!room.record.is_live && action !== 'end') throw new ApiError(404, 'This Live session has ended.');
 
@@ -220,7 +223,11 @@ async function handle({ ctx, body, method }) {
 
   if (action === 'end') {
     await ctx.rest(`mw_video_live_sessions?id=eq.${room.record.id}`, { method: 'PATCH', body: { is_live: false, ended_at: new Date().toISOString() } });
-    await livekit('DeleteRoom', room.roomName, {}).catch(() => {});
+    await ctx.rest(`mw_live_room_members?room_name=eq.${encodeURIComponent(room.roomName)}`, {
+      method: 'PATCH',
+      body: { state: 'viewer', host_muted: false, updated_at: new Date().toISOString() },
+    });
+    await livekit('DeleteRoom', room.roomName, {});
     return { ok: true };
   }
 

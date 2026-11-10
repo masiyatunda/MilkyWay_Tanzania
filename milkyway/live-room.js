@@ -25,6 +25,7 @@
     pollTimer: 0,
     refreshTimer: 0,
     hostDepartureTimer: 0,
+    ending: false,
     audio: new Map(),
     tiles: new Map(),
     toastTimer: 0
@@ -37,7 +38,6 @@
     connecting: 'Inaunganisha…',
     reconnecting: 'Muunganisho umekatika kwa muda. Inaunganisha tena…',
     connectionLost: 'Imeshindikana kuunganisha tena. Live hii bado iko wazi; jaribu kujiunga tena.',
-    guestSettingsFailed: 'Live imeendelea, lakini mipangilio ya viti vya wageni haikuhifadhiwa.',
     guestMediaRestoreFailed: 'Umeunganishwa tena kama mtazamaji; sauti au video ya mgeni haikuweza kurejeshwa.',
     connected: 'LIVE',
     audioLive: 'Sauti LIVE',
@@ -54,6 +54,14 @@
     secure: 'Live inahitaji HTTPS na ruhusa ya kamera na maikrofoni.',
     guestSeat: 'Kiti cha mgeni',
     openSeat: 'Kiti wazi',
+    requestJoin: '+ Omba kujiunga',
+    requestSent: 'Ombi limetumwa',
+    guestRequests: 'Maombi ya wageni',
+    approve: 'Kubali',
+    reject: 'Kataa',
+    ended: 'Mwenyeji amemaliza Live hii.',
+    endSyncFailed: 'Live imefungwa hapa, lakini seva haikuthibitisha kuondolewa kwa washiriki.',
+    settingsApprovalFailed: 'Live inaendelea, lakini mpangilio wa viti haukuweza kuhifadhiwa.',
     guestBoxes: 'Viti vya wageni',
     guestBoxesCount: '{n} viti vya wageni'
   };
@@ -64,7 +72,6 @@
     connecting: 'Connecting…',
     reconnecting: 'Connection interrupted. Reconnecting…',
     connectionLost: 'Could not reconnect. This Live is still open; try joining again.',
-    guestSettingsFailed: 'Live is active, but guest seating settings could not be saved.',
     guestMediaRestoreFailed: 'Reconnected as a viewer; guest audio or video could not be restored.',
     connected: 'LIVE',
     audioLive: 'Audio LIVE',
@@ -81,6 +88,14 @@
     secure: 'Live requires HTTPS and camera and microphone access.',
     guestSeat: 'Guest box',
     openSeat: 'Open seat',
+    requestJoin: '+ Request to join',
+    requestSent: 'Request sent',
+    guestRequests: 'Guest requests',
+    approve: 'Approve',
+    reject: 'Decline',
+    ended: 'The host ended this Live.',
+    endSyncFailed: 'Live ended here, but the server could not confirm participant cleanup.',
+    settingsApprovalFailed: 'Live is active, but the guest-seat settings could not be saved.',
     guestBoxes: 'Guest boxes',
     guestBoxesCount: '{n} guest boxes'
   };
@@ -386,6 +401,7 @@
     const recovering = options.recovery === true;
     if (state.joining || state.room || (state.recovering && !recovering)) return;
     const generation = ++state.generation;
+    state.ending = false;
     state.joining = true;
     state.session = record;
     state.host = host;
@@ -416,10 +432,10 @@
         if (mode === 'video') await room.localParticipant.setCameraEnabled(true, { facingMode: state.facing });
         if (!recovering) {
           try {
-            await roomAction('settings', { layout: state.guestSlots + 1, admission: 'direct', order: [] });
+            await roomAction('settings', { layout: state.guestSlots + 1, admission: 'approval', order: [] });
           } catch (error) {
             console.warn('[MilkyWay Live] guest settings could not be saved', error);
-            showMessage(t('guestSettingsFailed'), true);
+            showMessage(t('settingsApprovalFailed'), true);
           }
           try {
             Promise.resolve(window.MilkyWayLiveNotifications?.api?.('live-started', { room: record.room_name })).catch(error => {
@@ -555,6 +571,20 @@
         state.recovering = false;
         return;
       }
+      const client = supabase();
+      if (client) {
+        try {
+          const result = await client.from('mw_video_live_sessions').select('is_live')
+            .eq('room_name', record.room_name).limit(1);
+          if (result.error) throw result.error;
+          if (!result.data?.length || result.data[0].is_live !== true) {
+            endByHost();
+            return;
+          }
+        } catch (error) {
+          console.warn('[MilkyWay Live] could not verify session after reconnect attempt', error);
+        }
+      }
     }
 
     if (state.generation !== attemptGeneration || !state.recovering) return;
@@ -664,6 +694,16 @@
       label.className = 'lv-seat-label';
       label.textContent = `${t('guestSeat')} ${participants.length + index}: ${t('openSeat')}`;
       seat.append(icon, label);
+      const self = state.roomState?.self?.state;
+      if (!state.host && self !== 'speaker') {
+        const request = document.createElement('button');
+        request.type = 'button';
+        request.className = 'lv-seat-request';
+        request.dataset.action = 'join';
+        request.textContent = self === 'pending' ? t('requestSent') : t('requestJoin');
+        request.disabled = self === 'pending';
+        seat.append(request);
+      }
       return seat;
     });
     const grid = $('mwLiveGrid');
@@ -785,7 +825,52 @@
     box.innerHTML = icons.box;
     box.setAttribute('aria-label', inBox ? t('leaveBox') : t('enterBox'));
     box.setAttribute('aria-pressed', String(inBox));
-    bar.hidden = join.hidden;
+    renderGuestRequests(bar, join);
+  }
+
+  function renderGuestRequests(bar, join) {
+    const requests = bar.querySelector('.lv-guest-requests');
+    requests.replaceChildren();
+    const pending = state.host
+      ? (state.roomState?.members || []).filter(member => member.state === 'pending')
+      : [];
+    if (pending.length) {
+      const heading = document.createElement('strong');
+      heading.className = 'lv-guest-requests-title';
+      heading.textContent = `${t('guestRequests')} (${pending.length})`;
+      requests.append(heading);
+      for (const member of pending) {
+        const row = document.createElement('div');
+        row.className = 'lv-guest-request';
+        const name = document.createElement('span');
+        name.textContent = member.name || 'MilkyWay';
+        const actions = document.createElement('span');
+        actions.className = 'lv-guest-request-actions';
+        for (const [action, label] of [['approve-guest', t('approve')], ['reject-guest', t('reject')]]) {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.dataset.action = action;
+          button.dataset.userId = member.userId;
+          button.textContent = label;
+          actions.append(button);
+        }
+        row.append(name, actions);
+        requests.append(row);
+      }
+    }
+    requests.hidden = !pending.length;
+    join.hidden = state.host || state.roomState?.self?.state === 'speaker' || !state.room;
+    bar.hidden = requests.hidden && join.hidden;
+  }
+
+  async function handleGuestRequest(action, target) {
+    if (!state.host || !target) return;
+    try {
+      await roomAction(action, { target });
+      await poll();
+    } catch (error) {
+      showMessage(error.message || 'Could not update the guest request.', true);
+    }
   }
 
   async function mediaAction(action) {
@@ -868,12 +953,17 @@
 
   async function endRecord(record) {
     if (!record || record.host_id !== userId()) return;
+    let serverError = null;
     try { await roomAction('end', {}, record); }
-    catch (error) { console.warn('[MilkyWay Live] room end request failed', error); }
+    catch (error) {
+      serverError = error;
+      console.error('[MilkyWay Live] server room termination failed', error);
+    }
     const result = await supabase().from('mw_video_live_sessions')
       .update({ is_live: false, ended_at: new Date().toISOString() })
       .eq('room_name', record.room_name).eq('host_id', userId());
     if (result.error) throw new Error(`Could not close the Live listing: ${result.error.message}`);
+    if (serverError) throw new Error(t('endSyncFailed'));
   }
 
   async function cleanup({ showLobby: shouldShowLobby = true, refreshList = true } = {}) {
@@ -902,6 +992,7 @@
     state.session = null;
     state.host = false;
     state.joining = false;
+    state.ending = false;
     if (shouldShowLobby) showLobby();
     if (refreshList) await refresh();
   }
@@ -921,6 +1012,7 @@
       await roomAction('leave-stage', {}, record).catch(error => console.warn('[MilkyWay Live] leave stage failed', error));
     }
     await cleanup();
+    if (failure) showMessage(failure, true);
     return { clean: !failure, error: failure };
   }
 
@@ -931,19 +1023,25 @@
         : window.confirm(t('endConfirm'));
       if (!confirmed) return;
     }
-    if (state.room || state.joining || state.recovering) await disconnect();
+    const outcome = state.room || state.session || state.joining || state.recovering
+      ? await disconnect()
+      : null;
     const page = $('mwLivePage');
     page.hidden = true;
     page.classList.remove('is-open');
     document.body.classList.remove('lv-open');
+    if (outcome && !outcome.clean) window.toast?.(outcome.error);
   }
 
   function endByHost() {
     const roomName = state.session?.room_name;
-    if (!roomName) return;
+    if (!roomName || state.ending) return;
+    state.ending = true;
     window.dispatchEvent(new CustomEvent('mw-live-host-ended', { detail: { room_name: roomName } }));
-    showMessage('This Live has ended.');
-    disconnect();
+    ++state.generation;
+    state.recovering = false;
+    showMessage(t('ended'));
+    cleanup().catch(error => console.error('[MilkyWay Live] remote room cleanup failed', error));
   }
 
   function toggleSettings() {
@@ -1029,6 +1127,8 @@
           break;
         case 'settings': toggleSettings();break;
         case 'join': guestAction();break;
+        case 'approve-guest': handleGuestRequest('approve', button.dataset.userId);break;
+        case 'reject-guest': handleGuestRequest('reject', button.dataset.userId);break;
         case 'reaction': heart();break;
         case 'share': share();break;
       }
