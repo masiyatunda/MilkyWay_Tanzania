@@ -58,7 +58,7 @@ body.lv-open { overflow: hidden; }
 .lv-close { font-size: 1.5rem !important; line-height: 1; }
 .lv-setup { display: grid; gap: 10px; margin-top: 24px; }
 .lv-setup label { color: var(--lv-muted); font-size: .88rem; font-weight: 700; }
-.lv-setup input {
+.lv-setup input,.lv-setup select {
   width: 100%;
   min-height: 48px;
   padding: 0 14px;
@@ -123,6 +123,9 @@ body.lv-open { overflow: hidden; }
   gap: 2px;
   background: #030712;
 }
+.lv-grid[data-slot-count="3"],
+.lv-grid[data-slot-count="4"],
+.lv-grid[data-slot-count="5"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .lv-tile { position: relative; min-width: 0; min-height: 0; overflow: hidden; background: #0c1424; }
 .lv-tile:only-child { grid-column: 1 / -1; grid-row: 1 / -1; }
 .lv-tile video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #030712; }
@@ -131,6 +134,21 @@ body.lv-open { overflow: hidden; }
 .lv-tile-label { position: absolute; z-index: 1; bottom: 12px; left: 12px; max-width: calc(100% - 24px); overflow: hidden; padding: 5px 10px; border: 1px solid rgba(255, 255, 255, .16); border-radius: 999px; background: rgba(5, 10, 20, .5); font-size: .8rem; text-overflow: ellipsis; white-space: nowrap; -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
 .lv-tile:not(.has-video) { background: radial-gradient(circle at 50% 42%, rgba(58, 120, 255, .26), #090f1d 65%); }
 .lv-tile.is-muted .lv-tile-label::after { content: " · Mic off"; color: var(--lv-muted); }
+.lv-seat-empty {
+  display: grid;
+  min-width: 0;
+  min-height: 0;
+  align-content: center;
+  justify-items: center;
+  gap: 10px;
+  padding: 12px;
+  border: 1px dashed rgba(255,255,255,.32);
+  background: radial-gradient(circle at 50% 42%, rgba(58,120,255,.18), #090f1d 68%);
+  color: var(--lv-muted);
+  text-align: center;
+}
+.lv-seat-icon { display: grid; width: 52px; height: 52px; place-items: center; border: 1px solid rgba(255,255,255,.32); border-radius: 50%; background: rgba(255,255,255,.08); color: var(--lv-cyan); font-size: 2rem; line-height: 1; }
+.lv-seat-label { max-width: 100%; font-size: .88rem; font-weight: 800; overflow-wrap: anywhere; }
 .lv-top {
   position: absolute;
   z-index: 5;
@@ -228,6 +246,17 @@ body.lv-open { overflow: hidden; }
 }
 .lv-settings label { font-size: .86rem; font-weight: 700; }
 .lv-settings input { width: 100%; accent-color: var(--lv-cyan); }
+.lv-settings-guest-slots { display: grid; gap: 8px; }
+.lv-settings-guest-slots select {
+  width: 100%;
+  min-height: 42px;
+  padding: 0 10px;
+  border: 1px solid var(--lv-line);
+  border-radius: 10px;
+  background: rgba(255,255,255,.1);
+  color: var(--lv-ink);
+  font: inherit;
+}
 .lv-toast { position: absolute; z-index: 20; top: calc(var(--lv-safe-top) + 74px); left: 50%; max-width: calc(100% - 32px); margin: 0; padding: 10px 14px; border: 1px solid var(--lv-line); border-radius: 12px; background: rgba(9, 15, 27, .84); opacity: 0; pointer-events: none; transform: translate(-50%, -8px); transition: opacity .16s, transform .16s; }
 .lv-toast.is-visible { opacity: 1; transform: translate(-50%, 0); }
 .lv-toast.is-error { border-color: rgba(255, 120, 145, .72); }

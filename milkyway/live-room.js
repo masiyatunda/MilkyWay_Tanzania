@@ -13,6 +13,7 @@
     records: [],
     host: false,
     mode: 'video',
+    guestSlots: 3,
     joining: false,
     refreshing: false,
     sound: true,
@@ -44,7 +45,9 @@
     endConfirm: 'Maliza Live hii kwa kila mtu?',
     offline: 'Hakuna mtandao. Jaribu tena.',
     invalidToken: 'Huduma ya Live haikurudisha tokeni halali.',
-    secure: 'Live inahitaji HTTPS na ruhusa ya kamera na maikrofoni.'
+    secure: 'Live inahitaji HTTPS na ruhusa ya kamera na maikrofoni.',
+    guestSeat: 'Kiti cha mgeni',
+    openSeat: 'Kiti wazi'
   };
   const english = {
     signIn: 'Sign in to use Live.',
@@ -63,7 +66,9 @@
     endConfirm: 'End this Live for everyone?',
     offline: 'No network connection. Try again.',
     invalidToken: 'The Live service returned an invalid token.',
-    secure: 'Live requires HTTPS and camera and microphone access.'
+    secure: 'Live requires HTTPS and camera and microphone access.',
+    guestSeat: 'Guest seat',
+    openSeat: 'Open seat'
   };
   const language = () => {
     try { return window.MilkyWayI18n?.language?.() || localStorage.getItem('mw_lang') || 'sw'; }
@@ -323,6 +328,7 @@
     const client = supabase();
     if (!client) { showMessage(t('offline'), true);return; }
     try {
+      state.guestSlots = Math.max(2, Math.min(4, Number($('mwLiveGuestSlots').value) || 3));
       const roomName = `mw-${mode}-live-${makeId()}`;
       const title = $('mwLiveTitle').value.trim() || (mode === 'audio' ? t('audioLive') : t('videoLive'));
       const record = {
@@ -338,7 +344,7 @@
       const saved = await client.from('mw_video_live_sessions').insert(record).select('id').single();
       if (saved.error) throw saved.error;
       record.id = saved.data.id;
-      await connect(record, true, mode);
+      await connect(record, true, mode, state.guestSlots);
     } catch (error) {
       console.error('[MilkyWay Live] could not create room', error);
       showMessage(error.message || 'Could not start Live.', true);
@@ -350,13 +356,14 @@
     await connect(record, record.host_id === userId(), roomMode(record));
   }
 
-  async function connect(record, host, mode) {
+  async function connect(record, host, mode, guestSlots = state.guestSlots) {
     if (state.joining || state.room) return;
     const generation = ++state.generation;
     state.joining = true;
     state.session = record;
     state.host = host;
     state.mode = mode;
+    if (host) state.guestSlots = Math.max(2, Math.min(4, Number(guestSlots) || 3));
     showStage(record);
     open({ start: true });
     try {
@@ -380,10 +387,8 @@
       if (host) {
         await room.localParticipant.setMicrophoneEnabled(true);
         if (mode === 'video') await room.localParticipant.setCameraEnabled(true, { facingMode: state.facing });
+        await roomAction('settings', { layout: state.guestSlots + 1, admission: 'direct', order: [] });
         await roomAction('started');
-        await roomAction('settings', { layout: 4, admission: 'direct', order: [] }).catch(error => {
-          console.warn('[MilkyWay Live] could not set default room layout', error);
-        });
         try {
           Promise.resolve(window.MilkyWayLiveNotifications?.api?.('live-started', { room: record.room_name })).catch(error => {
             console.warn('[MilkyWay Live] notification request failed', error);
@@ -471,14 +476,19 @@
     const room = state.room;
     if (!room) return;
     const hostId = state.session.host_id;
-    const speakers = new Set([hostId]);
-    for (const member of state.roomState?.members || []) if (member.state === 'speaker') speakers.add(member.userId);
-    const participants = [room.localParticipant, ...room.remoteParticipants.values()]
-      .filter(participant => speakers.has(participant.identity));
+    const speakerIds = [hostId];
+    for (const member of state.roomState?.members || []) {
+      if (member.state === 'speaker' && !speakerIds.includes(member.userId)) speakerIds.push(member.userId);
+    }
+    const participantsById = new Map([room.localParticipant, ...room.remoteParticipants.values()]
+      .map(participant => [participant.identity, participant]));
+    const participants = speakerIds.map(id => participantsById.get(id)).filter(Boolean);
     const visible = new Set();
+    const tiles = [];
     for (const participant of participants) {
       visible.add(participant.identity);
       const tile = participantTile(participant, participant === room.localParticipant);
+      tiles.push(tile.element);
       tile.element.querySelector('.lv-tile-label').textContent = participant.name || (participant.identity === hostId ? state.session.host_name : 'Guest');
       const publication = participant.getTrackPublication(state.sdk.Track.Source.Camera);
       const track = publication?.track && !publication.isMuted ? publication.track : null;
@@ -499,6 +509,26 @@
         state.tiles.delete(id);
       }
     }
+    const guestSlots = Math.max(2, Math.min(4, Number(state.roomState?.settings?.layout) - 1 || state.guestSlots));
+    const capacity = guestSlots + 1;
+    const emptySeats = Math.max(0, capacity - participants.length);
+    const seats = Array.from({ length: emptySeats }, (_, index) => {
+      const seat = document.createElement('article');
+      seat.className = 'lv-seat-empty';
+      seat.setAttribute('aria-label', `${t('guestSeat')} ${index + 1}: ${t('openSeat')}`);
+      const icon = document.createElement('span');
+      icon.className = 'lv-seat-icon';
+      icon.setAttribute('aria-hidden', 'true');
+      icon.textContent = '+';
+      const label = document.createElement('span');
+      label.className = 'lv-seat-label';
+      label.textContent = `${t('guestSeat')} ${participants.length + index}: ${t('openSeat')}`;
+      seat.append(icon, label);
+      return seat;
+    });
+    const grid = $('mwLiveGrid');
+    grid.dataset.slotCount = String(capacity);
+    grid.replaceChildren(...tiles, ...seats);
     $('mwLiveCount').textContent = String(Math.max(participants.length, room.remoteParticipants.size + 1));
   }
 
@@ -545,6 +575,9 @@
       const result = await roomAction('status');
       if (!Array.isArray(result.messages) || !Array.isArray(result.members)) throw new Error('Live status response is invalid.');
       state.roomState = result;
+      if (Number.isInteger(result.settings?.layout)) {
+        state.guestSlots = Math.max(2, Math.min(4, result.settings.layout - 1));
+      }
       renderComments(result.messages);
       renderRoster();
       renderControls();
@@ -598,6 +631,10 @@
     const bar = $('mwLiveGuestBar');
     const join = $('mwLiveJoin');
     const box = $('mwLiveBoxToggle');
+    const guestSlotSetting = $('mwLiveGuestSlotSetting');
+    const stageGuestSlots = $('mwLiveStageGuestSlots');
+    guestSlotSetting.hidden = !state.host;
+    stageGuestSlots.value = String(state.guestSlots);
     const self = state.roomState?.self?.state || '';
     join.hidden = state.host || hostOrSpeaker || !room;
     join.textContent = self === 'pending' ? (language().startsWith('sw') ? 'Futa ombi' : 'Cancel request') : t('join');
@@ -771,6 +808,28 @@
     $('mwLiveSettingsBtn').setAttribute('aria-expanded', String(!panel.hidden));
   }
 
+  async function updateGuestSlots(value) {
+    if (!state.host || !state.room) return;
+    const slots = Number(value);
+    if (!Number.isInteger(slots) || slots < 2 || slots > 4) {
+      showMessage('Choose between 2 and 4 guest boxes.', true);
+      renderControls();
+      return;
+    }
+    const select = $('mwLiveStageGuestSlots');
+    select.disabled = true;
+    try {
+      const result = await roomAction('settings', { layout: slots + 1 });
+      state.guestSlots = slots;
+      state.roomState.settings = result.settings;
+      renderRoster();
+      renderControls();
+    } catch (error) {
+      showMessage(error.message || 'Could not update guest boxes.', true);
+      renderControls();
+    } finally { select.disabled = false; }
+  }
+
   function bindKeyboard() {
     const page = $('mwLivePage');
     const input = $('mwLiveCommentInput');
@@ -845,6 +904,7 @@
       state.volume = Number(event.target.value) / 100;
       for (const { element } of state.audio.values()) element.volume = state.volume;
     });
+    $('mwLiveStageGuestSlots').addEventListener('change', event => updateGuestSlots(event.target.value));
     page.addEventListener('keydown', event => {
       if (event.key === 'Escape') {
         $('mwLiveSettings').hidden = true;

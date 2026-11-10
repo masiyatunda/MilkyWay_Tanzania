@@ -189,6 +189,8 @@ async function handle({ ctx, body, method }) {
   if (action === 'settings') {
     const current = await loadSettings(ctx, room.roomName);
     const layout = Number.isInteger(body.layout) ? Math.max(2, Math.min(21, body.layout)) : current.layout;
+    const speakers = await ctx.rest(`mw_live_room_members?room_name=eq.${encodeURIComponent(room.roomName)}&state=eq.speaker&select=user_id`);
+    if (speakers.length > layout - 1) throw new ApiError(409, 'Remove a guest from the stage before reducing the number of guest boxes.');
     const next = {
       layout,
       admission: ADMISSIONS.includes(body.admission) ? body.admission : current.admission,
