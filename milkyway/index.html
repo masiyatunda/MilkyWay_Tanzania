@@ -127,7 +127,7 @@
 
 
 
-<script src="mw-dialog.js"></script><script src="shared-theme.js?v=6"></script><link rel="stylesheet" href="mw-bundle-live.css?v=3">
+<script src="mw-dialog.js"></script><script src="shared-theme.js?v=6"></script><link rel="stylesheet" href="mw-bundle-live.css?v=4">
 
 
 
@@ -328,84 +328,62 @@ nav.orbit .orbit-inner > #composeBtn{flex:1 1 0!important;width:auto!important;m
   </div>
   </div>
 </div></div>
-<section id="mwLivePage" class="lv" role="dialog" aria-modal="true" aria-label="MilkyWay Live" data-view="lobby" hidden>
-  <div id="mwLiveLobby" class="lv-lobby">
-    <header class="lv-lobby-head"><h1>LIVE</h1><div class="lv-lobby-actions"><button type="button" id="mwLiveLobbyMenuButton" class="lv-icon" data-action="lobby-menu" aria-label="Menu" aria-expanded="false">⋯</button><button type="button" class="lv-icon" data-action="close" aria-label="Close">×</button></div></header>
-    <div id="mwLiveLobbyMenu" class="lv-lobby-menu" hidden><button type="button" data-action="history">Live history</button></div>
+<section id="mwLivePage" class="lv-live" role="dialog" aria-modal="true" aria-label="MilkyWay Live" data-view="lobby" hidden>
+  <section id="mwLiveLobby" class="lv-lobby">
+    <header class="lv-lobby-head">
+      <div><p class="lv-eyebrow">MILKYWAY · LIVE</p><h1>Go live</h1></div>
+      <button type="button" class="lv-close" data-action="close" aria-label="Close">×</button>
+    </header>
     <form id="mwLiveSetup" class="lv-setup" autocomplete="off">
-      <input id="mwLiveTitle" maxlength="100" placeholder="Add a title to your LIVE" aria-label="LIVE title">
-      <label class="lv-field"><span id="mwLiveSeatLabel">Guest seats</span><select id="mwLiveSeatCount"><option value="1">1</option><option value="2">2</option><option value="3" selected>3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option></select></label>
-      <label class="lv-field lv-check"><input type="checkbox" id="mwLiveAutoAccept"><span id="mwLiveAutoLabel">Auto-accept guests</span></label>
+      <label for="mwLiveTitle">Title</label>
+      <input id="mwLiveTitle" maxlength="100" placeholder="What are you sharing?" aria-label="LIVE title">
       <div class="lv-start-row">
-        <button type="button" class="lv-btn lv-btn-primary" data-action="start-video"><span id="mwLiveStartLabel">Go LIVE</span></button>
-        <button type="button" class="lv-btn" data-action="start-audio"><span id="mwLiveStartAudioLabel">Audio only</span></button>
+        <button type="button" class="lv-start lv-start-primary" data-action="start-video">Start video Live</button>
+        <button type="button" class="lv-start" data-action="start-audio">Start audio Live</button>
       </div>
     </form>
     <section class="lv-now">
-      <div class="lv-now-head"><h2 id="mwLiveNowTitle">Live now</h2><span id="mwLiveNowCount" class="lv-now-count">0</span><button type="button" class="lv-link" data-action="refresh">&#8635;</button></div>
-      <div id="mwLiveSessions" class="lv-session-list"><p class="muted">…</p></div>
+      <header class="lv-now-head"><h2>Live now</h2><span id="mwLiveNowCount">0</span><button type="button" class="lv-refresh" data-action="refresh" aria-label="Refresh Live list">↻</button></header>
+      <div id="mwLiveSessions" class="lv-session-list" aria-live="polite"><p class="lv-empty">Loading…</p></div>
     </section>
-    <section id="mwLiveHistory" class="lv-history" aria-labelledby="mwLiveHistoryTitle" hidden>
-      <header class="lv-history-head"><button type="button" class="lv-link" data-action="history-back" aria-label="Back">‹</button><h2 id="mwLiveHistoryTitle">Live history</h2></header>
-      <div id="mwLiveHistoryList" class="lv-session-list"></div>
-    </section>
-  </div>
-  <section id="mwLiveStage" class="mw-live-stage lv-stage" aria-label="Live broadcast" hidden>
-    <div id="mwLiveGrid" class="lv-grid"></div>
-    <div id="mwLiveAudioRoom" class="tt-audio-room" hidden></div>
+  </section>
+  <section id="mwLiveStage" class="lv-stage" aria-label="Live broadcast" hidden>
+    <div id="mwLiveGrid" class="lv-grid" aria-label="Video participants"></div>
     <div id="mwLiveRemoteAudio" hidden></div>
     <header class="lv-top">
-      <div class="lv-host"><div id="mwLiveHostAvatar" class="lv-avatar">M</div><div class="lv-host-text"><strong id="mwLiveHostName">MilkyWay</strong><span id="mwLiveStatus" role="status"></span></div></div>
-      <div class="lv-top-right">
-        <button type="button" class="lv-count" id="mwLiveCount" data-action="viewers" aria-label="Viewers"><b>0</b></button>
-        <button type="button" class="lv-icon" data-action="close" aria-label="Close">×</button>
+      <div class="lv-host">
+        <div id="mwLiveHostAvatar" class="lv-avatar">M</div>
+        <div class="lv-host-text"><strong id="mwLiveHostName">MilkyWay</strong><span id="mwLiveStatus" role="status">Connecting…</span></div>
+      </div>
+      <div class="lv-top-actions">
+        <span class="lv-count" id="mwLiveCount" aria-label="Viewers">1</span>
+        <button type="button" class="lv-close" data-action="close" aria-label="Close Live">×</button>
       </div>
     </header>
     <div id="mwLiveHearts" class="lv-hearts" aria-hidden="true"></div>
     <div class="lv-bottom">
-      <div class="lv-feed-row">
-        <div class="lv-comments-wrap">
-          <div id="mwLiveComments" class="mw-live-comments lv-comments" role="log" aria-live="polite"></div>
-          <button type="button" id="mwLiveNew" class="lv-new" data-action="new" hidden></button>
-        </div>
-      </div>
+      <div id="mwLiveComments" class="lv-comments" role="log" aria-live="polite"></div>
       <div id="mwLiveGuestBar" class="lv-guestbar" hidden>
-        <div id="mwLiveRequestCard" class="lv-reqcard" hidden></div>
-        <div class="lv-guestrow">
-          <button type="button" id="mwLiveJoin" class="lv-pill lv-pill-main" data-action="join" hidden></button>
-          <button type="button" id="mwLiveManage" class="lv-pill" data-action="guests" hidden></button>
-          <div id="mwLiveSeats" class="lv-seatctl" hidden>
-            <button type="button" id="mwLiveSeatMinus" data-action="seat-minus">&minus;</button>
-            <b id="mwLiveSeatValue"></b>
-            <button type="button" id="mwLiveSeatPlus" data-action="seat-plus">+</button>
-          </div>
-        </div>
-      </div>
-      <div class="tt-audio-bottom">
-        <button type="button" id="mwLiveAudioJoin" class="tt-audio-btn-join" data-action="join" hidden></button>
-        <button type="button" id="mwLiveAudioLeave" class="tt-audio-btn-leave" data-action="close" hidden></button>
+        <button type="button" id="mwLiveJoin" class="lv-guest-action" data-action="join" hidden>Join stage</button>
       </div>
       <div class="lv-floating-controls" aria-label="Live controls">
-        <button type="button" id="mwLiveMic" class="lv-tool" data-action="mic" hidden></button>
-        <button type="button" id="mwLiveCamera" class="lv-tool" data-action="camera" hidden></button>
-        <button type="button" id="mwLiveFlip" class="lv-tool" data-action="flip" hidden></button>
-        <button type="button" id="mwLiveSound" class="lv-tool" data-action="sound"></button>
-        <button type="button" id="mwLiveSettingsBtn" class="lv-tool" data-action="settings" aria-expanded="false"></button>
-        <button type="button" id="mwLiveAudioMic" class="lv-tool" data-action="mic" hidden></button>
-        <button type="button" id="mwLiveBoxToggle" class="lv-tool lv-box-toggle" data-action="box" hidden></button>
+        <button type="button" id="mwLiveMic" class="lv-control" data-action="mic" aria-label="Microphone" aria-pressed="false" hidden></button>
+        <button type="button" id="mwLiveCamera" class="lv-control" data-action="camera" aria-label="Camera" aria-pressed="false" hidden></button>
+        <button type="button" id="mwLiveFlip" class="lv-control" data-action="flip" aria-label="Flip camera" hidden></button>
+        <button type="button" id="mwLiveSound" class="lv-control" data-action="sound" aria-label="Mute audio" aria-pressed="true"></button>
+        <button type="button" id="mwLiveSettingsBtn" class="lv-control" data-action="settings" aria-label="Settings" aria-expanded="false"></button>
+        <button type="button" id="mwLiveBoxToggle" class="lv-control" data-action="box" aria-label="Leave box" aria-pressed="true" hidden></button>
       </div>
-      <div class="mwx-bar lv-dock">
-        <form id="mwLiveCommentForm" class="lv-compose"><input id="mwLiveCommentInput" maxlength="500" autocomplete="off" enterkeyhint="send" placeholder="Add comment…" aria-label="Live comment"><button type="submit" id="mwLiveCommentSend" aria-label="Send">&#10148;</button></form>
-        <aside class="mw-live-actions lv-actions" aria-label="Live actions">
-          <button type="button" id="mwLiveShare" class="lv-act" data-action="share"></button>
-          <button type="button" id="mwLiveHeart" class="lv-act mwx-like" data-action="reaction"></button>
-        </aside>
-      </div>
+      <form id="mwLiveCommentForm" class="lv-compose">
+        <input id="mwLiveCommentInput" maxlength="500" autocomplete="off" enterkeyhint="send" placeholder="Add a comment…" aria-label="Live comment">
+        <button type="submit" id="mwLiveCommentSend" aria-label="Send comment">➤</button>
+        <button type="button" id="mwLiveHeart" data-action="reaction" aria-label="Send heart">♥</button>
+        <button type="button" id="mwLiveShare" data-action="share" aria-label="Share Live">↗</button>
+      </form>
     </div>
-    <section id="mwLiveSettings" class="lv-settings" aria-label="Live settings" hidden><h3 id="mwLiveSettingsTitle">Settings</h3><label for="mwLiveVolume" id="mwLiveVolumeLabel">Volume</label><input id="mwLiveVolume" type="range" min="0" max="100" value="100"><label for="mwLiveOutput" id="mwLiveOutputLabel">Output</label><select id="mwLiveOutput"><option value="default">Default</option></select></section>
-    <div id="mwLiveSheetBackdrop" class="lv-backdrop" hidden></div>
-    <section id="mwLiveSheet" class="lv-sheet" hidden></section>
-    <div id="mwLiveMenu" class="lv-menu" hidden></div>
+    <section id="mwLiveSettings" class="lv-settings" aria-label="Live settings" hidden>
+      <label for="mwLiveVolume">Speaker volume</label><input id="mwLiveVolume" type="range" min="0" max="100" value="100">
+    </section>
   </section>
   <p id="mwLiveMessage" class="lv-toast" role="status" aria-live="polite"></p>
 </section>
@@ -1747,7 +1725,7 @@ if(AUTH_LINK_ERROR){history.replaceState(null,'',location.pathname+location.sear
 <script src="dm-calls.js"></script>
 <script src="chat.js"></script><script src="chat-settings.js"></script><script src="group-settings.js"></script>
 <script src="chat-search.js"></script><script src="account-country.js"></script><script src="account-details.js"></script>
-<script src="live-room.js?v=6"></script><script src="live-in-feed.js"></script>
+<script src="live-room.js?v=7"></script><script src="live-in-feed.js"></script>
 <script src="ui-language.js"></script>
 <script src="locale-loader.js?v=1"></script><script src="translations.js"></script><script src="live-globe.js"></script>
 <script src="premium.js"></script>

@@ -45,10 +45,9 @@ Source order:
 - `chat-settings.css`
 - `compact-buttons.css`
 
-### `mw-bundle-live.css` (38,751 bytes)
+### `mw-bundle-live.css` (11,980 bytes)
 Source order:
 - `live-room.css`
-- `tiktok-live.css`
 
 ### `mw-bundle-overlays.css` (4,299 bytes)
 Source order:
