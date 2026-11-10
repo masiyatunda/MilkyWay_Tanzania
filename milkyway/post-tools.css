@@ -1,32 +1,31 @@
 /* Post cards: one-line reactions and actions, inline comments, reposts and the photo zoom viewer. Loaded after the theme sheets. */
 .mw-sr{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 
-/* One compact action line right under the post: reactions (star, fire, heart) then Comments, Share, Repost, Save and •••.
-   Small icons with counts, no wrapping, at every width. */
-#feed .post>.actions{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:center;gap:2px;padding:4px 8px 6px;min-width:0}
-#feed .post .actions>.signals{display:flex;flex-wrap:nowrap;align-items:center;gap:2px;padding:0;margin:0;flex:0 1 auto;min-width:0}
-#feed .post .actions>:is(.signals>.sig,.act){flex:0 0 auto!important;min-width:34px;min-height:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;gap:4px;padding:0 7px!important;border:0!important;border-radius:999px!important;background:transparent!important;box-shadow:none!important;color:var(--muted)!important;font-size:.8rem;font-weight:700;line-height:1;white-space:nowrap;overflow:visible;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+/* Post actions keep readable icons and tap targets, wrapping when space is limited. */
+#feed .post>.actions{display:flex!important;flex-direction:row!important;flex-wrap:wrap!important;align-items:center;gap:6px;padding:8px 10px 10px;min-width:0;overflow:visible}
+#feed .post .actions>.signals{display:flex;flex-wrap:nowrap;align-items:center;gap:5px;padding:0;margin:0;flex:0 1 auto;min-width:0}
+#feed .post .actions>:is(.signals>.sig,.act){flex:0 0 auto!important;min-width:42px;min-height:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 9px!important;border:0!important;border-radius:999px!important;background:transparent!important;box-shadow:none!important;color:var(--muted)!important;font-size:.9rem;font-weight:700;line-height:1;white-space:nowrap;overflow:visible;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 #feed .post .actions>:is(.signals>.sig,.act):hover{background:var(--mw-accent-soft,rgba(127,127,127,.12))!important}
 #feed .post .actions>:is(.signals>.sig,.act):focus-visible{outline:2px solid var(--mw-accent,var(--blue));outline-offset:1px}
 #feed .post .actions>.act[data-share]::before{display:none}
-#feed .post .actions .sig-ico{font-size:1rem;transition:transform .15s ease}
+#feed .post .actions .sig-ico{font-size:1.15rem;transition:transform .15s ease}
 #feed .post .actions :is(.sig-count,.mw-act-count){font-variant-numeric:tabular-nums;font-weight:700;min-width:1ch;text-align:left}
 #feed .post .actions .sig.on{color:var(--text)!important}
 #feed .post .actions .sig.on .sig-ico{transform:scale(1.12)}
 #feed .post .actions .sig:active .sig-ico,#feed .post .actions>.act:active .mw-act-ico{transform:scale(.9)}
-#feed .post .actions .mw-act-ico{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .15s ease}
+#feed .post .actions .mw-act-ico{width:21px;height:21px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .15s ease}
 #feed .post .actions>.act[data-echo]{margin-left:auto}
 #feed .post .actions>.act.on{color:var(--mw-accent,var(--gold,#facc15))!important}
 #feed .post .actions>.act[data-save].on .mw-act-ico{fill:currentColor}
 #feed .post .actions>.act[data-repost]:disabled{opacity:.6;cursor:progress}
 #feed .post .actions>.mw-message-menu{flex:0 0 auto;margin-left:0}
-#feed .post .actions>.mw-message-menu>summary{min-width:34px;min-height:34px;height:34px;padding:0 6px;border:0;background:transparent;color:var(--muted);font-size:.8rem;letter-spacing:.06em}
+#feed .post .actions>.mw-message-menu>summary{min-width:42px;min-height:42px;height:42px;padding:0 8px;border:0;background:transparent;color:var(--muted);font-size:.9rem;letter-spacing:.06em}
 @media(max-width:380px){
-  #feed .post>.actions{padding-inline:4px;gap:0}
-  #feed .post .actions>:is(.signals>.sig,.act){min-width:30px;padding:0 5px!important;gap:3px;font-size:.74rem}
-  #feed .post .actions .mw-act-ico{width:17px;height:17px}
-  #feed .post .actions .sig-ico{font-size:.92rem}
-  #feed .post .actions>.mw-message-menu>summary{min-width:28px;padding:0 3px}
+  #feed .post>.actions{padding-inline:8px;gap:5px}
+  #feed .post .actions>:is(.signals>.sig,.act){min-width:40px;min-height:40px;height:40px;padding:0 7px!important;gap:4px;font-size:.84rem}
+  #feed .post .actions .mw-act-ico{width:20px;height:20px}
+  #feed .post .actions .sig-ico{font-size:1.08rem}
+  #feed .post .actions>.mw-message-menu>summary{min-width:40px;min-height:40px;height:40px;padding:0 6px}
 }
 
 /* Inline comments under the post (Facebook style); the posts above and below stay visible */

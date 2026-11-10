@@ -8,7 +8,8 @@
 .mwg-tile-gift::before{width:19px!important;height:19px!important}
 
 /* Feed and profile posts: a gold Gift pill (icon and label) right after the reactions. */
-#feed .post .actions>.act.mwg-gift-act.mwg-gift-act,#publicProfile .post .actions>.mwg-gift-act{flex:0 0 auto!important;gap:5px;min-height:34px;height:34px;margin-inline:4px;padding:0 12px!important;border:1px solid rgba(160,105,0,.45)!important;border-radius:999px!important;background:linear-gradient(180deg,#ffe27a,#f4b400)!important;box-shadow:0 2px 8px rgba(244,180,0,.35)!important;color:var(--mwg-gold-ink)!important;font-size:.8rem;font-weight:900;cursor:pointer}
+#feed .post .actions>.act.mwg-gift-act.mwg-gift-act,#publicProfile .post .actions>.mwg-gift-act{flex:0 0 auto!important;gap:7px;min-height:42px;height:42px;margin-inline:3px;padding:0 14px!important;border:1px solid rgba(160,105,0,.45)!important;border-radius:999px!important;background:linear-gradient(180deg,#ffe27a,#f4b400)!important;box-shadow:0 2px 8px rgba(244,180,0,.35)!important;color:var(--mwg-gold-ink)!important;font-size:.9rem;font-weight:900;cursor:pointer}
+#feed .post .actions>.act.mwg-gift-act::before{width:20px;height:20px}
 #feed .post .actions>.act.mwg-gift-act.mwg-gift-act:hover{filter:brightness(1.05);background:linear-gradient(180deg,#ffe27a,#f4b400)!important}
 #feed .post .actions>.act.mwg-gift-act.mwg-gift-act:active{transform:scale(.95)}
 #feed .post .actions>.act.mwg-gift-act[hidden]{display:none!important}
@@ -192,7 +193,7 @@
 @media(max-width:600px){
   html body #feed .post>.actions{flex-wrap:wrap!important;row-gap:4px;overflow:visible}
   html body #feed .post>.actions>.signals{flex:0 0 auto;min-width:auto}
-  html body #feed .post .actions>.act.mwg-gift-act.mwg-gift-act{display:inline-flex!important;visibility:visible;opacity:1;min-width:auto;min-height:36px;height:36px;margin-inline:2px;padding:0 11px!important;font-size:.78rem}
+  html body #feed .post .actions>.act.mwg-gift-act.mwg-gift-act{display:inline-flex!important;visibility:visible;opacity:1;min-width:42px;min-height:42px;height:42px;margin-inline:2px;padding:0 12px!important;font-size:.88rem}
   html body #feed .post .actions>.act.mwg-gift-act[hidden]{display:none!important}
   #profilePosts .post .actions,#publicProfile .post .actions{display:flex;flex-wrap:wrap;gap:6px}
   .mwg-media-gift{top:8px;right:8px;width:42px;height:42px}
