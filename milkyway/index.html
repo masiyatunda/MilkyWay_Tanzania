@@ -127,7 +127,7 @@
 
 
 
-<script src="mw-dialog.js"></script><script src="shared-theme.js?v=6"></script><link rel="stylesheet" href="mw-bundle-live.css?v=2">
+<script src="mw-dialog.js"></script><script src="shared-theme.js?v=6"></script><link rel="stylesheet" href="mw-bundle-live.css?v=3">
 
 
 
@@ -362,15 +362,6 @@ nav.orbit .orbit-inner > #composeBtn{flex:1 1 0!important;width:auto!important;m
       </div>
     </header>
     <div id="mwLiveHearts" class="lv-hearts" aria-hidden="true"></div>
-    <div class="lv-floating-controls" aria-label="Live controls">
-      <button type="button" id="mwLiveMic" class="lv-tool" data-action="mic" hidden></button>
-      <button type="button" id="mwLiveCamera" class="lv-tool" data-action="camera" hidden></button>
-      <button type="button" id="mwLiveFlip" class="lv-tool" data-action="flip" hidden></button>
-      <button type="button" id="mwLiveSound" class="lv-tool" data-action="sound"></button>
-      <button type="button" id="mwLiveSettingsBtn" class="lv-tool" data-action="settings" aria-expanded="false"></button>
-      <button type="button" id="mwLiveAudioMic" class="lv-tool" data-action="mic" hidden></button>
-      <button type="button" id="mwLiveBoxToggle" class="lv-tool lv-box-toggle" data-action="box" hidden></button>
-    </div>
     <div class="lv-bottom">
       <div class="lv-feed-row">
         <div class="lv-comments-wrap">
@@ -393,6 +384,15 @@ nav.orbit .orbit-inner > #composeBtn{flex:1 1 0!important;width:auto!important;m
       <div class="tt-audio-bottom">
         <button type="button" id="mwLiveAudioJoin" class="tt-audio-btn-join" data-action="join" hidden></button>
         <button type="button" id="mwLiveAudioLeave" class="tt-audio-btn-leave" data-action="close" hidden></button>
+      </div>
+      <div class="lv-floating-controls" aria-label="Live controls">
+        <button type="button" id="mwLiveMic" class="lv-tool" data-action="mic" hidden></button>
+        <button type="button" id="mwLiveCamera" class="lv-tool" data-action="camera" hidden></button>
+        <button type="button" id="mwLiveFlip" class="lv-tool" data-action="flip" hidden></button>
+        <button type="button" id="mwLiveSound" class="lv-tool" data-action="sound"></button>
+        <button type="button" id="mwLiveSettingsBtn" class="lv-tool" data-action="settings" aria-expanded="false"></button>
+        <button type="button" id="mwLiveAudioMic" class="lv-tool" data-action="mic" hidden></button>
+        <button type="button" id="mwLiveBoxToggle" class="lv-tool lv-box-toggle" data-action="box" hidden></button>
       </div>
       <div class="mwx-bar lv-dock">
         <form id="mwLiveCommentForm" class="lv-compose"><input id="mwLiveCommentInput" maxlength="500" autocomplete="off" enterkeyhint="send" placeholder="Add comment…" aria-label="Live comment"><button type="submit" id="mwLiveCommentSend" aria-label="Send">&#10148;</button></form>
@@ -1747,7 +1747,7 @@ if(AUTH_LINK_ERROR){history.replaceState(null,'',location.pathname+location.sear
 <script src="dm-calls.js"></script>
 <script src="chat.js"></script><script src="chat-settings.js"></script><script src="group-settings.js"></script>
 <script src="chat-search.js"></script><script src="account-country.js"></script><script src="account-details.js"></script>
-<script src="live-room.js?v=5"></script><script src="live-in-feed.js"></script>
+<script src="live-room.js?v=6"></script><script src="live-in-feed.js"></script>
 <script src="ui-language.js"></script>
 <script src="locale-loader.js?v=1"></script><script src="translations.js"></script><script src="live-globe.js"></script>
 <script src="premium.js"></script>

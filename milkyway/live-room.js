@@ -748,7 +748,9 @@
     const ids = S.ids || [];
     const style = getComputedStyle(stage);
     S.safeTop = parseFloat(style.getPropertyValue('--lv-safe-top')) || 0;
-    const zone = Math.round(Math.min(H * .3, 250) + (S.barH ? S.barH + 8 : 0) + (parseFloat(style.getPropertyValue('--lv-safe-bottom')) || 0));
+    const commentMax = Math.max(72, Math.min(Math.round(H * .3), 220));
+    const zone = Math.round(commentMax + (S.barH || 0) + 64 + (parseFloat(style.getPropertyValue('--lv-safe-bottom')) || 0) + 40);
+    stage.style.setProperty('--lv-comments-max', `${commentMax}px`);
     stage.style.setProperty('--lv-zone', `${zone}px`);
     const featuredId = settingsOf().featuredId;
     const featuredIndex = ids.length > 1 && featuredId && ids.includes(featuredId) ? ids.indexOf(featuredId) : -1;
@@ -933,7 +935,8 @@
     const toggle = $('mwLiveBoxToggle');
     toggle.hidden = !(S.host && S.room);
     toggle.dataset.state = S.inBox ? 'in' : 'out';
-    toggle.innerHTML = `${ICONS.box}<span>${S.inBox ? t('leaveBox') : t('enterBox')}</span>`;
+    toggle.setAttribute('aria-pressed', String(S.inBox));
+    toggle.innerHTML = ICONS.box;
     toggle.setAttribute('aria-label', S.inBox ? t('leaveBox') : t('enterBox'));
     // Guest bar: labeled actions. Hosts manage boxes and requests, viewers request a seat.
     const self = S.state?.self?.state;
@@ -983,7 +986,10 @@
     }
     const barShown = !card.hidden || !toggle.hidden || !join.hidden || !manage.hidden;
     bar.hidden = !barShown;
-    const barH = barShown ? bar.offsetHeight : 0;
+    const controlsHeight = document.querySelector('.lv-floating-controls')?.offsetHeight || 0;
+    const audioBottom = $('mwLiveAudioJoin')?.parentElement;
+    const audioBottomHeight = audioBottom && getComputedStyle(audioBottom).display !== 'none' ? audioBottom.offsetHeight : 0;
+    const barH = (barShown ? bar.offsetHeight : 0) + controlsHeight + audioBottomHeight;
     if (barH !== S.barH) { S.barH = barH;layoutTiles(); }
     stage.dataset.guest = self || '';
     paintAudioRoom();
@@ -1195,6 +1201,7 @@
   async function paintSettings() {
     const panel = $('mwLiveSettings');
     panel.hidden = !panel.hidden;
+    $('mwLiveSettingsBtn')?.setAttribute('aria-expanded', String(!panel.hidden));
     $('mwLiveSheetBackdrop').hidden = panel.hidden && !S.sheet;
     if (panel.hidden) return;
     const select = $('mwLiveOutput');
@@ -1268,7 +1275,7 @@
       else if (action === 'new') scrollFeed(feedNode(), true);
     });
     $('mwLiveSetup').addEventListener('submit', event => { event.preventDefault();start('video'); });
-    $('mwLiveSheetBackdrop').addEventListener('click', () => { closeSheet();$('mwLiveSettings').hidden = true; });
+    $('mwLiveSheetBackdrop').addEventListener('click', () => { closeSheet();$('mwLiveSettings').hidden = true;$('mwLiveSettingsBtn').setAttribute('aria-expanded', 'false'); });
     $('mwLiveVolume').addEventListener('input', event => { S.volume = Number(event.target.value) / 100;applySound(); });
     $('mwLiveOutput').addEventListener('change', event => { S.audio.forEach(item => item.el.setSinkId?.(event.target.value).catch(() => {})); });
     const list = feedNode();
@@ -1283,7 +1290,7 @@
       try { await sendComment(text); } catch { if (!input.value) input.value = text; }
       input.focus({ preventScroll: true });
     });
-    page.addEventListener('keydown', event => { if (event.key === 'Escape' && !$('mwLiveSheetBackdrop').hidden) { closeSheet();$('mwLiveSettings').hidden = true; } });
+    page.addEventListener('keydown', event => { if (event.key === 'Escape' && !$('mwLiveSheetBackdrop').hidden) { closeSheet();$('mwLiveSettings').hidden = true;$('mwLiveSettingsBtn').setAttribute('aria-expanded', 'false'); } });
     window.addEventListener('mw-language-change', () => { paintStatic();cardKey = '';refresh();if (!$('mwLiveHistory').hidden) paintHistory();if (S.state) { $('mwLiveSheet').dataset.key = '';paintSheet(); } });
     window.addEventListener('hashchange', () => { if (!S.room) refresh(); });
     try { sb.channel('mw-live-discovery-v3').on('postgres_changes', { event: '*', schema: 'public', table: 'mw_video_live_sessions' }, () => refresh()).subscribe(); } catch (error) { console.warn('[MilkyWay Live] realtime unavailable', error); }

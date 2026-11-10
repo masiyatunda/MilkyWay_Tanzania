@@ -241,12 +241,10 @@
 #mwLivePage.lv .tt-audio-mic svg { width: 14px; height: 14px; }
 #mwLivePage.lv .tt-audio-bottom { display: none; }
 #mwLivePage.lv .tt-audio-stage .tt-audio-bottom {
-  position: absolute;
-  z-index: 7;
-  right: 12px;
-  bottom: calc(var(--lv-dock) + var(--lv-sb) + var(--lv-kbo, 0px) + 8px);
-  left: 12px;
+  position: relative;
+  z-index: 8;
   display: flex;
+  flex: none;
   align-items: center;
   justify-content: center;
   gap: 10px;
