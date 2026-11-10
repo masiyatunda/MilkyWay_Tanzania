@@ -127,7 +127,7 @@
 
 
 
-<script src="mw-dialog.js"></script><script src="shared-theme.js?v=6"></script><link rel="stylesheet" href="mw-bundle-live.css?v=1">
+<script src="mw-dialog.js"></script><script src="shared-theme.js?v=6"></script><link rel="stylesheet" href="mw-bundle-live.css?v=2">
 
 
 
@@ -362,24 +362,25 @@ nav.orbit .orbit-inner > #composeBtn{flex:1 1 0!important;width:auto!important;m
       </div>
     </header>
     <div id="mwLiveHearts" class="lv-hearts" aria-hidden="true"></div>
+    <aside class="lv-tools lv-control-panel" aria-label="Live controls">
+      <button type="button" id="mwLiveMic" class="lv-tool" data-action="mic" hidden></button>
+      <button type="button" id="mwLiveCamera" class="lv-tool" data-action="camera" hidden></button>
+      <button type="button" id="mwLiveFlip" class="lv-tool" data-action="flip" hidden></button>
+      <button type="button" id="mwLiveSound" class="lv-tool" data-action="sound"></button>
+      <button type="button" id="mwLiveSettingsBtn" class="lv-tool" data-action="settings" aria-expanded="false"></button>
+      <button type="button" id="mwLiveAudioMic" class="lv-tool" data-action="mic" hidden></button>
+      <button type="button" id="mwLiveBoxToggle" class="lv-pill lv-control-box" data-action="box" hidden></button>
+    </aside>
     <div class="lv-bottom">
       <div class="lv-feed-row">
         <div class="lv-comments-wrap">
           <div id="mwLiveComments" class="mw-live-comments lv-comments" role="log" aria-live="polite"></div>
           <button type="button" id="mwLiveNew" class="lv-new" data-action="new" hidden></button>
         </div>
-        <aside class="lv-tools" aria-label="Live tools">
-          <button type="button" id="mwLiveMic" class="lv-tool" data-action="mic" hidden></button>
-          <button type="button" id="mwLiveCamera" class="lv-tool" data-action="camera" hidden></button>
-          <button type="button" id="mwLiveFlip" class="lv-tool" data-action="flip" hidden></button>
-          <button type="button" id="mwLiveSound" class="lv-tool" data-action="sound"></button>
-          <button type="button" id="mwLiveSettingsBtn" class="lv-tool" data-action="settings" aria-expanded="false"></button>
-        </aside>
       </div>
       <div id="mwLiveGuestBar" class="lv-guestbar" hidden>
         <div id="mwLiveRequestCard" class="lv-reqcard" hidden></div>
         <div class="lv-guestrow">
-          <button type="button" id="mwLiveBoxToggle" class="lv-pill" data-action="box" hidden></button>
           <button type="button" id="mwLiveJoin" class="lv-pill lv-pill-main" data-action="join" hidden></button>
           <button type="button" id="mwLiveManage" class="lv-pill" data-action="guests" hidden></button>
           <div id="mwLiveSeats" class="lv-seatctl" hidden>
@@ -390,7 +391,6 @@ nav.orbit .orbit-inner > #composeBtn{flex:1 1 0!important;width:auto!important;m
         </div>
       </div>
       <div class="tt-audio-bottom">
-        <button type="button" id="mwLiveAudioMic" class="tt-audio-btn-mic" data-action="mic" hidden></button>
         <button type="button" id="mwLiveAudioJoin" class="tt-audio-btn-join" data-action="join" hidden></button>
         <button type="button" id="mwLiveAudioLeave" class="tt-audio-btn-leave" data-action="close" hidden></button>
       </div>

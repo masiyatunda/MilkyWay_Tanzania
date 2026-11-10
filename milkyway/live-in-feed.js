@@ -36,8 +36,19 @@
 
   const currentUser = () => (typeof user !== 'undefined' ? user : null);
   const feedMode = () => (typeof mode !== 'undefined' ? mode : 'feed');
+  const uniqueRecords = items => {
+    const rooms = new Set(), hosts = new Set();
+    return items.filter(record => {
+      const room = String(record.room_name || '').trim();
+      const host = String(record.host_id || '').trim();
+      if (!room || rooms.has(room) || (host && hosts.has(host))) return false;
+      rooms.add(room);
+      if (host) hosts.add(host);
+      return true;
+    });
+  };
   // Lives others are hosting, in discovery order; this is the order the in-Live swipe walks through.
-  const watchable = () => records.filter(record => record.room_name && record.host_id !== currentUser()?.id);
+  const watchable = () => uniqueRecords(records).filter(record => record.room_name && record.host_id !== currentUser()?.id);
 
   function avatarNode(profile, fallback, size) {
     const element = document.createElement('span');

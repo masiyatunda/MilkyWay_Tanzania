@@ -32,7 +32,9 @@
     wants: ['wants to join', 'anaomba kujiunga'], approved: ['You are on stage', 'Uko jukwaani'], share: ['Link copied', 'Link imenakiliwa'], offline: ['No network connection.', 'Hakuna mtandao.'],
     removed: ['Comment removed', 'Maoni yameondolewa'], delConfirm: ['Remove this comment?', 'Ondoa maoni haya?'], full: ['All guest boxes are full.', 'Mabox yote ya wageni yamejaa.'],
     micOff: ['Mic off', 'Maikrofoni imezimwa'], seatEmpty: ['Empty seat', 'Kiti wazi'], leaveRoom: ['Leave', 'Toka'], requestJoin: ['Request to Join', 'Omba kuingia'], cancelRequest: ['Cancel request', 'Futa ombi'],
-    addSeat: ['Add box', 'Ongeza boksi'], removeSeat: ['Remove box', 'Punguza boksi'], camOff: ['Camera off', 'Kamera imezimwa'], close: ['Close', 'Funga'], refresh: ['Refresh', 'Onyesha upya'],
+    addSeat: ['Add box', 'Ongeza boksi'], removeSeat: ['Remove box', 'Punguza boksi'], camOff: ['Camera off', 'Kamera imezimwa'], camOn: ['Camera on', 'Washa kamera'],
+    flipCam: ['Flip camera', 'Geuza kamera'], soundMute: ['Mute audio', 'Zima sauti'], soundEnable: ['Enable audio', 'Washa sauti'],
+    liveControls: ['Live controls', 'Vidhibiti vya Live'], close: ['Close', 'Funga'], refresh: ['Refresh', 'Onyesha upya'],
   };
   const lang = () => { try { return window.MilkyWayI18n?.language?.() || localStorage.getItem('mw_lang') || 'sw'; } catch { return 'sw'; } };
   const t = key => { const row = COPY[key]; return row ? (lang().startsWith('sw') ? row[1] : row[0]) : key; };
@@ -151,6 +153,18 @@
     const allowed = new Set((follows.data || []).map(row => row.following_id));
     return records.filter(record => !restricted(record) || record.host_id === user.id || allowed.has(record.host_id));
   }
+  function uniqueLiveRecords(records) {
+    const rooms = new Set(), hosts = new Set(), ids = new Set();
+    return records.filter(record => {
+      const room = String(record.room_name || '').trim();
+      const host = String(record.host_id || '').trim();
+      const id = String(record.id || '').trim();
+      if (!room || !host || rooms.has(room) || hosts.has(host) || (id && ids.has(id))) return false;
+      rooms.add(room);hosts.add(host);
+      if (id) ids.add(id);
+      return true;
+    });
+  }
   let listKey = '';
   async function refresh(force = true) {
     if (typeof sb === 'undefined' || S.discovering) return;
@@ -159,13 +173,14 @@
     try {
       const result = await sb.from('mw_video_live_sessions').select('id,room_name,host_id,host_name,title,scope,is_live,started_at').eq('is_live', true).order('started_at', { ascending: false }).limit(100);
       if (result.error) throw new Error(t('unavailable'));
-      const records = await accessible((result.data || []).filter(record => record.room_name && record.host_id));
+      const records = uniqueLiveRecords(await accessible(result.data || []));
       const authSession = (await sb.auth.getSession()).data.session;
       const res = await discoveryFetch({ headers: { apikey: sb.supabaseKey || '', ...(authSession ? { Authorization: `Bearer ${authSession.access_token}` } : {}) }, cache: 'no-store', signal: AbortSignal.timeout(12000) });
       const verified = await res.json().catch(() => null);
       if (!res.ok || !Array.isArray(verified?.sessions)) throw new Error(t('unavailable'));
-      const active = records.filter(record => verified.sessions.some(item => item.room_name === record.room_name));
-      active.forEach(record => { record.verified = true;record.connectedCount = verified.sessions.find(item => item.room_name === record.room_name)?.connectedCount; });
+      const verifiedRooms = new Map(verified.sessions.filter(item => item?.room_name).map(item => [item.room_name, item]));
+      const active = records.filter(record => verifiedRooms.has(record.room_name));
+      active.forEach(record => { record.verified = true;record.connectedCount = verifiedRooms.get(record.room_name)?.connectedCount; });
       const ids = [...new Set(records.map(record => record.host_id))].sort();
       const key = ids.join(',');
       if (ids.length && key !== S.profileKey) {
@@ -196,6 +211,7 @@
   function paintList(records, activeCount) {
     const list = $('mwLiveSessions');
     if (!list) return;
+    records = uniqueLiveRecords(records);
     const key = JSON.stringify([lang(), user?.id, activeCount, records.map(r => [r.id, r.title, r.verified, r.connectedCount, r.profile?.display_name, r.profile?.avatar_url])]);
     const badge = $('mwLiveNowCount');
     if (badge) { badge.hidden = !activeCount;badge.textContent = String(activeCount); }
@@ -205,6 +221,8 @@
     if (!records.length) { const empty = document.createElement('p');empty.className = 'lv-empty';empty.textContent = t('none');list.append(empty);return; }
     for (const record of records) {
       const card = document.createElement('button');card.type = 'button';card.className = 'lv-card mw-live-session';
+      card.dataset.liveKey = record.id || record.room_name;
+      card.dataset.room = record.room_name;
       const face = document.createElement('span');face.className = 'lv-avatar';
       const name = record.profile?.display_name || record.host_name || 'MilkyWay';
       paintAvatar(face, record.profile, name);
@@ -691,7 +709,11 @@
   function applySound() {
     S.audio.forEach(item => { item.el.muted = !S.sound;item.el.volume = S.volume; });
     const button = $('mwLiveSound');
-    if (button) { button.innerHTML = S.sound ? ICONS.sound : ICONS.soundOff;button.setAttribute('aria-pressed', String(S.sound)); }
+    if (button) {
+      button.innerHTML = S.sound ? ICONS.sound : ICONS.soundOff;
+      button.setAttribute('aria-pressed', String(S.sound));
+      button.setAttribute('aria-label', S.sound ? t('soundMute') : t('soundEnable'));
+    }
   }
 
   // Slot engine: every tile is snapped to a computed rectangle, so tiles resize and re-arrange as people join or leave.
@@ -898,15 +920,21 @@
     const publishing = !!S.room && (S.host || S.state?.self?.state === 'speaker') && mePublishing();
     const person = S.room?.localParticipant;
     const micOn = !!person?.isMicrophoneEnabled, camOn = !!person?.isCameraEnabled;
-    const tools = { mwLiveMic: publishing, mwLiveCamera: publishing && S.mode === 'video', mwLiveFlip: publishing && S.mode === 'video' && camOn };
+    const tools = { mwLiveMic: publishing && S.mode === 'video', mwLiveCamera: publishing && S.mode === 'video', mwLiveFlip: publishing && S.mode === 'video' && camOn };
     for (const [id, visible] of Object.entries(tools)) { const node = $(id);if (node) node.hidden = !visible; }
     $('mwLiveMic').innerHTML = micOn ? ICONS.mic : ICONS.micOff;$('mwLiveMic').setAttribute('aria-pressed', String(micOn));
     $('mwLiveCamera').innerHTML = camOn ? ICONS.cam : ICONS.camOff;$('mwLiveCamera').setAttribute('aria-pressed', String(camOn));
     $('mwLiveFlip').innerHTML = ICONS.flip;
+    $('mwLiveMic').setAttribute('aria-label', micOn ? t('mute') : t('unmute'));
+    $('mwLiveCamera').setAttribute('aria-label', camOn ? t('camOff') : t('camOn'));
+    $('mwLiveFlip').setAttribute('aria-label', t('flipCam'));
+    $('mwLiveSound').setAttribute('aria-label', S.sound ? t('soundMute') : t('soundEnable'));
+    $('mwLiveSettingsBtn').setAttribute('aria-label', t('settings'));
     const toggle = $('mwLiveBoxToggle');
     toggle.hidden = !(S.host && S.room);
     toggle.dataset.state = S.inBox ? 'in' : 'out';
     toggle.innerHTML = `${ICONS.box}<span>${S.inBox ? t('leaveBox') : t('enterBox')}</span>`;
+    toggle.setAttribute('aria-label', S.inBox ? t('leaveBox') : t('enterBox'));
     // Guest bar: labeled actions. Hosts manage boxes and requests, viewers request a seat.
     const self = S.state?.self?.state;
     const settings = settingsOf();
@@ -1204,6 +1232,9 @@
     $('mwLiveHeart').innerHTML = ICONS.heart;
     $('mwLiveSound').innerHTML = ICONS.sound;
     $('mwLiveFlip').innerHTML = ICONS.flip;
+    $('mwLiveSound').setAttribute('aria-label', t('soundMute'));
+    $('mwLiveSettingsBtn').setAttribute('aria-label', t('settings'));
+    document.querySelector('.lv-control-panel')?.setAttribute('aria-label', t('liveControls'));
     if (typeof ResizeObserver === 'function') new ResizeObserver(() => layoutTiles()).observe($('mwLiveGrid'));
     page.addEventListener('pointerdown', () => { if (S.room && S.room.canPlaybackAudio === false) S.room.startAudio().catch(() => {}); }, { passive: true });
     page.addEventListener('click', event => {
