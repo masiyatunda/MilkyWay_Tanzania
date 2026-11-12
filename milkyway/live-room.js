@@ -546,11 +546,11 @@
         }, 30000);
       }
     });
-    room.on(event.DataReceived, payload => {
+    room.on(event.DataReceived, (payload, participant) => {
       if (!live()) return;
       try {
         const message = JSON.parse(new TextDecoder().decode(payload));
-        if (message.type === 'lv-ended' && !state.host) { endByHost();return; }
+        if (message.type === 'lv-ended' && !state.host && participant?.identity === state.session?.host_id) { endByHost();return; }
         if (message.type === 'lv-heart') heart(false);
         if (message.type === 'lv-sync') poll();
       } catch (error) { console.warn('[MilkyWay Live] ignored invalid room event', error); }
