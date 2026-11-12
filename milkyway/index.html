@@ -127,7 +127,7 @@
 
 
 
-<script src="mw-dialog.js"></script><script src="shared-theme.js?v=6"></script><link rel="stylesheet" href="mw-bundle-live.css?v=9">
+<script src="mw-dialog.js"></script><script src="shared-theme.js?v=6"></script><link rel="stylesheet" href="mw-bundle-live.css?v=8">
 
 
 
@@ -226,7 +226,6 @@ nav.orbit .orbit-inner > #composeBtn{flex:1 1 0!important;width:auto!important;m
 </style>
 
 <link rel="stylesheet" href="mw-bundle-theme-final.css?v=1">
-<link rel="stylesheet" href="video-playback.css?v=1">
 
 
 
@@ -372,7 +371,6 @@ nav.orbit .orbit-inner > #composeBtn{flex:1 1 0!important;width:auto!important;m
       <div id="mwLiveComments" class="lv-comments" role="log" aria-live="polite"></div>
       <div id="mwLiveGuestBar" class="lv-guestbar" hidden>
         <button type="button" id="mwLiveJoin" class="lv-guest-action" data-action="join" hidden>Join stage</button>
-        <div class="lv-guest-requests" aria-live="polite" hidden></div>
       </div>
       <div class="lv-floating-controls" aria-label="Live controls">
         <button type="button" id="mwLiveMic" class="lv-control" data-action="mic" aria-label="Microphone" aria-pressed="false" hidden></button>
@@ -560,7 +558,7 @@ nav.orbit .orbit-inner > #composeBtn{flex:1 1 0!important;width:auto!important;m
 <div class="sheet-bg" id="aboutSheet"><div class="sheet"><button class="close" data-close="aboutSheet">×</button><h2>◉ Kuhusu MilkyWay</h2><p class="muted" style="line-height:1.55"><b style="color:var(--text)">MilkyWay</b> ni social platform ya Masiyatunda yenye kauli <b style="color:var(--gold)">Freedom · Truth · Light</b>.<br><br>Watumiaji wanaweza kufungua akaunti, kupost picha/video, kufuatana, kutoa Signals, kuandika Echoes, kuhifadhi posts, kutafuta watu, kupokea notifications na kuripoti content.<br><br>MilkyWay ina database yake ndani ya Supabase na imeandaliwa ili baadaye itumike pia na Flutter/FlutterFlow kupitia backend hiyo hiyo.</p><a class='btn ghost' href='/' style='display:block;text-align:center;text-decoration:none'>← Masiyatunda</a></div></div>
 <div class="toast" id="toast"></div>
 
-<!-- The Supabase client downloads in parallel (preloaded above) but runs here, so the app skeleton paints first on slow networks. --><script>window.__mwStartupGuard=setTimeout(()=>{if(!window.__mwAppBootStarted){const feed=document.getElementById('feed');if(feed?.querySelector('.mw-skeleton'))feed.innerHTML='<div class="empty" role="status"><h3>Programu inachelewa kuanza</h3><p>Angalia muunganisho, kisha ujaribu tena.</p><button type="button" class="act primary" onclick="location.reload()">Jaribu tena</button></div>'}},12000);</script><script src="offline-data.js?v=2"></script><script src="offline-actions.js?v=1"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>if(!window.supabase?.createClient)document.write('<script src="https://unpkg.com/@supabase/supabase-js@2"><\/script>');</script>
+<!-- The Supabase client downloads in parallel (preloaded above) but runs here, so the app skeleton paints first on slow networks. --><script src="offline-data.js?v=2"></script><script src="offline-actions.js?v=1"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // Follow state per signed-in account ("account:target" → following?) and accounts with a follow write in flight.
 const followKnown=new Map(),followBusy=new Set();let followTaps=0;
@@ -699,7 +697,6 @@ function mwOfflineFeed(){return`<div class="empty mw-offline-feed" role="status"
 addEventListener('mw-reconnected',()=>{try{setWho();loadFeed();window.MilkyWayLive?.refresh?.()}catch(e){console.warn('reconnect',e)}});
 // Likes, saves, follows and comments made offline have reached the server: show the real counts.
 addEventListener('mw-outbox-synced',()=>{try{loadFeed()}catch(e){}});
-function withTimeout(promise,ms,message){let timer;return Promise.race([promise,new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error(message)),ms)})]).finally(()=>clearTimeout(timer))}
 async function loadFeed(){
  const feed=$('feed'); if(!feed) return;
  // Preserve the user's reading position when a reaction/save refreshes the feed.
@@ -708,25 +705,24 @@ async function loadFeed(){
  const feedAnchorId=firstVisiblePost?.id||'';
  const feedAnchorTop=firstVisiblePost?.getBoundingClientRect().top||0;
  if(!feed.querySelector('.post'))feed.innerHTML='<div class="mw-skeleton" aria-busy="true" aria-label="Inapakia nyota…"><div class="mw-skeleton-card"><i></i><b></b><span></span></div><div class="mw-skeleton-card"><i></i><b></b><span></span></div><div class="mw-skeleton-card"><i></i><b></b><span></span></div></div>';
- const startupWatchdog=setTimeout(()=>{if(feed.querySelector('.mw-skeleton')&&!feed.querySelector('.post')){feed.innerHTML=mwOfflineFeed()+`<div class="empty mw-feed-retry"><button type="button" class="act primary" onclick="loadFeed()">${window.MilkyWayI18n?.t('retry')||'Jaribu tena'}</button></div>`;if(navigator.onLine!==false){clearTimeout(loadFeed.retry);loadFeed.retry=setTimeout(()=>{if(!feed.querySelector('.post'))loadFeed()},8000)}}},15000);
  try{
   const q=sb.from('mw_posts').select('*').order('created_at',{ascending:false}).limit(40);
-  const res=await withTimeout(q,7000,'Supabase haijibu. Jaribu tena.');
-  const data=res.data, error=res.error; if(error) throw error;const rawPosts=data||[];const authorIds=[...new Set(rawPosts.map(p=>p.author_id).filter(Boolean))];let profMap={};if(authorIds.length){const{data:profiles}=await withTimeout(sb.from('mw_profiles').select('id,display_name,username,bio,avatar_url').in('id',authorIds),7000,'Profaili hazijajibu. Jaribu tena.');(profiles||[]).forEach(x=>profMap[x.id]=x)}const privacy=await privacyFlags(authorIds);Object.entries(privacy).forEach(([id,flags])=>{if(profMap[id])profMap[id].is_private=!!flags.private});rawPosts.forEach(p=>p.mw_profiles=profMap[p.author_id]||null);const blocked=[]; setTimeout(()=>{try{loadStories()}catch(e){}},300);const now=Date.now();let posts=rawPosts.filter(p=>{const pr=p.mw_profiles; const suspended=pr?.suspended_until && new Date(pr.suspended_until).getTime()>now; return !blocked.includes(p.author_id)&&!pr?.is_banned&&!suspended;});
+  const res=await Promise.race([q, new Promise((_,rej)=>setTimeout(()=>rej(Error('Supabase haijibu. Jaribu tena.')),7000))]);
+  const data=res.data, error=res.error; if(error) throw error;const rawPosts=data||[];const authorIds=[...new Set(rawPosts.map(p=>p.author_id).filter(Boolean))];let profMap={};if(authorIds.length){const{data:profiles}=await sb.from('mw_profiles').select('id,display_name,username,bio,avatar_url').in('id',authorIds);(profiles||[]).forEach(x=>profMap[x.id]=x)}const privacy=await privacyFlags(authorIds);Object.entries(privacy).forEach(([id,flags])=>{if(profMap[id])profMap[id].is_private=!!flags.private});rawPosts.forEach(p=>p.mw_profiles=profMap[p.author_id]||null);const blocked=[]; setTimeout(()=>{try{loadStories()}catch(e){}},300);const now=Date.now();let posts=rawPosts.filter(p=>{const pr=p.mw_profiles; const suspended=pr?.suspended_until && new Date(pr.suspended_until).getTime()>now; return !blocked.includes(p.author_id)&&!pr?.is_banned&&!suspended;});
   // Respect private profiles: owners and their followers can see their posts.
-  if(logged()){const privateIds=posts.filter(p=>p.mw_profiles?.is_private&&p.author_id!==user.id).map(p=>p.author_id);if(privateIds.length){const{data:myFollows}=await withTimeout(followsQuery(q=>q.select('following_id').eq('follower_id',user.id).in('following_id',privateIds)),7000,'Ufuatiliaji wa akaunti haujajibu.');const allowed=new Set((myFollows||[]).map(x=>x.following_id));posts=posts.filter(p=>!p.mw_profiles?.is_private||p.author_id===user.id||allowed.has(p.author_id));}}else{posts=posts.filter(p=>!p.mw_profiles?.is_private); }
+  if(logged()){const privateIds=posts.filter(p=>p.mw_profiles?.is_private&&p.author_id!==user.id).map(p=>p.author_id);if(privateIds.length){const{data:myFollows}=await followsQuery(q=>q.select('following_id').eq('follower_id',user.id).in('following_id',privateIds));const allowed=new Set((myFollows||[]).map(x=>x.following_id));posts=posts.filter(p=>!p.mw_profiles?.is_private||p.author_id===user.id||allowed.has(p.author_id));}}else{posts=posts.filter(p=>!p.mw_profiles?.is_private); }
   // "Only me" posts stay visible to their author alone.
-  if(window.MilkyWayGallery)posts=await withTimeout(window.MilkyWayGallery.visible(posts),7000,'Machapisho hayajapakia. Jaribu tena.');
+  if(window.MilkyWayGallery)posts=await window.MilkyWayGallery.visible(posts);
   if(mode==='saved'){
-   if(!logged()){requireLogin('kuona Saved');feed.innerHTML='<div class="empty" role="status"><h3>Ingia kwanza</h3><p>Ingia ili kuona machapisho uliyohifadhi.</p></div>';return}const{saves}=await withTimeout(getSavedIds(),7000,'Machapisho yaliyohifadhiwa hayajajibu.');const set=new Set(saves);posts=posts.filter(p=>set.has(p.id));
+   if(!logged()){requireLogin('kuona Saved');return}const{saves}=await getSavedIds();const set=new Set(saves);posts=posts.filter(p=>set.has(p.id));
   }
-  if(mode==='following'&&logged()){const{data:f}=await withTimeout(followsQuery(q=>q.select('following_id').eq('follower_id',user.id)),7000,'Orodha ya unaowafuata haijajibu.');const set=new Set((f||[]).map(x=>x.following_id));posts=posts.filter(p=>set.has(p.author_id)||p.author_id===user.id)}
-  posts=await withTimeout(withLinkedPost(posts),7000,'Chapisho halijajibu. Jaribu tena.');
+  if(mode==='following'&&logged()){const{data:f}=await followsQuery(q=>q.select('following_id').eq('follower_id',user.id));const set=new Set((f||[]).map(x=>x.following_id));posts=posts.filter(p=>set.has(p.author_id)||p.author_id===user.id)}
+  posts=await withLinkedPost(posts);
   if(!posts.length&&window.MilkyWayOffline?.offline){if(!feed.querySelector('.post'))feed.innerHTML=mwOfflineFeed();return}
   if(!posts.length){const savedMode=mode==='saved';const title=savedMode?(window.MilkyWayI18n?.t('savedEmptyTitle')||'Hakuna Saved bado'):(window.MilkyWayI18n?.t('feedEmptyTitle')||'Anga ni tulivu');const message=savedMode?(window.MilkyWayI18n?.t('savedEmptyBody')||'Gusa ☆ kwenye post unayoipenda.'):(window.MilkyWayI18n?.t('feedEmptyBody')||'Chapisha nyota ya kwanza kwa kitufe ＋.');feed.innerHTML=`<div class="empty" role="status"><h3>${esc(title)}</h3><p>${esc(message)}</p></div>`;return}
-  const ids=posts.map(p=>p.id);const[{data:sigs},{data:echos},{data:saves}]=await withTimeout(Promise.all([
+  const ids=posts.map(p=>p.id);const[{data:sigs},{data:echos},{data:saves}]=await Promise.all([
    sb.from('mw_signals').select('post_id,kind,user_id').in('post_id',ids),sb.from('mw_echoes').select('id,post_id,body,author_name,created_at').in('post_id',ids).order('created_at',{ascending:false}),logged()?sb.from('mw_saves').select('post_id').eq('user_id',user.id).in('post_id',ids):Promise.resolve({data:[]})
-  ]),7000,'Taarifa za mawasiliano hazijajibu. Jaribu tena.');const sm={};(sigs||[]).forEach(s=>{sm[s.post_id]??={light:0,truth:0,freedom:0,mine:{}};sm[s.post_id][s.kind]++;if(s.user_id===user?.id)sm[s.post_id].mine[s.kind]=1});const ec={},echoPreview={};[...ids.flatMap(id=>window.MilkyWayOutbox?.comments(id)||[]).filter(p=>!(echos||[]).some(e=>e.id===p.id)).reverse(),...(echos||[])].forEach(e=>{ec[e.post_id]=(ec[e.post_id]||0)+1;(echoPreview[e.post_id]??=[]).push(e)});const saved=new Set((saves||[]).map(x=>x.post_id));
+  ]);const sm={};(sigs||[]).forEach(s=>{sm[s.post_id]??={light:0,truth:0,freedom:0,mine:{}};sm[s.post_id][s.kind]++;if(s.user_id===user?.id)sm[s.post_id].mine[s.kind]=1});const ec={},echoPreview={};[...ids.flatMap(id=>window.MilkyWayOutbox?.comments(id)||[]).filter(p=>!(echos||[]).some(e=>e.id===p.id)).reverse(),...(echos||[])].forEach(e=>{ec[e.post_id]=(ec[e.post_id]||0)+1;(echoPreview[e.post_id]??=[]).push(e)});const saved=new Set((saves||[]).map(x=>x.post_id));
   feed.innerHTML=posts.map(p=>{const s=sm[p.id]||{light:0,truth:0,freedom:0,mine:{}};const prof=p.mw_profiles||{display_name:p.author_name};const media=p.media_url?(p.media_type==='video'?`<video class="post-media" src="${esc(p.media_url)}" controls muted playsinline loop preload="none" data-mw-autoplay></video>`:`<img class="post-media" src="${esc(window.MilkyWayMedia.image(p.media_url,720))}" loading="lazy" decoding="async">`):'';return `<article class="post" id="post-${p.id}" data-post-id="${p.id}" data-author-id="${p.author_id}" data-created-at="${esc(p.created_at||'')}"><div class="post-head">${avatarHTML(prof)}<div class="post-meta"><strong>${esc(prof.display_name||'Msafiri')}</strong><span>@${esc(prof.username||'msafiri')} · ${ago(p.created_at)}</span></div>${logged()&&p.author_id!==user.id?`${(()=>{const on=window.MilkyWayOutbox?.state('follow',p.author_id)??followKnown.get(user.id+':'+p.author_id);return`<button type="button" class="follow-mini${on?' following ghost':on===false?' primary':''}" data-follow="${esc(p.author_id)}"${on===undefined?'':` aria-pressed="${on}" data-mw-i18n="${on?'following':'follow'}"`}>${on===undefined?'...':esc(window.MilkyWayI18n?.t(on?'following':'follow')||(on?'Following':'Follow'))}</button>`})()}`:''}</div>${media}<div class="post-body">${p.caption?`<p>${esc(p.caption)}</p>`:''}</div><div class="signals" role="group" aria-label="Reactions">${[['light','⭐'],['truth','🔥'],['freedom','💜']].map(([k,i])=>`<button type="button" class="sig ${s.mine[k]?'on':''}" data-sig="${k}" data-id="${p.id}" aria-pressed="${s.mine[k]?'true':'false'}"><span class="sig-ico" aria-hidden="true">${i}</span><span class="sig-count">${s[k]||0}</span></button>`).join('')}</div>${(echoPreview[p.id]||[]).length?`<div class="post-echo-preview" aria-label="Maoni ya post">${(echoPreview[p.id]||[]).slice(0,2).reverse().map(e=>`<div class="post-echo-line"><strong>${esc(e.author_name||'Msafiri')}</strong> <span>${esc(e.body)}</span></div>`).join('')}${(ec[p.id]||0)>2?`<button class="act post-echo-more" data-echo="${p.id}">Angalia maoni yote (${ec[p.id]})</button>`:''}</div>`:''}<div class="actions"><button class="act" data-echo="${p.id}">💬 Maoni ${ec[p.id]||0}</button>${`<button type="button" class="act mwg-gift-act" data-mw-gift data-post="${p.id}" data-to="${p.author_id}" aria-label="Tuma zawadi" title="Tuma zawadi"><span class="mwg-gift-label">Zawadi</span></button>`}<button class="act ${saved.has(p.id)?'on':''}" data-save="${p.id}">${saved.has(p.id)?'⭐':'☆'}</button><button class="act" data-share="${p.id}">WhatsApp</button><button type="button" class="act" data-repost="${p.id}" data-author-id="${p.author_id}"><span aria-hidden="true">🔁</span> <span data-mw-i18n="repost">Repost</span></button><button class="act danger" data-report="${p.id}" data-report-user="${p.author_id}">⚑</button>${logged()&&p.author_id===user.id?`<button class="act" data-edit="${p.id}">✎ Hariri post</button><button class="act danger" data-delete="${p.id}">🗑 Futa</button>`:''}</div></article>`}).join('');
   if(mode==='feed')window.MilkyWaySuggested?.render(feed);
   bindFeed();
@@ -743,7 +739,6 @@ async function loadFeed(){
   // Offline: "mw-reconnected" reloads the feed. A slow or failing server is retried quietly a little later.
   if(window.MilkyWayOffline?.offline||navigator.onLine===false)return;
   clearTimeout(loadFeed.retry);loadFeed.retry=setTimeout(()=>{if(!feed.querySelector('.post'))loadFeed()},8000)}
-finally{clearTimeout(startupWatchdog)}
 }
 
 async function editPost(postId){
@@ -1655,7 +1650,7 @@ if('serviceWorker' in navigator){
  const busy=()=>[...document.querySelectorAll('video,audio')].some(m=>m.srcObject&&!m.paused);
  const reload=()=>{if(reloaded)return;reloaded=true;location.reload()};
  navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!hadController)return;if(!busy()){reload();return}document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')reload()})});
- navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(registration=>document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')registration.update().catch(()=>{})})).catch(error=>console.warn('Service worker registration failed.',error));
+ navigator.serviceWorker.register('sw.js').then(registration=>document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')registration.update().catch(()=>{})})).catch(()=>{});
 }
 
 
@@ -1700,25 +1695,22 @@ async function cacheMediaUrl(url){ if(!url||!('caches' in window)) return; try{ 
 window.mwCacheMedia = cacheMediaUrl;
 
 async function boot(){
-  window.__mwAppBootStarted = true;
-  clearTimeout(window.__mwStartupGuard);
-  const saved = loadLocalAccount();
+  let sessionUser = null;
+  try { const {data} = await sb.auth.getSession(); sessionUser = data.session?.user || null; } catch {}
   const offline = window.MilkyWayOffline?.offline || navigator.onLine === false;
-  let sessionUser = offline ? saved?.user || null : null;
-  if (offline && saved?.profile) window._mwCachedProfile = saved.profile;
-  if (!offline) {
-    try { const {data} = await withTimeout(sb.auth.getSession(),5000,'Supabase Auth haijajibu.'); sessionUser = data.session?.user || null; }
-    catch(error) { console.warn('Could not restore the Supabase session during startup.',error); }
-  }
-  if (!sessionUser && (window.MilkyWayOffline?.offline || navigator.onLine === false) && saved?.user) {
-    sessionUser = saved.user;
-    if (saved.profile) window._mwCachedProfile = saved.profile;
+  if (!sessionUser && offline) {
+    const saved = loadLocalAccount();
+    if (saved?.user) {
+      sessionUser = saved.user;
+      // Attach cached profile so setWho can use it immediately
+      if (saved.profile) window._mwCachedProfile = saved.profile;
+    }
   }
   user = sessionUser;
-  loadFeed();
   setupNotificationSound();
   setWho();
   if (typeof applyLang === 'function') applyLang();
+  loadFeed();
   window.MilkyWayLive?.refresh();
   startNotificationWatch();
   startPresence();
@@ -1726,9 +1718,7 @@ async function boot(){
 }
 let authUpdateGeneration=0;
 sb.auth.onAuthStateChange((event,session)=>{
-  const cachedOfflineAccount=!session?.user&&event==='INITIAL_SESSION'&&(navigator.onLine===false||window.MilkyWayOffline?.offline)?loadLocalAccount():null;
-  user=session?.user||cachedOfflineAccount?.user||null;
-  if(cachedOfflineAccount?.profile)window._mwCachedProfile=cachedOfflineAccount.profile;
+  user=session?.user||null;
   const accountId=user?.id,attempt=++authUpdateGeneration;
   if(event==='SIGNED_OUT'){clearLocalAccount();window.MilkyWayOffline?.clear();window.MilkyWayPrefetch?.clear();}
   if(!user){window.MilkyWayCalls?.disconnect();window.MilkyWayFiles?.release();closeSheet('threadSheet');closeSheet('msgSheet');$('threadList').replaceChildren();}
@@ -1742,28 +1732,14 @@ sb.auth.onAuthStateChange((event,session)=>{
       setWho();if(!['TOKEN_REFRESHED','USER_UPDATED'].includes(event))loadFeed();window.MilkyWayLive?.refresh();setupNotificationSound();startNotificationWatch();startPresence();
     }catch(error){toast(window.MilkyWayI18n?.text(error.message)||error.message);}
   },0);
-});
-addEventListener('mw-offline',()=>{
-  if(user)return;
-  const cached=loadLocalAccount();
-  if(!cached?.user)return;
-  user=cached.user;
-  if(cached.profile)window._mwCachedProfile=cached.profile;
-  setWho();
-  loadFeed();
-});
-boot().catch(error=>toast(window.MilkyWayI18n?.text(error.message)||error.message));
+});boot().catch(error=>toast(window.MilkyWayI18n?.text(error.message)||error.message));
 if(AUTH_LINK_ERROR){history.replaceState(null,'',location.pathname+location.search);setTimeout(()=>{openAuth('login');$('authMsg').textContent='Link ya password imeisha muda au imeshatumika. Bonyeza "Nimesahau password" kupata link mpya.';},0)}
 </script>
 <script src="dm-files.js"></script>
 <script src="dm-calls.js"></script>
 <script src="chat.js"></script><script src="chat-settings.js"></script><script src="group-settings.js"></script>
 <script src="chat-search.js"></script><script src="account-country.js"></script><script src="account-details.js"></script>
-<<<<<<< HEAD
-<script src="live-room.js?v=15"></script><script src="live-in-feed.js"></script>
-=======
-<script src="live-room.js?v=12"></script><script src="live-in-feed.js"></script>
->>>>>>> parent of 612618d ("Tafadhali fanya marekebisho ya mwisho yafuatayo:  1. Orbit Action Buttons: Rekebisha mpangilio wa CSS kwenye vitufe vya upande wa kulia (kama Gift, Star, n.k.) kwenye ukurasa wa Orbit. Zisongeze ndani kabisa (weka padding au safe-area inset ya kutosha kulia) ili zisikatwe wala kuonekana nusu kwenye skrini za simu.  2. Live Disconnection Fix: Kwenye mantiki ya kuanzisha Live (go live / join room), kuna hitilafu inayosababisha live ifunguke kwa sekunde chache kisha ikate ghafla. Tafadhali chunguza usimamizi wa token za LiveKit na miunganisho ya Supabase, ondoa sehemu zinazosababisha kukata huko, na uhakikishe chumba kinakaa wazi na thabiti bila kukatika ovyo.)
+<script src="live-room.js?v=13"></script><script src="live-in-feed.js"></script>
 <script src="ui-language.js"></script>
 <script src="locale-loader.js?v=1"></script><script src="translations.js"></script><script src="live-globe.js"></script>
 <script src="premium.js"></script>
@@ -1771,11 +1747,7 @@ if(AUTH_LINK_ERROR){history.replaceState(null,'',location.pathname+location.sear
 <script src="gallery.js"></script>
 <script src="live-broadcast.js"></script>
 <script src="video-compress.js"></script><script src="engage.js"></script><script src="suggested.js"></script>
-<<<<<<< HEAD
-<script src="release-shell.js"></script><script src="live-notifications.js"></script><script src="account-hub.js?v=trimmed-account-panel-v52"></script><script src="android-app.js"></script><script src="apk-link.js"></script><script src="native-push.js"></script><script src="share-target.js"></script><script src="media-prefetch.js?v=1"></script><script src="media-playback.js?v=3"></script><script src="settings-ui.js"></script><script src="post-tools.js"></script><script src="gift-catalog.js?v=63"></script><script src="gifts.js?v=68"></script><script src="final-layout.js?v=69"></script><script>/* Not needed to show the app: the Android update check and the Lipa Namba QR encoder load once the page is idle. */window.MilkyWayNetwork.later('qr-code.js?v=62').catch(()=>{});window.MilkyWayNetwork.later('app-update.js').catch(()=>{});</script>
-=======
-<script src="release-shell.js"></script><script src="live-notifications.js"></script><script src="account-hub.js?v=trimmed-account-panel-v52"></script><script src="android-app.js"></script><script src="apk-link.js"></script><script src="native-push.js"></script><script src="share-target.js"></script><script src="media-prefetch.js?v=1"></script><script src="media-playback.js"></script><script src="settings-ui.js"></script><script src="post-tools.js"></script><script src="gift-catalog.js?v=63"></script><script src="gifts.js?v=68"></script><script src="final-layout.js?v=69"></script><script>/* Not needed to show the app: the Android update check and the Lipa Namba QR encoder load once the page is idle. */window.MilkyWayNetwork.later('qr-code.js?v=62').catch(()=>{});window.MilkyWayNetwork.later('app-update.js').catch(()=>{});</script>
->>>>>>> parent of 612618d ("Tafadhali fanya marekebisho ya mwisho yafuatayo:  1. Orbit Action Buttons: Rekebisha mpangilio wa CSS kwenye vitufe vya upande wa kulia (kama Gift, Star, n.k.) kwenye ukurasa wa Orbit. Zisongeze ndani kabisa (weka padding au safe-area inset ya kutosha kulia) ili zisikatwe wala kuonekana nusu kwenye skrini za simu.  2. Live Disconnection Fix: Kwenye mantiki ya kuanzisha Live (go live / join room), kuna hitilafu inayosababisha live ifunguke kwa sekunde chache kisha ikate ghafla. Tafadhali chunguza usimamizi wa token za LiveKit na miunganisho ya Supabase, ondoa sehemu zinazosababisha kukata huko, na uhakikishe chumba kinakaa wazi na thabiti bila kukatika ovyo.)
+<script src="release-shell.js"></script><script src="live-notifications.js"></script><script src="account-hub.js?v=trimmed-account-panel-v52"></script><script src="android-app.js"></script><script src="apk-link.js"></script><script src="native-push.js"></script><script src="share-target.js"></script><script src="media-prefetch.js?v=1"></script><script src="media-playback.js?v=2"></script><script src="settings-ui.js"></script><script src="post-tools.js"></script><script src="gift-catalog.js?v=63"></script><script src="gifts.js?v=68"></script><script src="final-layout.js?v=69"></script><script>/* Not needed to show the app: the Android update check and the Lipa Namba QR encoder load once the page is idle. */window.MilkyWayNetwork.later('qr-code.js?v=62').catch(()=>{});window.MilkyWayNetwork.later('app-update.js').catch(()=>{});</script>
 <script>
 document.getElementById('topNotifyBtn')?.addEventListener('click', () => {
   const sheet = document.getElementById('notifySheet');

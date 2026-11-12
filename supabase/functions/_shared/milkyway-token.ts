@@ -86,7 +86,7 @@ export async function milkywayToken(request: Request) {
         }
         canPublish = body.role === 'host' && record.host_id === account.id;
       }
-      const token = new AccessToken(apiKey!, apiSecret!, { identity: account.id, name: String(body.name || 'MilkyWay user').slice(0, 80), ttl: '10m' });
+      const token = new AccessToken(apiKey!, apiSecret!, { identity: account.id, name: String(body.name || 'MilkyWay user').slice(0, 80), ttl: '1h' });
       token.addGrant({ roomJoin: true, room: roomName, canSubscribe: true, canPublish, canPublishData: true, canPublishSources: canPublish ? audioOnly ? [2] : [1, 2] : [] });
       return json({ token: await token.toJwt(), serverUrl, roomName, room: roomName });
     }

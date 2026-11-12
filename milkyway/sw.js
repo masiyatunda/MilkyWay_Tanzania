@@ -1,21 +1,12 @@
-<<<<<<< HEAD
-const CACHE='milkyway-v127-startup-recovery-v1';
-const ASSETS=[ './mw-bundle-core.css?v=1','./mw-bundle-live.css?v=9','./mw-bundle-overlays.css?v=1','./mw-bundle-theme-final.css?v=1','./','./index.html','./mobile-galaxy.css?v=1','./live-room.css?v=10','./live-room.js?v=14','./galaxy.css?v=2','./galaxy-live.css','./galaxy-nebula.svg','./galaxy-starfield.svg','./premium.css','./theme.css','./engage.css','./engage.js','./video-compress.js','./suggested.css','./suggested.js','./chat-settings.css','./chat-settings.js','./compact-buttons.css?v=2','./brand/milkyway-emblem-96.png','./brand/milkyway-watermark.png','./brand/milkyway-logo-web.png','./favicon.ico','./premium.js','./translations.js','./dm-files.js','./ui-language.js','./locale-loader.js?v=1','./manifest.json','./icon-192.png','./icon-512.png'];
-=======
-const CACHE='milkyway-v123-live-grid-polish-v3';
-const ASSETS=[ './mw-bundle-core.css?v=1','./mw-bundle-live.css?v=8','./mw-bundle-overlays.css?v=1','./mw-bundle-theme-final.css?v=1','./','./index.html','./mobile-galaxy.css?v=1','./live-room.css?v=10','./live-room.js?v=12','./galaxy.css?v=2','./galaxy-live.css','./galaxy-nebula.svg','./galaxy-starfield.svg','./premium.css','./theme.css','./engage.css','./engage.js','./video-compress.js','./suggested.css','./suggested.js','./chat-settings.css','./chat-settings.js','./compact-buttons.css?v=2','./brand/milkyway-emblem-96.png','./brand/milkyway-watermark.png','./brand/milkyway-logo-web.png','./favicon.ico','./premium.js','./translations.js','./dm-files.js','./ui-language.js','./locale-loader.js?v=1','./manifest.json','./icon-192.png','./icon-512.png'];
->>>>>>> parent of 612618d ("Tafadhali fanya marekebisho ya mwisho yafuatayo:  1. Orbit Action Buttons: Rekebisha mpangilio wa CSS kwenye vitufe vya upande wa kulia (kama Gift, Star, n.k.) kwenye ukurasa wa Orbit. Zisongeze ndani kabisa (weka padding au safe-area inset ya kutosha kulia) ili zisikatwe wala kuonekana nusu kwenye skrini za simu.  2. Live Disconnection Fix: Kwenye mantiki ya kuanzisha Live (go live / join room), kuna hitilafu inayosababisha live ifunguke kwa sekunde chache kisha ikate ghafla. Tafadhali chunguza usimamizi wa token za LiveKit na miunganisho ya Supabase, ondoa sehemu zinazosababisha kukata huko, na uhakikishe chumba kinakaa wazi na thabiti bila kukatika ovyo.)
+const CACHE='milkyway-v124-live-reconnect-safe-area-v1';
+const ASSETS=[ './mw-bundle-core.css?v=1','./mw-bundle-live.css?v=8','./mw-bundle-overlays.css?v=1','./mw-bundle-theme-final.css?v=1','./','./index.html','./mobile-galaxy.css?v=1','./live-room.css?v=10','./live-room.js?v=13','./galaxy.css?v=2','./galaxy-live.css','./galaxy-nebula.svg','./galaxy-starfield.svg','./premium.css','./theme.css','./engage.css','./engage.js','./video-compress.js','./suggested.css','./suggested.js','./chat-settings.css','./chat-settings.js','./compact-buttons.css?v=2','./brand/milkyway-emblem-96.png','./brand/milkyway-watermark.png','./brand/milkyway-logo-web.png','./favicon.ico','./premium.js','./translations.js','./dm-files.js','./ui-language.js','./locale-loader.js?v=1','./manifest.json','./icon-192.png','./icon-512.png'];
 ASSETS.push('./language-dropdown.js','./language-dropdown.css');
 ASSETS.push('./mw-dialog.js','./mw-dialog.css','./studio.css');
 ASSETS.push('./live-globe.css','./cosmos.css','./brand/earth-texture.jpg','./shared-theme.js?v=2','./release.css','./release-shell.js','./icon-maskable-192.png','./icon-maskable-512.png');
 // The Live backdrop is saved the first time Live opens, so a first install on a slow network downloads less.
 ASSETS.push('./media-images.js','./backgrounds/app-background.webp');
 ASSETS.push('./live-notifications.js');
-<<<<<<< HEAD
-ASSETS.push('./account-hub.js','./account-hub.css','./media-playback.js?v=3','./video-playback.css?v=1');
-=======
-ASSETS.push('./account-hub.js','./account-hub.css','./media-playback.js');
->>>>>>> parent of 612618d ("Tafadhali fanya marekebisho ya mwisho yafuatayo:  1. Orbit Action Buttons: Rekebisha mpangilio wa CSS kwenye vitufe vya upande wa kulia (kama Gift, Star, n.k.) kwenye ukurasa wa Orbit. Zisongeze ndani kabisa (weka padding au safe-area inset ya kutosha kulia) ili zisikatwe wala kuonekana nusu kwenye skrini za simu.  2. Live Disconnection Fix: Kwenye mantiki ya kuanzisha Live (go live / join room), kuna hitilafu inayosababisha live ifunguke kwa sekunde chache kisha ikate ghafla. Tafadhali chunguza usimamizi wa token za LiveKit na miunganisho ya Supabase, ondoa sehemu zinazosababisha kukata huko, na uhakikishe chumba kinakaa wazi na thabiti bila kukatika ovyo.)
+ASSETS.push('./account-hub.js','./account-hub.css','./media-playback.js?v=2');
 ASSETS.push('./chat.js','./chat.css','./chat-doodle.svg','./group-settings.js','./group-settings.css');
 ASSETS.push('./android-app.js','./android-app.css','./profile-galaxy-watermark.svg');
 ASSETS.push('./settings-ui.js','./settings-ui.css','./account-header.css','./edge-layout.css');

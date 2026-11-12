@@ -15,11 +15,7 @@
     mode: 'video',
     guestSlots: 3,
     joining: false,
-<<<<<<< HEAD
     recovering: false,
-    settingsFallback: false,
-=======
->>>>>>> parent of 612618d ("Tafadhali fanya marekebisho ya mwisho yafuatayo:  1. Orbit Action Buttons: Rekebisha mpangilio wa CSS kwenye vitufe vya upande wa kulia (kama Gift, Star, n.k.) kwenye ukurasa wa Orbit. Zisongeze ndani kabisa (weka padding au safe-area inset ya kutosha kulia) ili zisikatwe wala kuonekana nusu kwenye skrini za simu.  2. Live Disconnection Fix: Kwenye mantiki ya kuanzisha Live (go live / join room), kuna hitilafu inayosababisha live ifunguke kwa sekunde chache kisha ikate ghafla. Tafadhali chunguza usimamizi wa token za LiveKit na miunganisho ya Supabase, ondoa sehemu zinazosababisha kukata huko, na uhakikishe chumba kinakaa wazi na thabiti bila kukatika ovyo.)
     refreshing: false,
     sound: true,
     volume: 1,
@@ -28,11 +24,7 @@
     polling: false,
     pollTimer: 0,
     refreshTimer: 0,
-<<<<<<< HEAD
     hostDepartureTimer: 0,
-    ending: false,
-=======
->>>>>>> parent of 612618d ("Tafadhali fanya marekebisho ya mwisho yafuatayo:  1. Orbit Action Buttons: Rekebisha mpangilio wa CSS kwenye vitufe vya upande wa kulia (kama Gift, Star, n.k.) kwenye ukurasa wa Orbit. Zisongeze ndani kabisa (weka padding au safe-area inset ya kutosha kulia) ili zisikatwe wala kuonekana nusu kwenye skrini za simu.  2. Live Disconnection Fix: Kwenye mantiki ya kuanzisha Live (go live / join room), kuna hitilafu inayosababisha live ifunguke kwa sekunde chache kisha ikate ghafla. Tafadhali chunguza usimamizi wa token za LiveKit na miunganisho ya Supabase, ondoa sehemu zinazosababisha kukata huko, na uhakikishe chumba kinakaa wazi na thabiti bila kukatika ovyo.)
     audio: new Map(),
     tiles: new Map(),
     toastTimer: 0
@@ -43,12 +35,10 @@
     liveNow: 'Live sasa',
     noLive: 'Hakuna Live inayoendelea sasa hivi.',
     connecting: 'Inaunganisha…',
-<<<<<<< HEAD
     reconnecting: 'Muunganisho umekatika kwa muda. Inaunganisha tena…',
     connectionLost: 'Imeshindikana kuunganisha tena. Live hii bado iko wazi; jaribu kujiunga tena.',
+    guestSettingsFailed: 'Live imeendelea, lakini mipangilio ya viti vya wageni haikuhifadhiwa.',
     guestMediaRestoreFailed: 'Umeunganishwa tena kama mtazamaji; sauti au video ya mgeni haikuweza kurejeshwa.',
-=======
->>>>>>> parent of 612618d ("Tafadhali fanya marekebisho ya mwisho yafuatayo:  1. Orbit Action Buttons: Rekebisha mpangilio wa CSS kwenye vitufe vya upande wa kulia (kama Gift, Star, n.k.) kwenye ukurasa wa Orbit. Zisongeze ndani kabisa (weka padding au safe-area inset ya kutosha kulia) ili zisikatwe wala kuonekana nusu kwenye skrini za simu.  2. Live Disconnection Fix: Kwenye mantiki ya kuanzisha Live (go live / join room), kuna hitilafu inayosababisha live ifunguke kwa sekunde chache kisha ikate ghafla. Tafadhali chunguza usimamizi wa token za LiveKit na miunganisho ya Supabase, ondoa sehemu zinazosababisha kukata huko, na uhakikishe chumba kinakaa wazi na thabiti bila kukatika ovyo.)
     connected: 'LIVE',
     audioLive: 'Sauti LIVE',
     videoLive: 'Video LIVE',
@@ -64,13 +54,6 @@
     secure: 'Live inahitaji HTTPS na ruhusa ya kamera na maikrofoni.',
     guestSeat: 'Kiti cha mgeni',
     openSeat: 'Kiti wazi',
-    requestJoin: '+ Omba',
-    requestSent: 'Ombi limetumwa',
-    guestRequests: 'Maombi ya wageni',
-    approve: 'Kubali',
-    reject: 'Kataa',
-    ended: 'Mwenyeji amemaliza Live hii.',
-    guestSettingsLocal: 'Mpangilio wa viti unatumika kwenye kifaa hiki pekee kwa sasa.',
     guestBoxes: 'Viti vya wageni',
     guestBoxesCount: '{n} viti vya wageni'
   };
@@ -79,12 +62,10 @@
     liveNow: 'Live now',
     noLive: 'Nobody is live right now.',
     connecting: 'Connecting…',
-<<<<<<< HEAD
     reconnecting: 'Connection interrupted. Reconnecting…',
     connectionLost: 'Could not reconnect. This Live is still open; try joining again.',
+    guestSettingsFailed: 'Live is active, but guest seating settings could not be saved.',
     guestMediaRestoreFailed: 'Reconnected as a viewer; guest audio or video could not be restored.',
-=======
->>>>>>> parent of 612618d ("Tafadhali fanya marekebisho ya mwisho yafuatayo:  1. Orbit Action Buttons: Rekebisha mpangilio wa CSS kwenye vitufe vya upande wa kulia (kama Gift, Star, n.k.) kwenye ukurasa wa Orbit. Zisongeze ndani kabisa (weka padding au safe-area inset ya kutosha kulia) ili zisikatwe wala kuonekana nusu kwenye skrini za simu.  2. Live Disconnection Fix: Kwenye mantiki ya kuanzisha Live (go live / join room), kuna hitilafu inayosababisha live ifunguke kwa sekunde chache kisha ikate ghafla. Tafadhali chunguza usimamizi wa token za LiveKit na miunganisho ya Supabase, ondoa sehemu zinazosababisha kukata huko, na uhakikishe chumba kinakaa wazi na thabiti bila kukatika ovyo.)
     connected: 'LIVE',
     audioLive: 'Audio LIVE',
     videoLive: 'Video LIVE',
@@ -100,13 +81,6 @@
     secure: 'Live requires HTTPS and camera and microphone access.',
     guestSeat: 'Guest box',
     openSeat: 'Open seat',
-    requestJoin: '+ Request',
-    requestSent: 'Request sent',
-    guestRequests: 'Guest requests',
-    approve: 'Approve',
-    reject: 'Decline',
-    ended: 'The host ended this Live.',
-    guestSettingsLocal: 'This guest-box layout is only available on this device for now.',
     guestBoxes: 'Guest boxes',
     guestBoxesCount: '{n} guest boxes'
   };
@@ -153,20 +127,10 @@
     state.toastTimer = setTimeout(() => node.classList.remove('is-visible'), 3500);
   }
 
-  function withTimeout(promise, milliseconds, message) {
-    return new Promise((resolve, reject) => {
-      const timer = setTimeout(() => reject(new Error(message)), milliseconds);
-      Promise.resolve(promise).then(
-        value => { clearTimeout(timer);resolve(value); },
-        error => { clearTimeout(timer);reject(error); }
-      );
-    });
-  }
-
   async function headers() {
     const client = supabase();
     if (!client) throw new Error(t('offline'));
-    const result = await withTimeout(client.auth.getSession(), 5000, t('offline'));
+    const result = await client.auth.getSession();
     const token = result.data?.session?.access_token;
     if (!token) throw new Error(t('signIn'));
     return {
@@ -183,22 +147,21 @@
 
   async function post(url, body, direct = '') {
     const requestHeaders = await headers();
-    const init = { method: 'POST', headers: requestHeaders, body: JSON.stringify(body), signal: AbortSignal.timeout(10000) };
+    const init = { method: 'POST', headers: requestHeaders, body: JSON.stringify(body) };
     let response;
     try { response = await fetch(url, init); }
     catch (error) {
       console.error('[MilkyWay Live] request failed', url, error);
     }
-    if (direct && !isJsonResponse(response)) response = await fetch(direct, { ...init, signal: AbortSignal.timeout(10000) });
+    if (direct && !isJsonResponse(response)) response = await fetch(direct, init);
     if (!response) throw new Error(t('offline'));
     if (response.status === 401) {
       const client = supabase();
       const refreshed = await client.auth.refreshSession();
       if (!refreshed.error && refreshed.data?.session) {
         init.headers = await headers();
-        init.signal = AbortSignal.timeout(10000);
         response = await fetch(url, init);
-        if (direct && !isJsonResponse(response)) response = await fetch(direct, { ...init, signal: AbortSignal.timeout(10000) });
+        if (direct && !isJsonResponse(response)) response = await fetch(direct, init);
       }
     }
     const payload = await response.json().catch(() => null);
@@ -383,7 +346,7 @@
     post(ROOM_API, { room: record.room_name, action, ...values });
 
   async function start(mode = 'video') {
-    if (state.room || state.joining) return;
+    if (state.room || state.joining || state.recovering) return;
     if (!currentUser()) { open();showMessage(t('signIn'), true);return; }
     if (!window.isSecureContext || !navigator.mediaDevices?.getUserMedia) {
       open();showMessage(t('secure'), true);return;
@@ -404,11 +367,7 @@
         started_at: new Date().toISOString(),
         ended_at: null
       };
-      const saved = await withTimeout(
-        client.from('mw_video_live_sessions').insert(record).select('id').single(),
-        10000,
-        t('offline')
-      );
+      const saved = await client.from('mw_video_live_sessions').insert(record).select('id').single();
       if (saved.error) throw saved.error;
       record.id = saved.data.id;
       await connect(record, true, mode, state.guestSlots);
@@ -419,26 +378,19 @@
   }
 
   async function watchLive(record) {
-    if (!record?.room_name || state.room || state.joining) return;
+    if (!record?.room_name || state.room || state.joining || state.recovering) return;
     await connect(record, record.host_id === userId(), roomMode(record));
   }
 
-  async function connect(record, host, mode, guestSlots = state.guestSlots) {
-    if (state.joining || state.room) return;
+  async function connect(record, host, mode, guestSlots = state.guestSlots, options = {}) {
+    const recovering = options.recovery === true;
+    if (state.joining || state.room || (state.recovering && !recovering)) return;
     const generation = ++state.generation;
-    state.ending = false;
     state.joining = true;
     state.session = record;
     state.host = host;
     state.mode = mode;
     if (host) state.guestSlots = Math.max(2, Math.min(4, Number(guestSlots) || 3));
-    state.settingsFallback = false;
-    state.roomState = {
-      settings: { layout: state.guestSlots + 1, admission: 'approval' },
-      self: { state: host ? 'speaker' : 'viewer' },
-      members: [],
-      messages: []
-    };
     showStage(record);
     open({ start: true });
     try {
@@ -462,21 +414,12 @@
       if (host) {
         await room.localParticipant.setMicrophoneEnabled(true);
         if (mode === 'video') await room.localParticipant.setCameraEnabled(true, { facingMode: state.facing });
-<<<<<<< HEAD
         if (!recovering) {
           try {
-            const result = await withTimeout(
-              roomAction('settings', { layout: state.guestSlots + 1, admission: 'approval', order: [] }),
-              3000,
-              'Guest-box settings request timed out.'
-            );
-            state.settingsFallback = false;
-            state.roomState.settings = result.settings;
+            await roomAction('settings', { layout: state.guestSlots + 1, admission: 'direct', order: [] });
           } catch (error) {
             console.warn('[MilkyWay Live] guest settings could not be saved', error);
-            state.settingsFallback = true;
-            state.roomState.settings = { ...state.roomState.settings, layout: state.guestSlots + 1 };
-            showMessage(t('guestSettingsLocal'));
+            showMessage(t('guestSettingsFailed'), true);
           }
           try {
             Promise.resolve(window.MilkyWayLiveNotifications?.api?.('live-started', { room: record.room_name })).catch(error => {
@@ -485,28 +428,35 @@
           } catch (error) { console.warn('[MilkyWay Live] notification request failed', error); }
         }
       } else if (recovering && options.wasSpeaker) {
-=======
-        await roomAction('settings', { layout: state.guestSlots + 1, admission: 'direct', order: [] });
-        await roomAction('started');
->>>>>>> parent of 612618d ("Tafadhali fanya marekebisho ya mwisho yafuatayo:  1. Orbit Action Buttons: Rekebisha mpangilio wa CSS kwenye vitufe vya upande wa kulia (kama Gift, Star, n.k.) kwenye ukurasa wa Orbit. Zisongeze ndani kabisa (weka padding au safe-area inset ya kutosha kulia) ili zisikatwe wala kuonekana nusu kwenye skrini za simu.  2. Live Disconnection Fix: Kwenye mantiki ya kuanzisha Live (go live / join room), kuna hitilafu inayosababisha live ifunguke kwa sekunde chache kisha ikate ghafla. Tafadhali chunguza usimamizi wa token za LiveKit na miunganisho ya Supabase, ondoa sehemu zinazosababisha kukata huko, na uhakikishe chumba kinakaa wazi na thabiti bila kukatika ovyo.)
         try {
-          Promise.resolve(window.MilkyWayLiveNotifications?.api?.('live-started', { room: record.room_name })).catch(error => {
-            console.warn('[MilkyWay Live] notification request failed', error);
-          });
-        } catch (error) { console.warn('[MilkyWay Live] notification request failed', error); }
+          await roomAction('request');
+          if (options.wasMicrophoneEnabled) await room.localParticipant.setMicrophoneEnabled(true);
+          if (mode === 'video' && options.wasCameraEnabled) {
+            await room.localParticipant.setCameraEnabled(true, { facingMode: state.facing });
+          }
+        } catch (error) {
+          console.warn('[MilkyWay Live] guest media could not be restored after reconnect', error);
+          showMessage(t('guestMediaRestoreFailed'), true);
+        }
       }
       state.joining = false;
       $('mwLiveStatus').textContent = t('connected');
-      renderRoster();
-      renderControls();
       await poll();
       state.pollTimer = setInterval(poll, 1500);
+      if (recovering) state.recovering = false;
     } catch (error) {
       console.error('[MilkyWay Live] connection failed', error);
       if (generation === state.generation) {
         const failedHost = state.host;
-        await cleanup();
-        if (failedHost) await endRecord(record).catch(endError => console.error('[MilkyWay Live] cleanup failed', endError));
+        await cleanup({ showLobby: !recovering, refreshList: !recovering });
+        if (recovering) {
+          state.session = record;
+          state.host = host;
+          state.mode = mode;
+          showStage(record);
+        } else if (failedHost) {
+          await endRecord(record).catch(endError => console.error('[MilkyWay Live] cleanup failed', endError));
+        }
         showMessage(error.message || 'Could not connect to Live.', true);
       }
     } finally {
@@ -528,18 +478,31 @@
     room.on(event.LocalTrackUnpublished, update);
     room.on(event.TrackMuted, update);
     room.on(event.TrackUnmuted, update);
-    room.on(event.ParticipantConnected, () => { if (live()) { renderRoster();poll(); } });
+    room.on(event.ParticipantConnected, participant => {
+      if (!live()) return;
+      if (participant.identity === state.session?.host_id) {
+        clearTimeout(state.hostDepartureTimer);
+        state.hostDepartureTimer = 0;
+      }
+      renderRoster();
+      poll();
+    });
     room.on(event.ParticipantDisconnected, participant => {
       if (!live()) return;
       renderRoster();
       poll();
-      if (!state.host && participant.identity === state.session.host_id) endByHost();
+      if (!state.host && participant.identity === state.session?.host_id) {
+        clearTimeout(state.hostDepartureTimer);
+        state.hostDepartureTimer = setTimeout(() => {
+          state.hostDepartureTimer = 0;
+          if (live()) endByHost();
+        }, 30000);
+      }
     });
-    room.on(event.DataReceived, (payload, participant) => {
+    room.on(event.DataReceived, payload => {
       if (!live()) return;
       try {
         const message = JSON.parse(new TextDecoder().decode(payload));
-        if (message.type === 'lv-ended' && !state.host && participant?.identity === state.session?.host_id) { endByHost();return; }
         if (message.type === 'lv-heart') heart(false);
         if (message.type === 'lv-sync') poll();
       } catch (error) { console.warn('[MilkyWay Live] ignored invalid room event', error); }
@@ -547,12 +510,20 @@
     room.on(event.ConnectionStateChanged, connection => {
       if (live()) $('mwLiveStatus').textContent = connection === 'connected' ? t('connected') : t('connecting');
     });
+    room.on(event.Reconnecting, () => {
+      if (live()) $('mwLiveStatus').textContent = t('reconnecting');
+    });
+    room.on(event.Reconnected, () => {
+      if (!live()) return;
+      $('mwLiveStatus').textContent = t('connected');
+      showMessage(t('connected'));
+      poll();
+    });
     room.on(event.Disconnected, () => {
-      if (live() && !state.joining) endByHost();
+      if (live() && !state.joining) recoverConnection(room, generation);
     });
   }
 
-<<<<<<< HEAD
   async function recoverConnection(room, generation) {
     if (state.recovering || state.room !== room || state.generation !== generation || !state.session) return;
     const record = state.session;
@@ -584,20 +555,6 @@
         state.recovering = false;
         return;
       }
-      const client = supabase();
-      if (client) {
-        try {
-          const result = await client.from('mw_video_live_sessions').select('is_live')
-            .eq('room_name', record.room_name).limit(1);
-          if (result.error) throw result.error;
-          if (!result.data?.length || result.data[0].is_live !== true) {
-            endByHost();
-            return;
-          }
-        } catch (error) {
-          console.warn('[MilkyWay Live] could not verify session after reconnect attempt', error);
-        }
-      }
     }
 
     if (state.generation !== attemptGeneration || !state.recovering) return;
@@ -611,8 +568,6 @@
     showMessage(t('connectionLost'), true);
   }
 
-=======
->>>>>>> parent of 612618d ("Tafadhali fanya marekebisho ya mwisho yafuatayo:  1. Orbit Action Buttons: Rekebisha mpangilio wa CSS kwenye vitufe vya upande wa kulia (kama Gift, Star, n.k.) kwenye ukurasa wa Orbit. Zisongeze ndani kabisa (weka padding au safe-area inset ya kutosha kulia) ili zisikatwe wala kuonekana nusu kwenye skrini za simu.  2. Live Disconnection Fix: Kwenye mantiki ya kuanzisha Live (go live / join room), kuna hitilafu inayosababisha live ifunguke kwa sekunde chache kisha ikate ghafla. Tafadhali chunguza usimamizi wa token za LiveKit na miunganisho ya Supabase, ondoa sehemu zinazosababisha kukata huko, na uhakikishe chumba kinakaa wazi na thabiti bila kukatika ovyo.)
   function participantTile(participant, local) {
     const grid = $('mwLiveGrid');
     let tile = state.tiles.get(participant.identity);
@@ -709,16 +664,6 @@
       label.className = 'lv-seat-label';
       label.textContent = `${t('guestSeat')} ${participants.length + index}: ${t('openSeat')}`;
       seat.append(icon, label);
-      const self = state.roomState?.self?.state;
-      if (!state.host && self !== 'speaker') {
-        const request = document.createElement('button');
-        request.type = 'button';
-        request.className = 'lv-seat-request';
-        request.dataset.action = 'join';
-        request.textContent = self === 'pending' ? t('requestSent') : t('requestJoin');
-        request.disabled = self === 'pending';
-        seat.append(request);
-      }
       return seat;
     });
     const grid = $('mwLiveGrid');
@@ -769,11 +714,8 @@
     try {
       const result = await roomAction('status');
       if (!Array.isArray(result.messages) || !Array.isArray(result.members)) throw new Error('Live status response is invalid.');
-      if (result.settings?.fallback) state.settingsFallback = true;
-      state.roomState = state.settingsFallback
-        ? { ...result, settings: { ...result.settings, layout: state.guestSlots + 1 } }
-        : result;
-      if (!state.settingsFallback && Number.isInteger(result.settings?.layout)) {
+      state.roomState = result;
+      if (Number.isInteger(result.settings?.layout)) {
         state.guestSlots = Math.max(2, Math.min(4, result.settings.layout - 1));
       }
       renderComments(result.messages);
@@ -843,52 +785,7 @@
     box.innerHTML = icons.box;
     box.setAttribute('aria-label', inBox ? t('leaveBox') : t('enterBox'));
     box.setAttribute('aria-pressed', String(inBox));
-    renderGuestRequests(bar, join);
-  }
-
-  function renderGuestRequests(bar, join) {
-    const requests = bar.querySelector('.lv-guest-requests');
-    requests.replaceChildren();
-    const pending = state.host
-      ? (state.roomState?.members || []).filter(member => member.state === 'pending')
-      : [];
-    if (pending.length) {
-      const heading = document.createElement('strong');
-      heading.className = 'lv-guest-requests-title';
-      heading.textContent = `${t('guestRequests')} (${pending.length})`;
-      requests.append(heading);
-      for (const member of pending) {
-        const row = document.createElement('div');
-        row.className = 'lv-guest-request';
-        const name = document.createElement('span');
-        name.textContent = member.name || 'MilkyWay';
-        const actions = document.createElement('span');
-        actions.className = 'lv-guest-request-actions';
-        for (const [action, label] of [['approve-guest', t('approve')], ['reject-guest', t('reject')]]) {
-          const button = document.createElement('button');
-          button.type = 'button';
-          button.dataset.action = action;
-          button.dataset.userId = member.userId;
-          button.textContent = label;
-          actions.append(button);
-        }
-        row.append(name, actions);
-        requests.append(row);
-      }
-    }
-    requests.hidden = !pending.length;
-    join.hidden = state.host || state.roomState?.self?.state === 'speaker' || !state.room;
-    bar.hidden = requests.hidden && join.hidden;
-  }
-
-  async function handleGuestRequest(action, target) {
-    if (!state.host || !target) return;
-    try {
-      await roomAction(action, { target });
-      await poll();
-    } catch (error) {
-      showMessage(error.message || 'Could not update the guest request.', true);
-    }
+    bar.hidden = join.hidden;
   }
 
   async function mediaAction(action) {
@@ -971,34 +868,19 @@
 
   async function endRecord(record) {
     if (!record || record.host_id !== userId()) return;
-    const client = supabase();
-    const closedAt = new Date().toISOString();
-    const [serverEnd, listingEnd] = await Promise.allSettled([
-      withTimeout(roomAction('end', {}, record), 8000, 'Live server shutdown timed out.'),
-      withTimeout(
-        client.from('mw_video_live_sessions')
-          .update({ is_live: false, ended_at: closedAt })
-          .eq('room_name', record.room_name).eq('host_id', userId()),
-        8000,
-        'Live listing shutdown timed out.'
-      ).then(result => {
-        if (result.error) throw new Error(`Could not close the Live listing: ${result.error.message}`);
-      })
-    ]);
-    if (serverEnd.status === 'rejected') {
-      console.error('[MilkyWay Live] server room termination failed', serverEnd.reason);
-    }
-    if (listingEnd.status === 'rejected') {
-      console.error('[MilkyWay Live] Live listing termination failed', listingEnd.reason);
-    }
-    if (serverEnd.status === 'rejected' && listingEnd.status === 'rejected') {
-      throw listingEnd.reason;
-    }
+    try { await roomAction('end', {}, record); }
+    catch (error) { console.warn('[MilkyWay Live] room end request failed', error); }
+    const result = await supabase().from('mw_video_live_sessions')
+      .update({ is_live: false, ended_at: new Date().toISOString() })
+      .eq('room_name', record.room_name).eq('host_id', userId());
+    if (result.error) throw new Error(`Could not close the Live listing: ${result.error.message}`);
   }
 
-  async function cleanup() {
+  async function cleanup({ showLobby: shouldShowLobby = true, refreshList = true } = {}) {
     clearInterval(state.pollTimer);
+    clearTimeout(state.hostDepartureTimer);
     state.pollTimer = 0;
+    state.hostDepartureTimer = 0;
     const room = state.room;
     state.room = null;
     state.roomState = null;
@@ -1019,24 +901,18 @@
     }
     state.session = null;
     state.host = false;
-    state.settingsFallback = false;
     state.joining = false;
-<<<<<<< HEAD
-    state.ending = false;
     if (shouldShowLobby) showLobby();
     if (refreshList) await refresh();
-=======
-    showLobby();
-    await refresh();
->>>>>>> parent of 612618d ("Tafadhali fanya marekebisho ya mwisho yafuatayo:  1. Orbit Action Buttons: Rekebisha mpangilio wa CSS kwenye vitufe vya upande wa kulia (kama Gift, Star, n.k.) kwenye ukurasa wa Orbit. Zisongeze ndani kabisa (weka padding au safe-area inset ya kutosha kulia) ili zisikatwe wala kuonekana nusu kwenye skrini za simu.  2. Live Disconnection Fix: Kwenye mantiki ya kuanzisha Live (go live / join room), kuna hitilafu inayosababisha live ifunguke kwa sekunde chache kisha ikate ghafla. Tafadhali chunguza usimamizi wa token za LiveKit na miunganisho ya Supabase, ondoa sehemu zinazosababisha kukata huko, na uhakikishe chumba kinakaa wazi na thabiti bila kukatika ovyo.)
   }
 
   async function disconnect() {
-    if (!state.session && !state.room && !state.joining) return { clean: true };
+    if (!state.session && !state.room && !state.joining && !state.recovering) return { clean: true };
     const record = state.session;
     const host = state.host;
     const self = state.roomState?.self?.state;
     ++state.generation;
+    state.recovering = false;
     let failure = '';
     if (host && record) {
       try { await endRecord(record); }
@@ -1045,40 +921,29 @@
       await roomAction('leave-stage', {}, record).catch(error => console.warn('[MilkyWay Live] leave stage failed', error));
     }
     await cleanup();
-    if (failure) showMessage(failure, true);
     return { clean: !failure, error: failure };
   }
 
   async function close() {
-    if (state.host && state.room) {
+    if (state.host && state.session) {
       const confirmed = window.MilkyWayDialog?.confirm
         ? await window.MilkyWayDialog.confirm({ message: t('endConfirm'), danger: true })
         : window.confirm(t('endConfirm'));
       if (!confirmed) return;
     }
-<<<<<<< HEAD
-    const outcome = state.room || state.session || state.joining || state.recovering
-      ? await disconnect()
-      : null;
-=======
-    if (state.room || state.joining) await disconnect();
->>>>>>> parent of 612618d ("Tafadhali fanya marekebisho ya mwisho yafuatayo:  1. Orbit Action Buttons: Rekebisha mpangilio wa CSS kwenye vitufe vya upande wa kulia (kama Gift, Star, n.k.) kwenye ukurasa wa Orbit. Zisongeze ndani kabisa (weka padding au safe-area inset ya kutosha kulia) ili zisikatwe wala kuonekana nusu kwenye skrini za simu.  2. Live Disconnection Fix: Kwenye mantiki ya kuanzisha Live (go live / join room), kuna hitilafu inayosababisha live ifunguke kwa sekunde chache kisha ikate ghafla. Tafadhali chunguza usimamizi wa token za LiveKit na miunganisho ya Supabase, ondoa sehemu zinazosababisha kukata huko, na uhakikishe chumba kinakaa wazi na thabiti bila kukatika ovyo.)
+    if (state.room || state.joining || state.recovering) await disconnect();
     const page = $('mwLivePage');
     page.hidden = true;
     page.classList.remove('is-open');
     document.body.classList.remove('lv-open');
-    if (outcome && !outcome.clean) window.toast?.(outcome.error);
   }
 
   function endByHost() {
     const roomName = state.session?.room_name;
-    if (!roomName || state.ending) return;
-    state.ending = true;
+    if (!roomName) return;
     window.dispatchEvent(new CustomEvent('mw-live-host-ended', { detail: { room_name: roomName } }));
-    ++state.generation;
-    state.recovering = false;
-    showMessage(t('ended'));
-    cleanup().catch(error => console.error('[MilkyWay Live] remote room cleanup failed', error));
+    showMessage('This Live has ended.');
+    disconnect();
   }
 
   function toggleSettings() {
@@ -1097,33 +962,16 @@
     }
     const select = $('mwLiveStageGuestSlots');
     select.disabled = true;
-    state.guestSlots = slots;
-    state.roomState = {
-      ...state.roomState,
-      settings: { ...state.roomState?.settings, layout: slots + 1 }
-    };
-    state.settingsFallback = true;
-    renderRoster();
     try {
-      const result = await withTimeout(
-        roomAction('settings', { layout: slots + 1 }),
-        3000,
-        'Guest-box settings request timed out.'
-      );
+      const result = await roomAction('settings', { layout: slots + 1 });
+      state.guestSlots = slots;
       state.roomState.settings = result.settings;
-      state.settingsFallback = false;
       renderRoster();
       renderControls();
     } catch (error) {
-      state.guestSlots = slots;
-      state.settingsFallback = true;
-      state.roomState.settings = { ...state.roomState.settings, layout: slots + 1 };
-      console.warn('[MilkyWay Live] guest settings are using the local fallback', error);
-      showMessage(t('guestSettingsLocal'));
+      showMessage(error.message || 'Could not update guest boxes.', true);
       renderControls();
-    } finally {
-      select.disabled = false;
-    }
+    } finally { select.disabled = false; }
   }
 
   function bindKeyboard() {
@@ -1181,8 +1029,6 @@
           break;
         case 'settings': toggleSettings();break;
         case 'join': guestAction();break;
-        case 'approve-guest': handleGuestRequest('approve', button.dataset.userId);break;
-        case 'reject-guest': handleGuestRequest('reject', button.dataset.userId);break;
         case 'reaction': heart();break;
         case 'share': share();break;
       }
@@ -1226,15 +1072,6 @@
         if (record) watchLive(record);
         else { open({ entry: 'viewer' });showMessage('This Live has ended.', true); }
       });
-    });
-    window.addEventListener('pagehide', () => {
-      if (!state.host || !state.session) return;
-      headers().then(requestHeaders => fetch(ROOM_API, {
-        method: 'POST',
-        keepalive: true,
-        headers: requestHeaders,
-        body: JSON.stringify({ room: state.session.room_name, action: 'end' })
-      })).catch(error => console.warn('[MilkyWay Live] page exit cleanup failed', error));
     });
     const client = supabase();
     if (client) {

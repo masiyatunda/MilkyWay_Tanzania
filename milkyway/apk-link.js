@@ -9,8 +9,8 @@
     .then(response => response.ok ? response.json() : null)
     .then(latest => {
       if (!latest || !latest.versionCode) return;
-      const target = String(latest.url || '/milkyway/download/MilkyWay.apk');
-      const url = new URL(target, location.origin);
+      const target = String(latest.url || 'download/MilkyWay.apk').replace(/^\/+/, '');
+      const url = new URL(target, base);
       url.searchParams.set('v', latest.versionCode);
       links.forEach(link => { link.href = url.pathname + url.search; });
     })

@@ -75,13 +75,8 @@ async function loadRoom(ctx, body) {
 }
 
 async function loadSettings(ctx, roomName) {
-  try {
-    const [row] = await ctx.rest(`mw_live_room_settings?room_name=eq.${encodeURIComponent(roomName)}&select=settings&limit=1`) || [];
-    return { ...DEFAULTS, ...(row?.settings || {}) };
-  } catch (error) {
-    console.warn('[MilkyWay Live] guest settings unavailable; using defaults', error);
-    return { ...DEFAULTS, fallback: true };
-  }
+  const [row] = await ctx.rest(`mw_live_room_settings?room_name=eq.${encodeURIComponent(roomName)}&select=settings&limit=1`).catch(() => []) || [];
+  return { ...DEFAULTS, ...(row?.settings || {}) };
 }
 
 const requireHost = room => { if (!room.host) throw new ApiError(403, 'Only the host can do this.'); };
@@ -92,20 +87,15 @@ const upsertMember = (ctx, roomName, userId, fields) => ctx.rest('mw_live_room_m
 
 async function status(ctx, room) {
   const me = await whoAmI(ctx);
-  const [settings, memberResult, messageResult, connected] = await Promise.all([
+  const [settings, rows, messages, connected] = await Promise.all([
     loadSettings(ctx, room.roomName),
-    ctx.rest(`mw_live_room_members?room_name=eq.${encodeURIComponent(room.roomName)}&select=room_name,user_id,name,avatar,state,host_muted&order=updated_at.desc&limit=200`)
-      .catch(error => { console.warn('[MilkyWay Live] guest member list unavailable', error);return []; }),
-    ctx.rest(`mw_live_room_messages?room_name=eq.${encodeURIComponent(room.roomName)}&select=id,user_id,name,avatar,kind,body,deleted,created_at&order=created_at.desc&limit=100`)
-      .catch(error => { console.warn('[MilkyWay Live] room messages unavailable', error);return []; }),
+    ctx.rest(`mw_live_room_members?room_name=eq.${encodeURIComponent(room.roomName)}&select=room_name,user_id,name,avatar,state,host_muted&order=updated_at.desc&limit=200`),
+    ctx.rest(`mw_live_room_messages?room_name=eq.${encodeURIComponent(room.roomName)}&select=id,user_id,name,avatar,kind,body,deleted,created_at&order=created_at.desc&limit=100`),
     connectedIds(room.roomName),
   ]);
-  const rows = memberResult || [];
-  const messages = messageResult || [];
   let own = (rows || []).find(row => row.user_id === ctx.user.id);
   if (!room.host && !own) {
-    await upsertMember(ctx, room.roomName, ctx.user.id, { name: me.name, avatar: me.avatar, state: 'viewer' })
-      .catch(error => console.warn('[MilkyWay Live] viewer membership unavailable', error));
+    await upsertMember(ctx, room.roomName, ctx.user.id, { name: me.name, avatar: me.avatar, state: 'viewer' }).catch(() => {});
     own = { room_name: room.roomName, user_id: ctx.user.id, name: me.name, avatar: me.avatar, state: 'viewer', host_muted: false };
   }
   if (room.host && !(await ctx.rest(`mw_live_room_settings?room_name=eq.${encodeURIComponent(room.roomName)}&select=room_name&limit=1`).catch(() => [null]))?.length) {
@@ -127,20 +117,20 @@ async function handle({ ctx, body, method }) {
   const room = await loadRoom(ctx, body);
   const target = () => requireUuid(typeof body.target === 'string' ? body.target.toLowerCase() : '', 'participant');
 
-  if (action === 'status') {
-    if (!room.record.is_live) throw new ApiError(404, 'This Live session has ended.');
-    return status(ctx, room);
-  }
+  if (action === 'status') return status(ctx, room);
   if (action === 'started') return { ok: true };
   if (!room.record.is_live && action !== 'end') throw new ApiError(404, 'This Live session has ended.');
 
   if (action === 'request') {
     if (room.host) throw new ApiError(400, 'The host is already on stage.');
     const settings = await loadSettings(ctx, room.roomName);
-    if (settings.admission === 'broadcast') throw new ApiError(403, 'Guests cannot join this Live.');
     const me = await whoAmI(ctx);
     const [existing] = await ctx.rest(`${memberPath(room.roomName, ctx.user.id)}&select=state,host_muted&limit=1`) || [];
-    if (existing?.state === 'speaker') return { state: 'speaker' };
+    if (existing?.state === 'speaker') {
+      await setPublish(room.roomName, ctx.user.id, true, room.audio, !existing.host_muted);
+      return { state: 'speaker' };
+    }
+    if (settings.admission === 'broadcast') throw new ApiError(403, 'Guests cannot join this Live.');
     const direct = settings.admission === 'direct';
     if (direct) {
       const seated = await ctx.rest(`mw_live_room_members?room_name=eq.${encodeURIComponent(room.roomName)}&state=eq.speaker&select=user_id`) || [];
@@ -229,26 +219,8 @@ async function handle({ ctx, body, method }) {
   }
 
   if (action === 'end') {
-    const endedAt = new Date().toISOString();
-    const [sessionResult, membersResult, roomResult] = await Promise.allSettled([
-      ctx.rest(`mw_video_live_sessions?id=eq.${room.record.id}`, { method: 'PATCH', body: { is_live: false, ended_at: endedAt } }),
-      ctx.rest(`mw_live_room_members?room_name=eq.${encodeURIComponent(room.roomName)}`, {
-        method: 'PATCH',
-        body: { state: 'viewer', host_muted: false, updated_at: endedAt },
-      }),
-      livekit('SendData', room.roomName, {
-        data: Buffer.from(JSON.stringify({ type: 'lv-ended' })).toString('base64'),
-        kind: 'RELIABLE',
-        destinationIdentities: [],
-      }).catch(error => {
-        console.warn('[MilkyWay Live] end broadcast failed; deleting room will disconnect participants', error);
-      }).then(() => livekit('DeleteRoom', room.roomName, {})),
-    ]);
-    if (membersResult.status === 'rejected') {
-      console.warn('[MilkyWay Live] guest cleanup failed while ending room', membersResult.reason);
-    }
-    if (sessionResult.status === 'rejected') throw sessionResult.reason;
-    if (roomResult.status === 'rejected') throw roomResult.reason;
+    await ctx.rest(`mw_video_live_sessions?id=eq.${room.record.id}`, { method: 'PATCH', body: { is_live: false, ended_at: new Date().toISOString() } });
+    await livekit('DeleteRoom', room.roomName, {}).catch(() => {});
     return { ok: true };
   }
 
