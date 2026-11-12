@@ -1702,17 +1702,17 @@ window.mwCacheMedia = cacheMediaUrl;
 async function boot(){
   window.__mwAppBootStarted = true;
   clearTimeout(window.__mwStartupGuard);
-  let sessionUser = null;
-  try { const {data} = await withTimeout(sb.auth.getSession(),5000,'Supabase Auth haijajibu.'); sessionUser = data.session?.user || null; }
-  catch(error) { console.warn('Could not restore the Supabase session during startup.',error); }
+  const saved = loadLocalAccount();
   const offline = window.MilkyWayOffline?.offline || navigator.onLine === false;
-  if (!sessionUser && offline) {
-    const saved = loadLocalAccount();
-    if (saved?.user) {
-      sessionUser = saved.user;
-      // Attach cached profile so setWho can use it immediately
-      if (saved.profile) window._mwCachedProfile = saved.profile;
-    }
+  let sessionUser = offline ? saved?.user || null : null;
+  if (offline && saved?.profile) window._mwCachedProfile = saved.profile;
+  if (!offline) {
+    try { const {data} = await withTimeout(sb.auth.getSession(),5000,'Supabase Auth haijajibu.'); sessionUser = data.session?.user || null; }
+    catch(error) { console.warn('Could not restore the Supabase session during startup.',error); }
+  }
+  if (!sessionUser && (window.MilkyWayOffline?.offline || navigator.onLine === false) && saved?.user) {
+    sessionUser = saved.user;
+    if (saved.profile) window._mwCachedProfile = saved.profile;
   }
   user = sessionUser;
   loadFeed();
@@ -1726,7 +1726,9 @@ async function boot(){
 }
 let authUpdateGeneration=0;
 sb.auth.onAuthStateChange((event,session)=>{
-  user=session?.user||null;
+  const cachedOfflineAccount=!session?.user&&event==='INITIAL_SESSION'&&(navigator.onLine===false||window.MilkyWayOffline?.offline)?loadLocalAccount():null;
+  user=session?.user||cachedOfflineAccount?.user||null;
+  if(cachedOfflineAccount?.profile)window._mwCachedProfile=cachedOfflineAccount.profile;
   const accountId=user?.id,attempt=++authUpdateGeneration;
   if(event==='SIGNED_OUT'){clearLocalAccount();window.MilkyWayOffline?.clear();window.MilkyWayPrefetch?.clear();}
   if(!user){window.MilkyWayCalls?.disconnect();window.MilkyWayFiles?.release();closeSheet('threadSheet');closeSheet('msgSheet');$('threadList').replaceChildren();}
@@ -1740,7 +1742,17 @@ sb.auth.onAuthStateChange((event,session)=>{
       setWho();if(!['TOKEN_REFRESHED','USER_UPDATED'].includes(event))loadFeed();window.MilkyWayLive?.refresh();setupNotificationSound();startNotificationWatch();startPresence();
     }catch(error){toast(window.MilkyWayI18n?.text(error.message)||error.message);}
   },0);
-});boot().catch(error=>toast(window.MilkyWayI18n?.text(error.message)||error.message));
+});
+addEventListener('mw-offline',()=>{
+  if(user)return;
+  const cached=loadLocalAccount();
+  if(!cached?.user)return;
+  user=cached.user;
+  if(cached.profile)window._mwCachedProfile=cached.profile;
+  setWho();
+  loadFeed();
+});
+boot().catch(error=>toast(window.MilkyWayI18n?.text(error.message)||error.message));
 if(AUTH_LINK_ERROR){history.replaceState(null,'',location.pathname+location.search);setTimeout(()=>{openAuth('login');$('authMsg').textContent='Link ya password imeisha muda au imeshatumika. Bonyeza "Nimesahau password" kupata link mpya.';},0)}
 </script>
 <script src="dm-files.js"></script>

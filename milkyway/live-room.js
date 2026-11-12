@@ -550,6 +550,7 @@
       if (!live()) return;
       try {
         const message = JSON.parse(new TextDecoder().decode(payload));
+        if (message.type === 'lv-ended' && !state.host) { endByHost();return; }
         if (message.type === 'lv-heart') heart(false);
         if (message.type === 'lv-sync') poll();
       } catch (error) { console.warn('[MilkyWay Live] ignored invalid room event', error); }

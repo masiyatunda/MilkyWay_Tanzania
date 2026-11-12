@@ -239,7 +239,13 @@ async function handle({ ctx, body, method }) {
         method: 'PATCH',
         body: { state: 'viewer', host_muted: false, updated_at: endedAt },
       }),
-      livekit('DeleteRoom', room.roomName, {}),
+      livekit('SendData', room.roomName, {
+        data: Buffer.from(JSON.stringify({ type: 'lv-ended' })).toString('base64'),
+        kind: 'RELIABLE',
+        destinationIdentities: [],
+      }).catch(error => {
+        console.warn('[MilkyWay Live] end broadcast failed; deleting room will disconnect participants', error);
+      }).then(() => livekit('DeleteRoom', room.roomName, {})),
     ]);
     if (membersResult.status === 'rejected') {
       console.warn('[MilkyWay Live] guest cleanup failed while ending room', membersResult.reason);
