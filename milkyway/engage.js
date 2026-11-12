@@ -66,6 +66,22 @@
   }
 
   /* ---------- Uploads to the caller's own public post folder ---------- */
+  const VIDEO_MIME_BY_EXTENSION = {
+    mp4: 'video/mp4', m4v: 'video/mp4', mov: 'video/quicktime', webm: 'video/webm',
+    ogv: 'video/ogg', ogg: 'video/ogg', '3gp': 'video/3gpp', '3gpp': 'video/3gpp',
+    '3g2': 'video/3gpp2', avi: 'video/x-msvideo', mkv: 'video/x-matroska',
+    mpeg: 'video/mpeg', mpg: 'video/mpeg', mpe: 'video/mpeg', vob: 'video/mpeg',
+    ts: 'video/mp2t', mts: 'video/mp2t', m2ts: 'video/mp2t', wmv: 'video/x-ms-wmv',
+    asf: 'video/x-ms-asf', flv: 'video/x-flv', qt: 'video/quicktime', mp4v: 'video/mp4',
+    divx: 'video/divx'
+  };
+  const videoMime = file => {
+    const type = String(file?.type || '').toLowerCase();
+    if (type.startsWith('video/')) return type;
+    const extension = /\.([a-z0-9]+)$/i.exec(String(file?.name || ''))?.[1]?.toLowerCase();
+    return VIDEO_MIME_BY_EXTENSION[extension] || '';
+  };
+  const isVideoFile = file => !!(videoMime(file) || window.MilkyWayVideo?.isVideo?.(file));
   // A JPEG frame saved next to each video (<video path>.poster.jpg) becomes the picture in shared-link previews.
   // Best effort: a video whose frame cannot be read is still posted.
   async function uploadPoster(file, path) {
@@ -103,14 +119,16 @@
   }
   const VIDEO_LIMIT = 100 * 1024 * 1024;
   // Starts shrinking an oversized video as soon as it is picked, so it is often ready by the time Publish is tapped.
-  const prepareVideo = file => { if (file?.type?.startsWith('video/')) window.MilkyWayVideo?.prepare(file, { maxBytes: VIDEO_LIMIT }); };
+  const prepareVideo = file => { if (isVideoFile(file)) window.MilkyWayVideo?.prepare(file, { maxBytes: VIDEO_LIMIT }); };
   async function upload(original, onProgress) {
-    const kind = original.type.startsWith('video/') ? 'video' : original.type.startsWith('image/') ? 'image' : 'file';
+    const kind = isVideoFile(original) ? 'video' : original.type.startsWith('image/') ? 'image' : 'file';
     if (kind === 'file') throw new Error(t('unsupportedFile'));
     onProgress?.(0);
     // An oversized video is quietly shrunk first; that step fills the first 60% of the same progress bar.
     let shrink = 0;
-    const file = kind === 'video' && window.MilkyWayVideo ? await window.MilkyWayVideo.prepare(original, { maxBytes: VIDEO_LIMIT, onProgress: percent => { shrink = 60; onProgress?.(Math.floor(percent * 0.6)); } }) : original;
+    const mime = kind === 'video' ? videoMime(original) : '';
+    const prepared = kind === 'video' && window.MilkyWayVideo ? await window.MilkyWayVideo.prepare(original, { maxBytes: VIDEO_LIMIT, onProgress: percent => { shrink = 60; onProgress?.(Math.floor(percent * 0.6)); } }) : original;
+    const file = mime && !String(prepared.type || '').toLowerCase().startsWith('video/') ? new File([prepared], prepared.name, { type: mime, lastModified: prepared.lastModified }) : prepared;
     if (file.size > (kind === 'video' ? VIDEO_LIMIT : 10 * 1024 * 1024)) throw new Error(t(kind === 'video' ? 'videoTooLarge' : 'photoTooLarge'));
     const path = `milkyway/${user.id}/${Date.now()}-${crypto.randomUUID().slice(0, 8)}-${file.name.replace(/[^a-zA-Z0-9._-]/g, '-').slice(-60)}`;
     // A video still saves its preview frame after the upload, so hold at 97% until that is done.
@@ -259,13 +277,13 @@
     const chips = node('div');
     const status = node('p', { className: 'mw-comment-status', role: 'status' });
     const paintAttachments = () => {
-      previews.replaceChildren(...state.media.map((item, index) => { const remove = node('button', { type: 'button', textContent: '×' }); remove.setAttribute('aria-label', t('remove')); remove.onclick = () => { if (item.preview) URL.revokeObjectURL(item.preview); window.MilkyWayVideo?.cancel(item.file); state.media.splice(index, 1); paintAttachments(); }; const preview = item.file.type.startsWith('video/') ? node('video', { src: item.preview, muted: true }) : node('img', { src: item.preview, alt: '' }); return node('div', { className: 'mw-attach-preview' }, preview, remove); }));
+      previews.replaceChildren(...state.media.map((item, index) => { const remove = node('button', { type: 'button', textContent: '×' }); remove.setAttribute('aria-label', t('remove')); remove.onclick = () => { if (item.preview) URL.revokeObjectURL(item.preview); window.MilkyWayVideo?.cancel(item.file); state.media.splice(index, 1); paintAttachments(); }; const preview = isVideoFile(item.file) ? node('video', { src: item.preview, controls: true, playsInline: true }) : node('img', { src: item.preview, alt: '' }); return node('div', { className: 'mw-attach-preview' }, preview, remove); }));
       chips.replaceChildren(tagChips(state.tags, index => { state.tags.splice(index, 1); paintAttachments(); }));
     };
     const emoji = emojiPicker(value => { if (!state.sending) insertAtCursor(input, value); });
     state.closePickers = () => { emoji.toggle(false); people.toggle(false); };
     const people = tagPicker(person => { if (state.sending) return;if (!state.tags.some(tag => tag.id === person.id)) state.tags.push(person); insertAtCursor(input, `@${person.username || person.name.replace(/\s+/g, '')} `); people.toggle(false); paintAttachments(); });
-    const file = node('input', { type: 'file', accept: 'image/*,video/*', multiple: true, hidden: true });
+    const file = node('input', { type: 'file', accept: 'image/*,video/*,.mkv,.mov,.avi,.wmv,.asf,.flv,.ogv,.vob,.qt,.3gp,.3g2,.mpeg,.mpg,.mpe,.ts,.mts,.m2ts,.mp4v,.divx', multiple: true, hidden: true });
     file.onchange = () => { for (const chosen of [...file.files].slice(0, 4 - state.media.length)) { state.media.push({ file: chosen, preview: URL.createObjectURL(chosen) }); prepareVideo(chosen); } file.value = ''; paintAttachments(); };
     const emojiButton = node('button', { type: 'button', className: 'mw-tool', textContent: '😊' }); emojiButton.setAttribute('aria-label', t('emoji')); emojiButton.title = t('emoji');
     emojiButton.onclick = () => { people.toggle(false); emoji.toggle(); };
@@ -531,7 +549,7 @@
     box.replaceChildren(...compose.files.map((item, index) => {
       const remove = node('button', { type: 'button', textContent: '×', className: 'mw-attach-remove' }); remove.setAttribute('aria-label', t('remove'));
       remove.onclick = () => { if (compose.publishing) return;if (item.preview) URL.revokeObjectURL(item.preview); window.MilkyWayVideo?.cancel(item.file); compose.files.splice(index, 1); paintComposerMedia(); };
-      const preview = item.document ? window.MilkyWayGallery.documentChip(item.file) : item.file.type.startsWith('video/') ? node('video', { src: item.preview, controls: true, playsInline: true }) : node('img', { src: item.preview, alt: '' });
+      const preview = item.document ? window.MilkyWayGallery.documentChip(item.file) : isVideoFile(item.file) ? node('video', { src: item.preview, controls: true, playsInline: true }) : node('img', { src: item.preview, alt: '' });
       const state = node('small', { className: 'mw-attach-state', textContent: item.uploaded ? '✓' : item.error ? `⚠ ${item.error}` : '' });
       item.stateElement = state;
       return node('div', { className: 'mw-compose-preview' }, preview, remove, state);
@@ -542,7 +560,7 @@
     for (const file of mediaInput.files) {
       if (compose.files.length >= 10) { toast(t('maxTenMedia')); break; }
       const isDocument = window.MilkyWayGallery.isDocument(file);
-      if (!isDocument && !file.type.startsWith('image/') && !file.type.startsWith('video/')) { toast(t('unsupportedFile')); continue; }
+      if (!isDocument && !file.type.startsWith('image/') && !isVideoFile(file)) { toast(t('unsupportedFile')); continue; }
       compose.files.push({ file, document: isDocument, preview: isDocument ? '' : URL.createObjectURL(file) });
       if (!isDocument) prepareVideo(file);
     }

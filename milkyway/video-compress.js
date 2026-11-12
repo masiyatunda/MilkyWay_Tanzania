@@ -5,6 +5,7 @@
   // regular upload progress. If the browser cannot re-record video, the original file is used unchanged.
   const BIG_FILE = 25 * 1024 * 1024; // a clip at least this big with a long edge over 1920px is shrunk even under the limit
   const MAX_SECONDS = 20 * 60; // re-recording runs in real time, so very long clips are left as they are
+  const VIDEO_EXTENSIONS = /\.(mp4|m4v|mov|webm|ogv|ogg|3gp|3gpp|3g2|avi|mkv|mpeg|mpg|mpe|vob|ts|mts|m2ts|wmv|asf|flv|qt|mp4v|divx)$/i;
   const jobs = new WeakMap(); // File -> job, so selection can start the work and Publish/retry reuse it
   let queue = Promise.resolve(); // one clip at a time keeps phones responsive
   let audio = null;
@@ -134,6 +135,7 @@
     }).filter(plan => plan.videoBps >= 100000);
   }
   const renamed = (name, type) => `${String(name || 'video').replace(/\.[a-z0-9]{1,5}$/i, '') || 'video'}.${type.includes('mp4') ? 'mp4' : 'webm'}`;
+  const isVideoFile = file => String(file?.type || '').toLowerCase().startsWith('video/') || VIDEO_EXTENSIONS.test(String(file?.name || ''));
 
   function start(file, maxBytes) {
     const controller = new AbortController();
@@ -168,7 +170,7 @@
   // Resolves to the file to upload: a smaller copy when one was needed and possible, otherwise the original.
   // onProgress(0–100) is only called while a copy is being made, so callers can fold it into their progress bar.
   function prepare(file, { maxBytes, onProgress } = {}) {
-    if (!(file instanceof Blob) || !String(file.type).startsWith('video/') || !maxBytes || file.size <= Math.min(maxBytes, BIG_FILE)) return Promise.resolve(file);
+    if (!(file instanceof Blob) || !isVideoFile(file) || !maxBytes || file.size <= Math.min(maxBytes, BIG_FILE)) return Promise.resolve(file);
     let job = jobs.get(file);
     if (!job || job.maxBytes !== maxBytes || job.controller.signal.aborted || (job.settled && job.failed)) { job = start(file, maxBytes); jobs.set(file, job); }
     if (onProgress) { job.listeners.add(onProgress); if (job.compressing) onProgress(job.percent); }
@@ -180,5 +182,5 @@
     if (!job) return;
     job.controller.abort(); jobs.delete(file);
   }
-  window.MilkyWayVideo = { prepare, cancel };
+  window.MilkyWayVideo = { prepare, cancel, isVideo: isVideoFile };
 })();

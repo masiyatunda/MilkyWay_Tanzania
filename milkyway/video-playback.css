@@ -1,0 +1,61 @@
+.mw-media-frame[data-kind="video"]{
+  display:grid;
+  place-items:center;
+  background:#05070c;
+}
+.mw-media-frame[data-kind="video"]>video.post-media{
+  display:block;
+  width:100%;
+  height:auto;
+  max-height:78dvh;
+  object-fit:contain;
+  background:#05070c;
+}
+.mw-video-volume{
+  position:absolute;
+  z-index:5;
+  top:12px;
+  right:12px;
+  display:grid;
+  width:44px;
+  height:44px;
+  min-height:44px;
+  place-items:center;
+  padding:8px;
+  border:1px solid rgba(255,255,255,.55);
+  border-radius:50%;
+  background:rgba(0,0,0,.68);
+  color:#fff;
+  cursor:pointer;
+}
+.mw-video-volume svg{
+  width:21px;
+  height:21px;
+}
+.mw-video-volume:focus-visible{
+  outline:2px solid #fff;
+  outline-offset:3px;
+}
+.mw-media-frame:fullscreen[data-kind="video"]{
+  display:grid;
+  place-items:center;
+}
+.mw-media-frame:fullscreen[data-kind="video"]>video.post-media{
+  width:100%;
+  height:100%;
+  max-height:100dvh;
+  object-fit:contain;
+}
+#feed.mw-tiktok-feed .mw-media-frame[data-kind="video"]>video.post-media{
+  width:100%;
+  height:100%;
+  min-height:calc(100svh - 160px);
+  max-height:calc(100svh - 160px);
+  object-fit:contain;
+}
+@media(min-width:720px){
+  #feed.mw-tiktok-feed .mw-media-frame[data-kind="video"]>video.post-media{
+    min-height:calc(100svh - 100px);
+    max-height:calc(100svh - 100px);
+  }
+}

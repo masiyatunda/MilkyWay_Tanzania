@@ -36,7 +36,7 @@
   height:100%;
   max-height:none;
   border-radius:0!important;
-  object-fit:cover;
+  object-fit:contain;
 }
 #feed>.post:has(>.mw-media-frame[data-kind="video"])>.post-head{
   position:absolute;

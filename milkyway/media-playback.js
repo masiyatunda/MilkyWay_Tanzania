@@ -10,6 +10,8 @@
   const saved = video => !!window.MilkyWayPrefetch?.has(video.currentSrc || video.getAttribute('src'));
   const tracked = new WeakSet();
   const fullscreenControls = new WeakSet();
+  const volumeControls = new WeakSet();
+  const volumeButtons = new WeakMap();
   const autoplayRequests = new WeakMap();
   const playbackGenerations = new WeakMap();
   // Once someone turns the sound on, later autoplayed videos keep it on for this visit.
@@ -46,7 +48,10 @@
   });
 
   function prepare(video) {
-    if (video.matches('video.post-media')) ensureFullscreenControl(video);
+    if (video.matches('video.post-media')) {
+      ensureFullscreenControl(video);
+      ensureVolumeControl(video);
+    }
     if (tracked.has(video)) return;
     tracked.add(video);
     video.playsInline = true;
@@ -56,7 +61,11 @@
     video.addEventListener('loadedmetadata', () => { if (video.paused && video.currentTime === 0) { try { video.currentTime = 0.05; } catch {} } }, { once: true });
     video.addEventListener('pause', () => { if (!video.mwAutoPausing && !video.ended && ratios.get(video) >= visibleRatio) video.dataset.mwUserPaused = 'true'; });
     video.addEventListener('play', () => { delete video.dataset.mwUserPaused; });
-    video.addEventListener('volumechange', () => { if (!video.mwAutoMuting) soundOn = !video.muted; });
+    video.addEventListener('volumechange', () => {
+      if (!video.mwAutoMuting) soundOn = !video.muted;
+      const button = volumeButtons.get(video);
+      if (button) updateVolumeControl(video, button);
+    });
     observer?.observe(video);
   }
 
@@ -124,6 +133,7 @@
       video.before(frame);
       frame.append(video);
     }
+    frame.dataset.kind = 'video';
     fullscreenControls.add(video);
     const button = document.createElement('button');
     button.type = 'button';
@@ -136,6 +146,40 @@
       event.preventDefault();event.stopPropagation();
       toggleFullscreen(video).catch(error => { console.error('Could not open video fullscreen.', error); });
     });
+    frame.append(button);
+  }
+
+  function updateVolumeControl(video, button) {
+    const muted = video.muted;
+    button.setAttribute('aria-label', muted ? 'Unmute video' : 'Mute video');
+    button.setAttribute('aria-pressed', String(!muted));
+    button.title = muted ? 'Unmute video' : 'Mute video';
+    button.innerHTML = muted
+      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Zm5 4 5 6m0-6-5 6"/></svg>'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Zm4 4a5 5 0 0 1 0 6m3-9a9 9 0 0 1 0 12"/></svg>';
+  }
+
+  function ensureVolumeControl(video) {
+    if (volumeControls.has(video)) return;
+    const frame = video.closest('.mw-media-frame');
+    if (!frame) return;
+    volumeControls.add(video);
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'mw-video-volume';
+    button.addEventListener('click', event => {
+      event.preventDefault();
+      event.stopPropagation();
+      const unmuting = video.muted || video.volume === 0;
+      video.mwAutoMuting = true;
+      video.muted = !unmuting;
+      if (unmuting && video.volume === 0) video.volume = 1;
+      video.mwAutoMuting = false;
+      soundOn = unmuting;
+      updateVolumeControl(video, button);
+    });
+    volumeButtons.set(video, button);
+    updateVolumeControl(video, button);
     frame.append(button);
   }
 
@@ -241,6 +285,9 @@
         object-fit: cover;
         background: #000;
       }
+      #feed.mw-tiktok-feed video.post-media {
+        object-fit: contain;
+      }
       #feed.mw-tiktok-feed .post-body {
         position: absolute;
         left: 12px;
@@ -318,11 +365,11 @@
     const prefersCompactFeed = window.matchMedia && window.matchMedia('(max-width: 820px)').matches;
     const hasVideo = [...feed.querySelectorAll('video.post-media')].length > 0;
     if (!hasVideo && !force) {
-      feed.classList.remove('mw-tiktok-feed');
+      deactivateTikTokFeed(feed);
       return;
     }
     if (!force && !prefersCompactFeed && !('ontouchstart' in window || navigator.maxTouchPoints > 0)) {
-      feed.classList.remove('mw-tiktok-feed');
+      deactivateTikTokFeed(feed);
       return;
     }
     ensureTikTokStyles();
@@ -344,6 +391,14 @@
         button.style.top = '16px';
         button.style.zIndex = '8';
       }
+      const volumeButton = post.querySelector('.mw-video-volume');
+      if (volumeButton) {
+        post.append(volumeButton);
+        volumeButton.style.position = 'absolute';
+        volumeButton.style.right = '68px';
+        volumeButton.style.top = '16px';
+        volumeButton.style.zIndex = '8';
+      }
     });
 
     const videos = [...feed.querySelectorAll('video.post-media')];
@@ -359,18 +414,29 @@
       for (const video of videos) {
         if (!video.isConnected) continue;
         if (video === target) {
-          if (video.paused) {
-            video.muted = true;
-            video.play().catch(() => {});
-          }
+          if (video.paused) autoPlay(video);
         } else if (!video.paused) {
-          video.pause();
+          autoPause(video);
+          delete video.dataset.mwAutoplayed;
         }
       }
     }, { threshold: [0.2, 0.45, 0.7, 1] });
 
     videos.forEach(video => observer.observe(video));
     feed.__mwTikTokObserver = observer;
+  }
+
+  function deactivateTikTokFeed(feed) {
+    feed.classList.remove('mw-tiktok-feed');
+    feed.__mwTikTokObserver?.disconnect();
+    feed.querySelectorAll('.mw-video-volume').forEach(button => {
+      const frame = button.closest('.mw-media-frame') || button.closest('.post')?.querySelector('.mw-media-frame');
+      if (frame && button.parentElement !== frame) frame.append(button);
+      button.style.removeProperty('position');
+      button.style.removeProperty('right');
+      button.style.removeProperty('top');
+      button.style.removeProperty('z-index');
+    });
   }
 
   const setupTikTokMode = () => activateTikTokFeed(false);
@@ -382,5 +448,5 @@
 
   window.addEventListener('mw-settings-open', () => setupTikTokMode());
   window.addEventListener('resize', () => setupTikTokMode());
-  window.MilkyWayMediaPlayback = { autoplayEnabled, refresh: update, toggleFullscreen, activateTikTokFeed: activateTikTokFeed, disableTikTokFeed: () => document.getElementById('feed')?.classList.remove('mw-tiktok-feed') };
+  window.MilkyWayMediaPlayback = { autoplayEnabled, refresh: update, toggleFullscreen, activateTikTokFeed: activateTikTokFeed, disableTikTokFeed: () => { const feed = document.getElementById('feed'); if (feed) deactivateTikTokFeed(feed); } };
 })();
