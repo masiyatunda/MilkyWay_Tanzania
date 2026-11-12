@@ -16,6 +16,7 @@
     guestSlots: 3,
     joining: false,
     recovering: false,
+    settingsFallback: false,
     refreshing: false,
     sound: true,
     volume: 1,
@@ -54,14 +55,13 @@
     secure: 'Live inahitaji HTTPS na ruhusa ya kamera na maikrofoni.',
     guestSeat: 'Kiti cha mgeni',
     openSeat: 'Kiti wazi',
-    requestJoin: '+ Omba kujiunga',
+    requestJoin: '+ Omba',
     requestSent: 'Ombi limetumwa',
     guestRequests: 'Maombi ya wageni',
     approve: 'Kubali',
     reject: 'Kataa',
     ended: 'Mwenyeji amemaliza Live hii.',
-    endSyncFailed: 'Live imefungwa hapa, lakini seva haikuthibitisha kuondolewa kwa washiriki.',
-    settingsApprovalFailed: 'Live inaendelea, lakini mpangilio wa viti haukuweza kuhifadhiwa.',
+    guestSettingsLocal: 'Mpangilio wa viti unatumika kwenye kifaa hiki pekee kwa sasa.',
     guestBoxes: 'Viti vya wageni',
     guestBoxesCount: '{n} viti vya wageni'
   };
@@ -88,14 +88,13 @@
     secure: 'Live requires HTTPS and camera and microphone access.',
     guestSeat: 'Guest box',
     openSeat: 'Open seat',
-    requestJoin: '+ Request to join',
+    requestJoin: '+ Request',
     requestSent: 'Request sent',
     guestRequests: 'Guest requests',
     approve: 'Approve',
     reject: 'Decline',
     ended: 'The host ended this Live.',
-    endSyncFailed: 'Live ended here, but the server could not confirm participant cleanup.',
-    settingsApprovalFailed: 'Live is active, but the guest-seat settings could not be saved.',
+    guestSettingsLocal: 'This guest-box layout is only available on this device for now.',
     guestBoxes: 'Guest boxes',
     guestBoxesCount: '{n} guest boxes'
   };
@@ -142,10 +141,20 @@
     state.toastTimer = setTimeout(() => node.classList.remove('is-visible'), 3500);
   }
 
+  function withTimeout(promise, milliseconds, message) {
+    return new Promise((resolve, reject) => {
+      const timer = setTimeout(() => reject(new Error(message)), milliseconds);
+      Promise.resolve(promise).then(
+        value => { clearTimeout(timer);resolve(value); },
+        error => { clearTimeout(timer);reject(error); }
+      );
+    });
+  }
+
   async function headers() {
     const client = supabase();
     if (!client) throw new Error(t('offline'));
-    const result = await client.auth.getSession();
+    const result = await withTimeout(client.auth.getSession(), 5000, t('offline'));
     const token = result.data?.session?.access_token;
     if (!token) throw new Error(t('signIn'));
     return {
@@ -162,21 +171,22 @@
 
   async function post(url, body, direct = '') {
     const requestHeaders = await headers();
-    const init = { method: 'POST', headers: requestHeaders, body: JSON.stringify(body) };
+    const init = { method: 'POST', headers: requestHeaders, body: JSON.stringify(body), signal: AbortSignal.timeout(10000) };
     let response;
     try { response = await fetch(url, init); }
     catch (error) {
       console.error('[MilkyWay Live] request failed', url, error);
     }
-    if (direct && !isJsonResponse(response)) response = await fetch(direct, init);
+    if (direct && !isJsonResponse(response)) response = await fetch(direct, { ...init, signal: AbortSignal.timeout(10000) });
     if (!response) throw new Error(t('offline'));
     if (response.status === 401) {
       const client = supabase();
       const refreshed = await client.auth.refreshSession();
       if (!refreshed.error && refreshed.data?.session) {
         init.headers = await headers();
+        init.signal = AbortSignal.timeout(10000);
         response = await fetch(url, init);
-        if (direct && !isJsonResponse(response)) response = await fetch(direct, init);
+        if (direct && !isJsonResponse(response)) response = await fetch(direct, { ...init, signal: AbortSignal.timeout(10000) });
       }
     }
     const payload = await response.json().catch(() => null);
@@ -382,7 +392,11 @@
         started_at: new Date().toISOString(),
         ended_at: null
       };
-      const saved = await client.from('mw_video_live_sessions').insert(record).select('id').single();
+      const saved = await withTimeout(
+        client.from('mw_video_live_sessions').insert(record).select('id').single(),
+        10000,
+        t('offline')
+      );
       if (saved.error) throw saved.error;
       record.id = saved.data.id;
       await connect(record, true, mode, state.guestSlots);
@@ -407,6 +421,13 @@
     state.host = host;
     state.mode = mode;
     if (host) state.guestSlots = Math.max(2, Math.min(4, Number(guestSlots) || 3));
+    state.settingsFallback = false;
+    state.roomState = {
+      settings: { layout: state.guestSlots + 1, admission: 'approval' },
+      self: { state: host ? 'speaker' : 'viewer' },
+      members: [],
+      messages: []
+    };
     showStage(record);
     open({ start: true });
     try {
@@ -432,10 +453,18 @@
         if (mode === 'video') await room.localParticipant.setCameraEnabled(true, { facingMode: state.facing });
         if (!recovering) {
           try {
-            await roomAction('settings', { layout: state.guestSlots + 1, admission: 'approval', order: [] });
+            const result = await withTimeout(
+              roomAction('settings', { layout: state.guestSlots + 1, admission: 'approval', order: [] }),
+              3000,
+              'Guest-box settings request timed out.'
+            );
+            state.settingsFallback = false;
+            state.roomState.settings = result.settings;
           } catch (error) {
             console.warn('[MilkyWay Live] guest settings could not be saved', error);
-            showMessage(t('settingsApprovalFailed'), true);
+            state.settingsFallback = true;
+            state.roomState.settings = { ...state.roomState.settings, layout: state.guestSlots + 1 };
+            showMessage(t('guestSettingsLocal'));
           }
           try {
             Promise.resolve(window.MilkyWayLiveNotifications?.api?.('live-started', { room: record.room_name })).catch(error => {
@@ -457,6 +486,8 @@
       }
       state.joining = false;
       $('mwLiveStatus').textContent = t('connected');
+      renderRoster();
+      renderControls();
       await poll();
       state.pollTimer = setInterval(poll, 1500);
       if (recovering) state.recovering = false;
@@ -754,8 +785,11 @@
     try {
       const result = await roomAction('status');
       if (!Array.isArray(result.messages) || !Array.isArray(result.members)) throw new Error('Live status response is invalid.');
-      state.roomState = result;
-      if (Number.isInteger(result.settings?.layout)) {
+      if (result.settings?.fallback) state.settingsFallback = true;
+      state.roomState = state.settingsFallback
+        ? { ...result, settings: { ...result.settings, layout: state.guestSlots + 1 } }
+        : result;
+      if (!state.settingsFallback && Number.isInteger(result.settings?.layout)) {
         state.guestSlots = Math.max(2, Math.min(4, result.settings.layout - 1));
       }
       renderComments(result.messages);
@@ -953,17 +987,29 @@
 
   async function endRecord(record) {
     if (!record || record.host_id !== userId()) return;
-    let serverError = null;
-    try { await roomAction('end', {}, record); }
-    catch (error) {
-      serverError = error;
-      console.error('[MilkyWay Live] server room termination failed', error);
+    const client = supabase();
+    const closedAt = new Date().toISOString();
+    const [serverEnd, listingEnd] = await Promise.allSettled([
+      withTimeout(roomAction('end', {}, record), 8000, 'Live server shutdown timed out.'),
+      withTimeout(
+        client.from('mw_video_live_sessions')
+          .update({ is_live: false, ended_at: closedAt })
+          .eq('room_name', record.room_name).eq('host_id', userId()),
+        8000,
+        'Live listing shutdown timed out.'
+      ).then(result => {
+        if (result.error) throw new Error(`Could not close the Live listing: ${result.error.message}`);
+      })
+    ]);
+    if (serverEnd.status === 'rejected') {
+      console.error('[MilkyWay Live] server room termination failed', serverEnd.reason);
     }
-    const result = await supabase().from('mw_video_live_sessions')
-      .update({ is_live: false, ended_at: new Date().toISOString() })
-      .eq('room_name', record.room_name).eq('host_id', userId());
-    if (result.error) throw new Error(`Could not close the Live listing: ${result.error.message}`);
-    if (serverError) throw new Error(t('endSyncFailed'));
+    if (listingEnd.status === 'rejected') {
+      console.error('[MilkyWay Live] Live listing termination failed', listingEnd.reason);
+    }
+    if (serverEnd.status === 'rejected' && listingEnd.status === 'rejected') {
+      throw listingEnd.reason;
+    }
   }
 
   async function cleanup({ showLobby: shouldShowLobby = true, refreshList = true } = {}) {
@@ -991,6 +1037,7 @@
     }
     state.session = null;
     state.host = false;
+    state.settingsFallback = false;
     state.joining = false;
     state.ending = false;
     if (shouldShowLobby) showLobby();
@@ -1060,16 +1107,33 @@
     }
     const select = $('mwLiveStageGuestSlots');
     select.disabled = true;
+    state.guestSlots = slots;
+    state.roomState = {
+      ...state.roomState,
+      settings: { ...state.roomState?.settings, layout: slots + 1 }
+    };
+    state.settingsFallback = true;
+    renderRoster();
     try {
-      const result = await roomAction('settings', { layout: slots + 1 });
-      state.guestSlots = slots;
+      const result = await withTimeout(
+        roomAction('settings', { layout: slots + 1 }),
+        3000,
+        'Guest-box settings request timed out.'
+      );
       state.roomState.settings = result.settings;
+      state.settingsFallback = false;
       renderRoster();
       renderControls();
     } catch (error) {
-      showMessage(error.message || 'Could not update guest boxes.', true);
+      state.guestSlots = slots;
+      state.settingsFallback = true;
+      state.roomState.settings = { ...state.roomState.settings, layout: slots + 1 };
+      console.warn('[MilkyWay Live] guest settings are using the local fallback', error);
+      showMessage(t('guestSettingsLocal'));
       renderControls();
-    } finally { select.disabled = false; }
+    } finally {
+      select.disabled = false;
+    }
   }
 
   function bindKeyboard() {

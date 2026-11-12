@@ -75,8 +75,13 @@ async function loadRoom(ctx, body) {
 }
 
 async function loadSettings(ctx, roomName) {
-  const [row] = await ctx.rest(`mw_live_room_settings?room_name=eq.${encodeURIComponent(roomName)}&select=settings&limit=1`).catch(() => []) || [];
-  return { ...DEFAULTS, ...(row?.settings || {}) };
+  try {
+    const [row] = await ctx.rest(`mw_live_room_settings?room_name=eq.${encodeURIComponent(roomName)}&select=settings&limit=1`) || [];
+    return { ...DEFAULTS, ...(row?.settings || {}) };
+  } catch (error) {
+    console.warn('[MilkyWay Live] guest settings unavailable; using defaults', error);
+    return { ...DEFAULTS, fallback: true };
+  }
 }
 
 const requireHost = room => { if (!room.host) throw new ApiError(403, 'Only the host can do this.'); };
@@ -87,15 +92,20 @@ const upsertMember = (ctx, roomName, userId, fields) => ctx.rest('mw_live_room_m
 
 async function status(ctx, room) {
   const me = await whoAmI(ctx);
-  const [settings, rows, messages, connected] = await Promise.all([
+  const [settings, memberResult, messageResult, connected] = await Promise.all([
     loadSettings(ctx, room.roomName),
-    ctx.rest(`mw_live_room_members?room_name=eq.${encodeURIComponent(room.roomName)}&select=room_name,user_id,name,avatar,state,host_muted&order=updated_at.desc&limit=200`),
-    ctx.rest(`mw_live_room_messages?room_name=eq.${encodeURIComponent(room.roomName)}&select=id,user_id,name,avatar,kind,body,deleted,created_at&order=created_at.desc&limit=100`),
+    ctx.rest(`mw_live_room_members?room_name=eq.${encodeURIComponent(room.roomName)}&select=room_name,user_id,name,avatar,state,host_muted&order=updated_at.desc&limit=200`)
+      .catch(error => { console.warn('[MilkyWay Live] guest member list unavailable', error);return []; }),
+    ctx.rest(`mw_live_room_messages?room_name=eq.${encodeURIComponent(room.roomName)}&select=id,user_id,name,avatar,kind,body,deleted,created_at&order=created_at.desc&limit=100`)
+      .catch(error => { console.warn('[MilkyWay Live] room messages unavailable', error);return []; }),
     connectedIds(room.roomName),
   ]);
+  const rows = memberResult || [];
+  const messages = messageResult || [];
   let own = (rows || []).find(row => row.user_id === ctx.user.id);
   if (!room.host && !own) {
-    await upsertMember(ctx, room.roomName, ctx.user.id, { name: me.name, avatar: me.avatar, state: 'viewer' }).catch(() => {});
+    await upsertMember(ctx, room.roomName, ctx.user.id, { name: me.name, avatar: me.avatar, state: 'viewer' })
+      .catch(error => console.warn('[MilkyWay Live] viewer membership unavailable', error));
     own = { room_name: room.roomName, user_id: ctx.user.id, name: me.name, avatar: me.avatar, state: 'viewer', host_muted: false };
   }
   if (room.host && !(await ctx.rest(`mw_live_room_settings?room_name=eq.${encodeURIComponent(room.roomName)}&select=room_name&limit=1`).catch(() => [null]))?.length) {
@@ -222,12 +232,20 @@ async function handle({ ctx, body, method }) {
   }
 
   if (action === 'end') {
-    await ctx.rest(`mw_video_live_sessions?id=eq.${room.record.id}`, { method: 'PATCH', body: { is_live: false, ended_at: new Date().toISOString() } });
-    await ctx.rest(`mw_live_room_members?room_name=eq.${encodeURIComponent(room.roomName)}`, {
-      method: 'PATCH',
-      body: { state: 'viewer', host_muted: false, updated_at: new Date().toISOString() },
-    });
-    await livekit('DeleteRoom', room.roomName, {});
+    const endedAt = new Date().toISOString();
+    const [sessionResult, membersResult, roomResult] = await Promise.allSettled([
+      ctx.rest(`mw_video_live_sessions?id=eq.${room.record.id}`, { method: 'PATCH', body: { is_live: false, ended_at: endedAt } }),
+      ctx.rest(`mw_live_room_members?room_name=eq.${encodeURIComponent(room.roomName)}`, {
+        method: 'PATCH',
+        body: { state: 'viewer', host_muted: false, updated_at: endedAt },
+      }),
+      livekit('DeleteRoom', room.roomName, {}),
+    ]);
+    if (membersResult.status === 'rejected') {
+      console.warn('[MilkyWay Live] guest cleanup failed while ending room', membersResult.reason);
+    }
+    if (sessionResult.status === 'rejected') throw sessionResult.reason;
+    if (roomResult.status === 'rejected') throw roomResult.reason;
     return { ok: true };
   }
 
