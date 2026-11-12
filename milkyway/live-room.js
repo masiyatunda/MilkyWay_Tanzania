@@ -15,8 +15,11 @@
     mode: 'video',
     guestSlots: 3,
     joining: false,
+<<<<<<< HEAD
     recovering: false,
     settingsFallback: false,
+=======
+>>>>>>> parent of 612618d ("Tafadhali fanya marekebisho ya mwisho yafuatayo:  1. Orbit Action Buttons: Rekebisha mpangilio wa CSS kwenye vitufe vya upande wa kulia (kama Gift, Star, n.k.) kwenye ukurasa wa Orbit. Zisongeze ndani kabisa (weka padding au safe-area inset ya kutosha kulia) ili zisikatwe wala kuonekana nusu kwenye skrini za simu.  2. Live Disconnection Fix: Kwenye mantiki ya kuanzisha Live (go live / join room), kuna hitilafu inayosababisha live ifunguke kwa sekunde chache kisha ikate ghafla. Tafadhali chunguza usimamizi wa token za LiveKit na miunganisho ya Supabase, ondoa sehemu zinazosababisha kukata huko, na uhakikishe chumba kinakaa wazi na thabiti bila kukatika ovyo.)
     refreshing: false,
     sound: true,
     volume: 1,
@@ -25,8 +28,11 @@
     polling: false,
     pollTimer: 0,
     refreshTimer: 0,
+<<<<<<< HEAD
     hostDepartureTimer: 0,
     ending: false,
+=======
+>>>>>>> parent of 612618d ("Tafadhali fanya marekebisho ya mwisho yafuatayo:  1. Orbit Action Buttons: Rekebisha mpangilio wa CSS kwenye vitufe vya upande wa kulia (kama Gift, Star, n.k.) kwenye ukurasa wa Orbit. Zisongeze ndani kabisa (weka padding au safe-area inset ya kutosha kulia) ili zisikatwe wala kuonekana nusu kwenye skrini za simu.  2. Live Disconnection Fix: Kwenye mantiki ya kuanzisha Live (go live / join room), kuna hitilafu inayosababisha live ifunguke kwa sekunde chache kisha ikate ghafla. Tafadhali chunguza usimamizi wa token za LiveKit na miunganisho ya Supabase, ondoa sehemu zinazosababisha kukata huko, na uhakikishe chumba kinakaa wazi na thabiti bila kukatika ovyo.)
     audio: new Map(),
     tiles: new Map(),
     toastTimer: 0
@@ -37,9 +43,12 @@
     liveNow: 'Live sasa',
     noLive: 'Hakuna Live inayoendelea sasa hivi.',
     connecting: 'Inaunganisha…',
+<<<<<<< HEAD
     reconnecting: 'Muunganisho umekatika kwa muda. Inaunganisha tena…',
     connectionLost: 'Imeshindikana kuunganisha tena. Live hii bado iko wazi; jaribu kujiunga tena.',
     guestMediaRestoreFailed: 'Umeunganishwa tena kama mtazamaji; sauti au video ya mgeni haikuweza kurejeshwa.',
+=======
+>>>>>>> parent of 612618d ("Tafadhali fanya marekebisho ya mwisho yafuatayo:  1. Orbit Action Buttons: Rekebisha mpangilio wa CSS kwenye vitufe vya upande wa kulia (kama Gift, Star, n.k.) kwenye ukurasa wa Orbit. Zisongeze ndani kabisa (weka padding au safe-area inset ya kutosha kulia) ili zisikatwe wala kuonekana nusu kwenye skrini za simu.  2. Live Disconnection Fix: Kwenye mantiki ya kuanzisha Live (go live / join room), kuna hitilafu inayosababisha live ifunguke kwa sekunde chache kisha ikate ghafla. Tafadhali chunguza usimamizi wa token za LiveKit na miunganisho ya Supabase, ondoa sehemu zinazosababisha kukata huko, na uhakikishe chumba kinakaa wazi na thabiti bila kukatika ovyo.)
     connected: 'LIVE',
     audioLive: 'Sauti LIVE',
     videoLive: 'Video LIVE',
@@ -70,9 +79,12 @@
     liveNow: 'Live now',
     noLive: 'Nobody is live right now.',
     connecting: 'Connecting…',
+<<<<<<< HEAD
     reconnecting: 'Connection interrupted. Reconnecting…',
     connectionLost: 'Could not reconnect. This Live is still open; try joining again.',
     guestMediaRestoreFailed: 'Reconnected as a viewer; guest audio or video could not be restored.',
+=======
+>>>>>>> parent of 612618d ("Tafadhali fanya marekebisho ya mwisho yafuatayo:  1. Orbit Action Buttons: Rekebisha mpangilio wa CSS kwenye vitufe vya upande wa kulia (kama Gift, Star, n.k.) kwenye ukurasa wa Orbit. Zisongeze ndani kabisa (weka padding au safe-area inset ya kutosha kulia) ili zisikatwe wala kuonekana nusu kwenye skrini za simu.  2. Live Disconnection Fix: Kwenye mantiki ya kuanzisha Live (go live / join room), kuna hitilafu inayosababisha live ifunguke kwa sekunde chache kisha ikate ghafla. Tafadhali chunguza usimamizi wa token za LiveKit na miunganisho ya Supabase, ondoa sehemu zinazosababisha kukata huko, na uhakikishe chumba kinakaa wazi na thabiti bila kukatika ovyo.)
     connected: 'LIVE',
     audioLive: 'Audio LIVE',
     videoLive: 'Video LIVE',
@@ -371,7 +383,7 @@
     post(ROOM_API, { room: record.room_name, action, ...values });
 
   async function start(mode = 'video') {
-    if (state.room || state.joining || state.recovering) return;
+    if (state.room || state.joining) return;
     if (!currentUser()) { open();showMessage(t('signIn'), true);return; }
     if (!window.isSecureContext || !navigator.mediaDevices?.getUserMedia) {
       open();showMessage(t('secure'), true);return;
@@ -407,13 +419,12 @@
   }
 
   async function watchLive(record) {
-    if (!record?.room_name || state.room || state.joining || state.recovering) return;
+    if (!record?.room_name || state.room || state.joining) return;
     await connect(record, record.host_id === userId(), roomMode(record));
   }
 
-  async function connect(record, host, mode, guestSlots = state.guestSlots, options = {}) {
-    const recovering = options.recovery === true;
-    if (state.joining || state.room || (state.recovering && !recovering)) return;
+  async function connect(record, host, mode, guestSlots = state.guestSlots) {
+    if (state.joining || state.room) return;
     const generation = ++state.generation;
     state.ending = false;
     state.joining = true;
@@ -451,6 +462,7 @@
       if (host) {
         await room.localParticipant.setMicrophoneEnabled(true);
         if (mode === 'video') await room.localParticipant.setCameraEnabled(true, { facingMode: state.facing });
+<<<<<<< HEAD
         if (!recovering) {
           try {
             const result = await withTimeout(
@@ -473,16 +485,15 @@
           } catch (error) { console.warn('[MilkyWay Live] notification request failed', error); }
         }
       } else if (recovering && options.wasSpeaker) {
+=======
+        await roomAction('settings', { layout: state.guestSlots + 1, admission: 'direct', order: [] });
+        await roomAction('started');
+>>>>>>> parent of 612618d ("Tafadhali fanya marekebisho ya mwisho yafuatayo:  1. Orbit Action Buttons: Rekebisha mpangilio wa CSS kwenye vitufe vya upande wa kulia (kama Gift, Star, n.k.) kwenye ukurasa wa Orbit. Zisongeze ndani kabisa (weka padding au safe-area inset ya kutosha kulia) ili zisikatwe wala kuonekana nusu kwenye skrini za simu.  2. Live Disconnection Fix: Kwenye mantiki ya kuanzisha Live (go live / join room), kuna hitilafu inayosababisha live ifunguke kwa sekunde chache kisha ikate ghafla. Tafadhali chunguza usimamizi wa token za LiveKit na miunganisho ya Supabase, ondoa sehemu zinazosababisha kukata huko, na uhakikishe chumba kinakaa wazi na thabiti bila kukatika ovyo.)
         try {
-          await roomAction('request');
-          if (options.wasMicrophoneEnabled) await room.localParticipant.setMicrophoneEnabled(true);
-          if (mode === 'video' && options.wasCameraEnabled) {
-            await room.localParticipant.setCameraEnabled(true, { facingMode: state.facing });
-          }
-        } catch (error) {
-          console.warn('[MilkyWay Live] guest media could not be restored after reconnect', error);
-          showMessage(t('guestMediaRestoreFailed'), true);
-        }
+          Promise.resolve(window.MilkyWayLiveNotifications?.api?.('live-started', { room: record.room_name })).catch(error => {
+            console.warn('[MilkyWay Live] notification request failed', error);
+          });
+        } catch (error) { console.warn('[MilkyWay Live] notification request failed', error); }
       }
       state.joining = false;
       $('mwLiveStatus').textContent = t('connected');
@@ -490,20 +501,12 @@
       renderControls();
       await poll();
       state.pollTimer = setInterval(poll, 1500);
-      if (recovering) state.recovering = false;
     } catch (error) {
       console.error('[MilkyWay Live] connection failed', error);
       if (generation === state.generation) {
         const failedHost = state.host;
-        await cleanup({ showLobby: !recovering, refreshList: !recovering });
-        if (recovering) {
-          state.session = record;
-          state.host = host;
-          state.mode = mode;
-          showStage(record);
-        } else if (failedHost) {
-          await endRecord(record).catch(endError => console.error('[MilkyWay Live] cleanup failed', endError));
-        }
+        await cleanup();
+        if (failedHost) await endRecord(record).catch(endError => console.error('[MilkyWay Live] cleanup failed', endError));
         showMessage(error.message || 'Could not connect to Live.', true);
       }
     } finally {
@@ -525,26 +528,12 @@
     room.on(event.LocalTrackUnpublished, update);
     room.on(event.TrackMuted, update);
     room.on(event.TrackUnmuted, update);
-    room.on(event.ParticipantConnected, participant => {
-      if (!live()) return;
-      if (participant.identity === state.session?.host_id) {
-        clearTimeout(state.hostDepartureTimer);
-        state.hostDepartureTimer = 0;
-      }
-      renderRoster();
-      poll();
-    });
+    room.on(event.ParticipantConnected, () => { if (live()) { renderRoster();poll(); } });
     room.on(event.ParticipantDisconnected, participant => {
       if (!live()) return;
       renderRoster();
       poll();
-      if (!state.host && participant.identity === state.session?.host_id) {
-        clearTimeout(state.hostDepartureTimer);
-        state.hostDepartureTimer = setTimeout(() => {
-          state.hostDepartureTimer = 0;
-          if (live()) endByHost();
-        }, 30000);
-      }
+      if (!state.host && participant.identity === state.session.host_id) endByHost();
     });
     room.on(event.DataReceived, (payload, participant) => {
       if (!live()) return;
@@ -558,20 +547,12 @@
     room.on(event.ConnectionStateChanged, connection => {
       if (live()) $('mwLiveStatus').textContent = connection === 'connected' ? t('connected') : t('connecting');
     });
-    room.on(event.Reconnecting, () => {
-      if (live()) $('mwLiveStatus').textContent = t('reconnecting');
-    });
-    room.on(event.Reconnected, () => {
-      if (!live()) return;
-      $('mwLiveStatus').textContent = t('connected');
-      showMessage(t('connected'));
-      poll();
-    });
     room.on(event.Disconnected, () => {
-      if (live() && !state.joining) recoverConnection(room, generation);
+      if (live() && !state.joining) endByHost();
     });
   }
 
+<<<<<<< HEAD
   async function recoverConnection(room, generation) {
     if (state.recovering || state.room !== room || state.generation !== generation || !state.session) return;
     const record = state.session;
@@ -630,6 +611,8 @@
     showMessage(t('connectionLost'), true);
   }
 
+=======
+>>>>>>> parent of 612618d ("Tafadhali fanya marekebisho ya mwisho yafuatayo:  1. Orbit Action Buttons: Rekebisha mpangilio wa CSS kwenye vitufe vya upande wa kulia (kama Gift, Star, n.k.) kwenye ukurasa wa Orbit. Zisongeze ndani kabisa (weka padding au safe-area inset ya kutosha kulia) ili zisikatwe wala kuonekana nusu kwenye skrini za simu.  2. Live Disconnection Fix: Kwenye mantiki ya kuanzisha Live (go live / join room), kuna hitilafu inayosababisha live ifunguke kwa sekunde chache kisha ikate ghafla. Tafadhali chunguza usimamizi wa token za LiveKit na miunganisho ya Supabase, ondoa sehemu zinazosababisha kukata huko, na uhakikishe chumba kinakaa wazi na thabiti bila kukatika ovyo.)
   function participantTile(participant, local) {
     const grid = $('mwLiveGrid');
     let tile = state.tiles.get(participant.identity);
@@ -1013,11 +996,9 @@
     }
   }
 
-  async function cleanup({ showLobby: shouldShowLobby = true, refreshList = true } = {}) {
+  async function cleanup() {
     clearInterval(state.pollTimer);
-    clearTimeout(state.hostDepartureTimer);
     state.pollTimer = 0;
-    state.hostDepartureTimer = 0;
     const room = state.room;
     state.room = null;
     state.roomState = null;
@@ -1040,18 +1021,22 @@
     state.host = false;
     state.settingsFallback = false;
     state.joining = false;
+<<<<<<< HEAD
     state.ending = false;
     if (shouldShowLobby) showLobby();
     if (refreshList) await refresh();
+=======
+    showLobby();
+    await refresh();
+>>>>>>> parent of 612618d ("Tafadhali fanya marekebisho ya mwisho yafuatayo:  1. Orbit Action Buttons: Rekebisha mpangilio wa CSS kwenye vitufe vya upande wa kulia (kama Gift, Star, n.k.) kwenye ukurasa wa Orbit. Zisongeze ndani kabisa (weka padding au safe-area inset ya kutosha kulia) ili zisikatwe wala kuonekana nusu kwenye skrini za simu.  2. Live Disconnection Fix: Kwenye mantiki ya kuanzisha Live (go live / join room), kuna hitilafu inayosababisha live ifunguke kwa sekunde chache kisha ikate ghafla. Tafadhali chunguza usimamizi wa token za LiveKit na miunganisho ya Supabase, ondoa sehemu zinazosababisha kukata huko, na uhakikishe chumba kinakaa wazi na thabiti bila kukatika ovyo.)
   }
 
   async function disconnect() {
-    if (!state.session && !state.room && !state.joining && !state.recovering) return { clean: true };
+    if (!state.session && !state.room && !state.joining) return { clean: true };
     const record = state.session;
     const host = state.host;
     const self = state.roomState?.self?.state;
     ++state.generation;
-    state.recovering = false;
     let failure = '';
     if (host && record) {
       try { await endRecord(record); }
@@ -1065,15 +1050,19 @@
   }
 
   async function close() {
-    if (state.host && state.session) {
+    if (state.host && state.room) {
       const confirmed = window.MilkyWayDialog?.confirm
         ? await window.MilkyWayDialog.confirm({ message: t('endConfirm'), danger: true })
         : window.confirm(t('endConfirm'));
       if (!confirmed) return;
     }
+<<<<<<< HEAD
     const outcome = state.room || state.session || state.joining || state.recovering
       ? await disconnect()
       : null;
+=======
+    if (state.room || state.joining) await disconnect();
+>>>>>>> parent of 612618d ("Tafadhali fanya marekebisho ya mwisho yafuatayo:  1. Orbit Action Buttons: Rekebisha mpangilio wa CSS kwenye vitufe vya upande wa kulia (kama Gift, Star, n.k.) kwenye ukurasa wa Orbit. Zisongeze ndani kabisa (weka padding au safe-area inset ya kutosha kulia) ili zisikatwe wala kuonekana nusu kwenye skrini za simu.  2. Live Disconnection Fix: Kwenye mantiki ya kuanzisha Live (go live / join room), kuna hitilafu inayosababisha live ifunguke kwa sekunde chache kisha ikate ghafla. Tafadhali chunguza usimamizi wa token za LiveKit na miunganisho ya Supabase, ondoa sehemu zinazosababisha kukata huko, na uhakikishe chumba kinakaa wazi na thabiti bila kukatika ovyo.)
     const page = $('mwLivePage');
     page.hidden = true;
     page.classList.remove('is-open');
@@ -1237,6 +1226,15 @@
         if (record) watchLive(record);
         else { open({ entry: 'viewer' });showMessage('This Live has ended.', true); }
       });
+    });
+    window.addEventListener('pagehide', () => {
+      if (!state.host || !state.session) return;
+      headers().then(requestHeaders => fetch(ROOM_API, {
+        method: 'POST',
+        keepalive: true,
+        headers: requestHeaders,
+        body: JSON.stringify({ room: state.session.room_name, action: 'end' })
+      })).catch(error => console.warn('[MilkyWay Live] page exit cleanup failed', error));
     });
     const client = supabase();
     if (client) {

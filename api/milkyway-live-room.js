@@ -137,13 +137,10 @@ async function handle({ ctx, body, method }) {
   if (action === 'request') {
     if (room.host) throw new ApiError(400, 'The host is already on stage.');
     const settings = await loadSettings(ctx, room.roomName);
+    if (settings.admission === 'broadcast') throw new ApiError(403, 'Guests cannot join this Live.');
     const me = await whoAmI(ctx);
     const [existing] = await ctx.rest(`${memberPath(room.roomName, ctx.user.id)}&select=state,host_muted&limit=1`) || [];
-    if (existing?.state === 'speaker') {
-      await setPublish(room.roomName, ctx.user.id, true, room.audio, !existing.host_muted);
-      return { state: 'speaker' };
-    }
-    if (settings.admission === 'broadcast') throw new ApiError(403, 'Guests cannot join this Live.');
+    if (existing?.state === 'speaker') return { state: 'speaker' };
     const direct = settings.admission === 'direct';
     if (direct) {
       const seated = await ctx.rest(`mw_live_room_members?room_name=eq.${encodeURIComponent(room.roomName)}&state=eq.speaker&select=user_id`) || [];
