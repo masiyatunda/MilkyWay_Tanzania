@@ -12,7 +12,6 @@
   const PAGE_TIMEOUT = 3500;
   const SLOW_PAGE_TIMEOUT = 1200;
   const ASSET_TIMEOUT = 4000;
-  const PRECACHE_TIMEOUT = 5000;
   const FRESH_WINDOW = 20000;
   const IMAGE_LIMIT = 400;
   const IMAGE_MAX_AGE = 24 * 60 * 60 * 1000;
@@ -151,14 +150,7 @@
 
     self.addEventListener('install', event => {
       event.waitUntil(caches.open(assets)
-        .then(cache => Promise.all((options.precache || []).map(path => {
-          const url = new URL(path, self.registration.scope);
-          const controller = new AbortController();
-          const timer = setTimeout(() => controller.abort(), PRECACHE_TIMEOUT);
-          return cache.add(new Request(url, { cache: 'reload', signal: controller.signal }))
-            .catch(() => {})
-            .finally(() => clearTimeout(timer));
-        })))
+        .then(cache => Promise.all((options.precache || []).map(path => cache.add(new URL(path, self.registration.scope).href).catch(() => {}))))
         .then(() => self.skipWaiting()));
     });
 

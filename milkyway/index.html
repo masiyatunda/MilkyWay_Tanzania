@@ -582,7 +582,6 @@ const SUPABASE_ANON_KEY='sb_publishable_GCFJ3Is8t8mdia4gLeHApg_M_3ez9xb';
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,window.MilkyWayOffline?.authStorage?{auth:{storage:window.MilkyWayOffline.authStorage}}:undefined);
 
 // Persist signed-in account + profile so the app still shows the user when opened offline.
-// Supabase's authStorage owns the session tokens; this separate entry only contains display data.
 const ACCOUNT_KEY = 'mw_local_account';
 function saveLocalAccount(u, profile) {
   try {
@@ -617,7 +616,7 @@ const nameOf=()=>user?.user_metadata?.display_name||user?.email?.split('@')[0]||
 const logged=()=>!!user;
 const avatarHTML=(p,cls='avatar')=>p?.avatar_url?`<div class="${cls}"><img loading="lazy" decoding="async" src="${esc(window.MilkyWayMedia.image(p.avatar_url,160))}"></div>`:`<div class="${cls}">${esc((p?.display_name||'M').trim().split(/\s+/).map(x=>x[0]).join('').slice(0,2).toUpperCase())}</div>`;
 // Real-time sync: feeds, chats, counts and presence refresh every second; a tick is skipped while the previous one is still running.
-const MW_SYNC_MS=3000;/* Background polling backs up realtime updates: every 3 s while active, 8 s on slow connections, 12 s after 45 s without input, and not at all while offline. */let mwLastInput=Date.now();['pointerdown','keydown','scroll','touchstart'].forEach(type=>addEventListener(type,()=>{mwLastInput=Date.now()},{passive:true,capture:true}));window.mwSyncPeriod=()=>{if(navigator.onLine===false||window.MilkyWayOffline?.offline)return Infinity;const c=navigator.connection;const slow=!!(c&&(c.saveData||/(^|-)2g$|^3g$/.test(c.effectiveType||'')));return Math.max(slow?8000:MW_SYNC_MS,Date.now()-mwLastInput>45000?12000:MW_SYNC_MS)};function mwEverySecond(task){let running=false,last=0;return setInterval(async()=>{if(running||document.visibilityState==='hidden')return;const now=Date.now();if(now-last<window.mwSyncPeriod()-150)return;last=now;running=true;try{await task()}catch(e){}finally{running=false}},MW_SYNC_MS)}
+const MW_SYNC_MS=1000;/* Background sync adapts to the device: every second while in use on a good connection, every 4 s on 2G/3G or Data Saver, every 6 s after 45 s without input, and not at all while offline. Realtime channels still deliver changes instantly. */let mwLastInput=Date.now();['pointerdown','keydown','scroll','touchstart'].forEach(type=>addEventListener(type,()=>{mwLastInput=Date.now()},{passive:true,capture:true}));window.mwSyncPeriod=()=>{if(navigator.onLine===false||window.MilkyWayOffline?.offline)return Infinity;const c=navigator.connection;const slow=!!(c&&(c.saveData||/(^|-)2g$|^3g$/.test(c.effectiveType||'')));return Math.max(slow?4000:MW_SYNC_MS,Date.now()-mwLastInput>45000?6000:MW_SYNC_MS)};function mwEverySecond(task){let running=false,last=0;return setInterval(async()=>{if(running||document.visibilityState==='hidden')return;const now=Date.now();if(now-last<window.mwSyncPeriod()-150)return;last=now;running=true;try{await task()}catch(e){}finally{running=false}},MW_SYNC_MS)}
 function toast(message){if(!message)return;message=window.MilkyWayOffline?.friendly(message)||message;$('toast').textContent=window.MilkyWayI18n?.text(message)||message;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2400)}
 function ago(x){let s=(Date.now()-new Date(x).getTime())/1000;if(s<60)return'sasa hivi';if(s<3600)return Math.floor(s/60)+'m';if(s<86400)return Math.floor(s/3600)+'h';return Math.floor(s/86400)+'d'}
 function requireLogin(text='kutumia huduma hii'){if(logged())return true;openAuth('login');toast(window.MilkyWayI18n?.t('signInFirst')||'Ingia kwanza.');return false}
@@ -1703,19 +1702,16 @@ window.mwCacheMedia = cacheMediaUrl;
 async function boot(){
   window.__mwAppBootStarted = true;
   clearTimeout(window.__mwStartupGuard);
-  const saved = loadLocalAccount();
+  let sessionUser = null;
+  try { const {data} = await withTimeout(sb.auth.getSession(),5000,'Supabase Auth haijajibu.'); sessionUser = data.session?.user || null; }
+  catch(error) { console.warn('Could not restore the Supabase session during startup.',error); }
   const offline = window.MilkyWayOffline?.offline || navigator.onLine === false;
-  let sessionUser = offline ? saved?.user || null : null;
-  if (offline && saved?.profile) window._mwCachedProfile = saved.profile;
-  if (!offline) {
-    try {
-      const {data} = await withTimeout(sb.auth.getSession(),2000,'Supabase Auth haijajibu.');
-      sessionUser = data.session?.user || null;
-    } catch(error) {
-      if ((window.MilkyWayOffline?.isNetworkError(error) || error?.message === 'Supabase Auth haijajibu.') && saved?.user) {
-        sessionUser = saved.user;
-        if (saved.profile) window._mwCachedProfile = saved.profile;
-      } else console.warn('Could not restore the Supabase session during startup.',error);
+  if (!sessionUser && offline) {
+    const saved = loadLocalAccount();
+    if (saved?.user) {
+      sessionUser = saved.user;
+      // Attach cached profile so setWho can use it immediately
+      if (saved.profile) window._mwCachedProfile = saved.profile;
     }
   }
   user = sessionUser;
@@ -1730,12 +1726,9 @@ async function boot(){
 }
 let authUpdateGeneration=0;
 sb.auth.onAuthStateChange((event,session)=>{
-  const cachedOfflineAccount=!session?.user&&event==='INITIAL_SESSION'&&(navigator.onLine===false||window.MilkyWayOffline?.offline)?loadLocalAccount():null;
-  user=session?.user||cachedOfflineAccount?.user||null;
-  if(cachedOfflineAccount?.profile)window._mwCachedProfile=cachedOfflineAccount.profile;
-  if(session?.user)saveLocalAccount(session.user,window._mwCachedProfile?.id===session.user.id?window._mwCachedProfile:null);
+  user=session?.user||null;
   const accountId=user?.id,attempt=++authUpdateGeneration;
-  if(event==='SIGNED_OUT'){user=null;clearLocalAccount();window.MilkyWayOffline?.clear();window.MilkyWayPrefetch?.clear();}
+  if(event==='SIGNED_OUT'){clearLocalAccount();window.MilkyWayOffline?.clear();window.MilkyWayPrefetch?.clear();}
   if(!user){window.MilkyWayCalls?.disconnect();window.MilkyWayFiles?.release();closeSheet('threadSheet');closeSheet('msgSheet');$('threadList').replaceChildren();}
   if(event==='PASSWORD_RECOVERY')openSheet('resetModal');
   setTimeout(async()=>{
