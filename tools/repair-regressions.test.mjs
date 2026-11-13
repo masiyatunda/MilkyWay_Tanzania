@@ -173,11 +173,14 @@ test('post action menus fit and scroll inside narrow mobile viewports', () => {
   const markup = source('milkyway/index.html');
   const worker = source('milkyway/sw.js');
   assert.match(styles, /#feed>\.post:has\([^}]*mw-message-menu\[open\][\s\S]*overflow:visible!important;[\s\S]*z-index:20!important;/);
+  assert.match(styles, /\.mw-message-menu\[open\]\{[\s\S]*inset:auto!important;[\s\S]*transform:none!important;/);
+  assert.match(styles, /\.mw-message-menu-items\{[\s\S]*position:absolute;[\s\S]*right:0;[\s\S]*bottom:calc\(100% \+ 6px\);[\s\S]*left:auto;/);
   assert.match(styles, /width:min\(280px,calc\(100vw - 24px\)\)/);
   assert.match(styles, /max-height:min\(60dvh,420px,calc\(100dvh - 24px\)\)/);
-  assert.match(styles, /overflow-y:auto;[\s\S]*white-space:normal;[\s\S]*overflow-wrap:anywhere;/);
-  assert.match(markup, /mw-bundle-core\.css\?v=2/);
-  assert.match(worker, /milkyway-v126-mobile-post-menu-v1/);
+  assert.match(styles, /overflow-y:auto;[\s\S]*touch-action:pan-y;/);
+  assert.match(styles, /white-space:normal;[\s\S]*overflow-wrap:anywhere;/);
+  assert.match(markup, /mw-bundle-core\.css\?v=3/);
+  assert.match(worker, /milkyway-v127-mobile-post-menu-position-v1/);
 });
 
 test('media enhancement scripts load after the shell and videos stay lazy outside the active view', () => {
@@ -190,7 +193,7 @@ test('media enhancement scripts load after the shell and videos stay lazy outsid
   assert.match(playback, /ratios\.get\(video\) \|\| 0\) >= visibleRatio/);
   assert.match(prefetch, /const AHEAD = \{ fast: 4, normal: 2, slow: 1 \}/);
   assert.match(prefetch, /const MAX_BYTES = 300 \* 1024 \* 1024/);
-  assert.match(worker, /milkyway-v125-offline-swr-performance-v1/);
+  assert.match(worker, /milkyway-v127-mobile-post-menu-position-v1/);
 });
 const ownerId = '11111111-1111-4111-8111-111111111111';
 const otherId = '22222222-2222-4222-8222-222222222222';
