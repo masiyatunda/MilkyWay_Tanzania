@@ -1,4 +1,4 @@
-const CACHE='milkyway-v127-mobile-post-menu-position-v1';
+const CACHE='milkyway-v128-offline-first-v1';
 const ASSETS=[ './mw-bundle-core.css?v=3','./mw-bundle-live.css?v=8','./mw-bundle-overlays.css?v=1','./mw-bundle-theme-final.css?v=1','./','./index.html','./mobile-galaxy.css?v=1','./live-room.css?v=10','./live-room.js?v=13','./galaxy.css?v=2','./galaxy-live.css','./galaxy-nebula.svg','./galaxy-starfield.svg','./premium.css','./theme.css','./engage.css','./engage.js','./video-compress.js','./suggested.css','./suggested.js','./chat-settings.css','./chat-settings.js','./compact-buttons.css?v=2','./brand/milkyway-emblem-96.png','./brand/milkyway-watermark.png','./brand/milkyway-logo-web.png','./favicon.ico','./premium.js','./translations.js','./dm-files.js','./ui-language.js','./locale-loader.js?v=1','./manifest.json','./icon-192.png','./icon-512.png'];
 ASSETS.push('./language-dropdown.js','./language-dropdown.css');
 ASSETS.push('./mw-dialog.js','./mw-dialog.css','./studio.css');
@@ -24,11 +24,19 @@ ASSETS.push('./native-push.js','./share-target.js','./app-update.js','./live-the
 ASSETS.push('./offline-data.js?v=3');
 // Feed prefetching and optimistic actions (likes, saves, follows, comments queued while offline).
 ASSETS.push('./media-prefetch.js?v=2','./offline-actions.js?v=1');
-ASSETS.push('./gift-catalog.js?v=63','./qr-code.js?v=62','./gifts.js?v=66','./gifts.css?v=65');
+ASSETS.push('./gift-catalog.js?v=63','./qr-code.js?v=62','./gifts.js?v=68','./gifts.css?v=65');
+ASSETS.push('./dm-calls.js','./phase-a.js','./phase-b.js','./fix-feed.js','./locale-catalogs.js');
+ASSETS.push('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2');
 // Shared caching (see /sw-cache.js): app shell and media load from the device, pages fall back to it when the network is slow.
 // The test harness loads this file without importScripts, so caching is skipped there.
 if (typeof importScripts === 'function') importScripts('/sw-cache.js');
-if (self.MWCache) self.MWCache.install({ prefix: 'milkyway-', version: CACHE.replace(/^milkyway-/, ''), precache: ASSETS, offlinePage: './index.html' });
+if (self.MWCache) self.MWCache.install({
+  prefix: 'milkyway-',
+  version: CACHE.replace(/^milkyway-/, ''),
+  precache: ASSETS,
+  required: ['./', './index.html', './mw-bundle-core.css?v=3', './mw-bundle-live.css?v=8', './mw-bundle-overlays.css?v=1', './mw-bundle-theme-final.css?v=1', './offline-data.js?v=3', './offline-actions.js?v=1', './icon-192.png', 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2'],
+  offlinePage: './index.html',
+});
 // Background Sync (where supported) wakes the worker once the network returns; open MilkyWay windows then refresh quietly.
 self.addEventListener('sync', event => {
   if (event.tag !== 'mw-reconnect') return;

@@ -1,7 +1,5 @@
 // Shared caching for the site and MilkyWay service workers (loaded with importScripts).
-// Pages: network first, but a slow or missing connection falls back to the saved copy after a short wait
-// (shorter still on 2G/3G and Data Saver, where the saved app shell opens at once and refreshes in the background).
-// Scripts, styles and pictures: shown straight from the saved copy and refreshed quietly in the background.
+// Pages and static assets: shown straight from the saved copy and refreshed quietly in the background.
 // Pictures that were never saved show as a blank tile while offline.
 // When a page arrives from the network with new content (a new deploy), its scripts and styles are fetched
 // fresh for a short window so a new page never runs with old code.
@@ -10,13 +8,10 @@
 // (MilkyWay's feed, profile and count reads are saved per account in IndexedDB by milkyway/offline-data.js.)
 (() => {
   const PAGE_TIMEOUT = 3500;
-  const SLOW_PAGE_TIMEOUT = 1200;
-  const ASSET_TIMEOUT = 4000;
-  const FRESH_WINDOW = 20000;
   const IMAGE_LIMIT = 400;
   const IMAGE_MAX_AGE = 24 * 60 * 60 * 1000;
-  const CDN_HOSTS = ['cdn.jsdelivr.net'];
-  const STATIC = /(?:\.(?:js|css|svg|png|jpe?g|webp|avif|gif|ico|woff2?|ttf|webmanifest)|\/manifest\.json)$/i;
+  const CDN_HOSTS = ['cdn.jsdelivr.net', 'unpkg.com', 'fonts.googleapis.com', 'fonts.gstatic.com'];
+  const STATIC = /(?:\.(?:html?|json|js|css|svg|png|jpe?g|webp|avif|gif|ico|woff2?|ttf|otf|webmanifest)|\/manifest\.json)$/i;
 
   function install(options) {
     const pages = `${options.prefix}pages-${options.version}`;
@@ -32,8 +27,6 @@
     };
     const inScope = options.inScope || (() => true);
     const isAsset = options.isAsset || (address => STATIC.test(address.pathname));
-    let freshUntil = 0;
-
     const timeout = (promise, ms) => new Promise((resolve, reject) => {
       const timer = setTimeout(() => reject(new Error('timeout')), ms);
       promise.then(value => { clearTimeout(timer); resolve(value); }, error => { clearTimeout(timer); reject(error); });
@@ -62,19 +55,17 @@
       const saved = usable(await cache.match(key) || await caches.match(key));
       const network = fetch(request).then(response => {
         if (response.ok && response.type === 'basic') {
-          const previous = saved && saved.headers.get('etag');
-          if (!saved || !previous || previous !== response.headers.get('etag')) freshUntil = Date.now() + FRESH_WINDOW;
           const copy = response.clone();
           keep(event, cache.put(key, copy).catch(() => {}));
         }
         return response;
       });
-      // No network at all: the saved page opens at once (and refreshes in the background once possible).
-      if (saved && self.navigator.onLine === false) { keep(event, network.catch(() => {})); return saved; }
+      // Serve the saved shell without waiting for the network; refresh it for the next visit.
+      if (saved) { keep(event, network.catch(() => {})); return saved; }
       try {
-        return await (saved ? timeout(network, slowNetwork() ? SLOW_PAGE_TIMEOUT : PAGE_TIMEOUT) : network);
+        return await timeout(network, PAGE_TIMEOUT);
       } catch {
-        if (saved) { keep(event, network.catch(() => {})); return saved; }
+        keep(event, network.catch(() => {}));
         // Never an error screen: any saved copy of the app shell boots instead and loads its saved data.
         return (await shell(cache)) || new Response(STARTING_HTML, { status: 200, headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' } });
       }
@@ -104,12 +95,11 @@
         keep(event, save(name, key, copy));
         return response;
       });
-      if (saved && Date.now() > freshUntil) { keep(event, network.catch(() => {})); return saved; }
+      if (saved) { keep(event, network.catch(() => {})); return saved; }
       try {
-        return await (saved ? timeout(network, ASSET_TIMEOUT) : network);
-      } catch (error) {
-        if (saved) { keep(event, network.catch(() => {})); return saved; }
-        throw error;
+        return await network;
+      } catch {
+        throw new TypeError('Static asset is not available offline.');
       }
     }
 
@@ -149,8 +139,18 @@
     }
 
     self.addEventListener('install', event => {
+      const required = new Set(options.required || []);
       event.waitUntil(caches.open(assets)
-        .then(cache => Promise.all((options.precache || []).map(path => cache.add(new URL(path, self.registration.scope).href).catch(() => {}))))
+        .then(cache => Promise.all((options.precache || []).map(path => {
+          const url = new URL(path, self.registration.scope);
+          const request = new Request(url.href, url.origin === self.location.origin ? undefined : { mode: 'no-cors' });
+          return fetch(request).then(response => {
+            if (!response.ok && response.type !== 'opaque') throw new Error(`Could not precache ${url.pathname}`);
+            return cache.put(request, response);
+          }).catch(error => {
+            if (required.has(path)) throw error;
+          });
+        })))
         .then(() => self.skipWaiting()));
     });
 

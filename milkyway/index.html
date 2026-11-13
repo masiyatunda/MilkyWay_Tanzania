@@ -1696,7 +1696,7 @@ if('serviceWorker' in navigator){
  const busy=()=>[...document.querySelectorAll('video,audio')].some(m=>m.srcObject&&!m.paused);
  const reload=()=>{if(reloaded)return;reloaded=true;location.reload()};
  navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!hadController)return;if(!busy()){reload();return}document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')reload()})});
- navigator.serviceWorker.register('sw.js').then(registration=>document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')registration.update().catch(()=>{})})).catch(()=>{});
+ navigator.serviceWorker.register('sw.js').then(registration=>document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')registration.update().catch(error=>console.warn('Service worker update check failed.',error))})).catch(error=>console.warn('Service worker registration failed.',error));
 }
 
 
@@ -1740,19 +1740,10 @@ function clearProfileOffline(){ try{ localStorage.removeItem('mw_offline_profile
 async function cacheMediaUrl(url){ if(!url||!('caches' in window)) return; try{ const c=await caches.open('mw-media-v1'); await c.add(url); }catch(e){} }
 window.mwCacheMedia = cacheMediaUrl;
 
-async function boot(){
-  let sessionUser = null;
-  try { const {data} = await sb.auth.getSession(); sessionUser = data.session?.user || null; } catch {}
-  const offline = window.MilkyWayOffline?.offline || navigator.onLine === false;
-  if (!sessionUser && offline) {
-    const saved = loadLocalAccount();
-    if (saved?.user) {
-      sessionUser = saved.user;
-      // Attach cached profile so setWho can use it immediately
-      if (saved.profile) window._mwCachedProfile = saved.profile;
-    }
-  }
-  user = sessionUser;
+function boot(){
+  const saved = loadLocalAccount();
+  user = saved?.user || null;
+  if (saved?.profile) window._mwCachedProfile = saved.profile;
   setupNotificationSound();
   setWho();
   if (typeof applyLang === 'function') applyLang();
