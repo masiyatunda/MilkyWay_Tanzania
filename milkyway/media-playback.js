@@ -50,7 +50,8 @@
     if (tracked.has(video)) return;
     tracked.add(video);
     video.playsInline = true;
-    if (video.preload === 'none') { if (nearby) nearby.observe(video); else video.preload = 'metadata'; }
+    if (video.preload !== 'none') video.preload = 'none';
+    if (nearby) nearby.observe(video); else video.preload = 'metadata';
     if (!video.hasAttribute('data-mw-sound')) { video.removeAttribute('muted');video.muted = false;video.defaultMuted = false; }
     // Some mobile browsers paint nothing until playback starts; seeking a hair forward shows the first frame.
     video.addEventListener('loadedmetadata', () => { if (video.paused && video.currentTime === 0) { try { video.currentTime = 0.05; } catch {} } }, { once: true });
@@ -352,10 +353,10 @@
     let activeObserver = feed.__mwTikTokObserver;
     if (activeObserver) activeObserver.disconnect();
     const observer = new IntersectionObserver(entries => {
-      const visible = entries
-        .filter(entry => entry.isIntersecting)
-        .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-      const target = visible[0]?.target;
+      for (const entry of entries) ratios.set(entry.target, entry.isIntersecting ? entry.intersectionRatio : 0);
+      const visible = videos.filter(video => (ratios.get(video) || 0) >= visibleRatio)
+        .sort((a, b) => ratios.get(b) - ratios.get(a));
+      const target = document.hidden ? null : visible[0];
       for (const video of videos) {
         if (!video.isConnected) continue;
         if (video === target) {
@@ -363,7 +364,7 @@
             video.muted = true;
             video.play().catch(() => {});
           }
-        } else if (!video.paused) {
+        } else if (!video.paused && !document.pictureInPictureElement && !document.fullscreenElement) {
           video.pause();
         }
       }

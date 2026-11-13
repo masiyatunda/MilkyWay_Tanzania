@@ -8,6 +8,7 @@
 <link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon-180.png"><link rel="icon" href="favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="32x32" href="brand/favicon-32.png"><link rel="icon" type="image/png" sizes="16x16" href="brand/favicon-16.png">
 <link rel="preconnect" href="https://masiyatunda-milkyway-live-mgh6b1np.livekit.cloud" crossorigin>
 <link rel="preconnect" href="https://wpclkhgizbvxuvbhbwzs.supabase.co" crossorigin><link rel="preconnect" href="https://cdn.jsdelivr.net"><link rel="preload" as="script" href="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+<link rel="preload" as="image" href="brand/milkyway-emblem-96.png">
 <script src="media-images.js"></script>
 <script>/* LiveKit is only needed for Live and calls, so it loads on first use instead of blocking every page load. */window.MilkyWayLoadLiveKit=(()=>{let loading=null;const sources=['https://cdn.jsdelivr.net/npm/livekit-client@2/dist/livekit-client.umd.min.js','https://unpkg.com/livekit-client@2/dist/livekit-client.umd.js'];const ready=()=>window.LivekitClient||window.LiveKitClient;const load=index=>new Promise((resolve,reject)=>{const script=document.createElement('script');script.src=sources[index];script.async=true;script.onload=()=>ready()?resolve(ready()):reject(new Error('LiveKit did not load.'));script.onerror=()=>{script.remove();reject(new Error('LiveKit did not load.'))};document.head.append(script)}).catch(error=>index+1<sources.length?load(index+1):Promise.reject(error));return()=>ready()?Promise.resolve(ready()):loading||(loading=load(0).catch(error=>{loading=null;throw error}))})();addEventListener('pointerdown',event=>{if(event.target.closest?.('#composeBtn,.mw-live-session,[data-mw-call]'))window.MilkyWayLoadLiveKit().catch(()=>{})},{passive:true,capture:true});</script>
 <style>
@@ -231,7 +232,7 @@ nav.orbit .orbit-inner > #composeBtn{flex:1 1 0!important;width:auto!important;m
 
 </head>
 <body><div class="stars"></div><div class="app">
-<header class="top"><div class="brand"><img src="brand/milkyway-emblem-96.png" width="40" height="40" alt="MilkyWay"><div><h1>MilkyWay</h1><small>FREEDOM · TRUTH · LIGHT</small><a class="mw-apk-link" id="mwApkLink" href="download/MilkyWay.apk?v=7" download="MilkyWay.apk" type="application/vnd.android.package-archive" data-mw-i18n-aria="downloadAndroidApp" aria-label="Download the MilkyWay Android app"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3a1 1 0 0 1 1 1v8.6l2.8-2.8a1 1 0 1 1 1.4 1.4l-4.5 4.5a1 1 0 0 1-1.4 0l-4.5-4.5a1 1 0 1 1 1.4-1.4l2.8 2.8V4a1 1 0 0 1 1-1zM5 18a1 1 0 0 1 1 1v.5h12V19a1 1 0 1 1 2 0v1.5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V19a1 1 0 0 1 1-1z"/></svg><span data-mw-i18n="getAndroidApp">Pakua App</span></a></div></div><div class="top-actions"><button class="btn ghost" id="topMenuBtn" type="button" aria-label="Menyu" title="Menyu" style="padding:8px 10px;font-size:1.2rem">☰</button><button class="btn ghost" id="topSearchBtn" type="button" aria-label="Tafuta" title="Tafuta" style="padding:8px 10px">🔍</button><button class="btn ghost" id="topNotifyBtn" type="button" aria-label="Arifa" title="Arifa" style="padding:8px 12px;font-size:1.1rem">🔔<span id="topNotifyBadge" class="badge" style="display:none;margin-left:4px">0</span></button><select id="langSel" title="Lugha"><option value="sw">SW</option><option value="en">EN</option></select><button class="btn primary" id="accountTopBtn" title="MilkyWay Galaxy" aria-label="MilkyWay Galaxy" style="padding:8px 10px;font-size:.72rem;white-space:nowrap;display:inline-flex;align-items:center;gap:6px" data-i18n="login">MilkyWay Galaxy</button></div></header><div class="install" id="installBar" style="display:none">
+<header class="top"><div class="brand"><img src="brand/milkyway-emblem-96.png" width="40" height="40" alt="MilkyWay" decoding="async" fetchpriority="high"><div><h1>MilkyWay</h1><small>FREEDOM · TRUTH · LIGHT</small><a class="mw-apk-link" id="mwApkLink" href="download/MilkyWay.apk?v=7" download="MilkyWay.apk" type="application/vnd.android.package-archive" data-mw-i18n-aria="downloadAndroidApp" aria-label="Download the MilkyWay Android app"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3a1 1 0 0 1 1 1v8.6l2.8-2.8a1 1 0 1 1 1.4 1.4l-4.5 4.5a1 1 0 0 1-1.4 0l-4.5-4.5a1 1 0 1 1 1.4-1.4l2.8 2.8V4a1 1 0 0 1 1-1zM5 18a1 1 0 0 1 1 1v.5h12V19a1 1 0 1 1 2 0v1.5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V19a1 1 0 0 1 1-1z"/></svg><span data-mw-i18n="getAndroidApp">Pakua App</span></a></div></div><div class="top-actions"><button class="btn ghost" id="topMenuBtn" type="button" aria-label="Menyu" title="Menyu" style="padding:8px 10px;font-size:1.2rem">☰</button><button class="btn ghost" id="topSearchBtn" type="button" aria-label="Tafuta" title="Tafuta" style="padding:8px 10px">🔍</button><button class="btn ghost" id="topNotifyBtn" type="button" aria-label="Arifa" title="Arifa" style="padding:8px 12px;font-size:1.1rem">🔔<span id="topNotifyBadge" class="badge" style="display:none;margin-left:4px">0</span></button><select id="langSel" title="Lugha"><option value="sw">SW</option><option value="en">EN</option></select><button class="btn primary" id="accountTopBtn" title="MilkyWay Galaxy" aria-label="MilkyWay Galaxy" style="padding:8px 10px;font-size:.72rem;white-space:nowrap;display:inline-flex;align-items:center;gap:6px" data-i18n="login">MilkyWay Galaxy</button></div></header><div class="install" id="installBar" style="display:none">
   <span id="installText">Pakua MilkyWay kwenye skrini yako</span>
   <button id="installBtn" type="button">Pakua App</button>
 </div>
@@ -558,7 +559,7 @@ nav.orbit .orbit-inner > #composeBtn{flex:1 1 0!important;width:auto!important;m
 <div class="sheet-bg" id="aboutSheet"><div class="sheet"><button class="close" data-close="aboutSheet">×</button><h2>◉ Kuhusu MilkyWay</h2><p class="muted" style="line-height:1.55"><b style="color:var(--text)">MilkyWay</b> ni social platform ya Masiyatunda yenye kauli <b style="color:var(--gold)">Freedom · Truth · Light</b>.<br><br>Watumiaji wanaweza kufungua akaunti, kupost picha/video, kufuatana, kutoa Signals, kuandika Echoes, kuhifadhi posts, kutafuta watu, kupokea notifications na kuripoti content.<br><br>MilkyWay ina database yake ndani ya Supabase na imeandaliwa ili baadaye itumike pia na Flutter/FlutterFlow kupitia backend hiyo hiyo.</p><a class='btn ghost' href='/' style='display:block;text-align:center;text-decoration:none'>← Masiyatunda</a></div></div>
 <div class="toast" id="toast"></div>
 
-<!-- The Supabase client downloads in parallel (preloaded above) but runs here, so the app skeleton paints first on slow networks. --><script src="offline-data.js?v=2"></script><script src="offline-actions.js?v=1"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- The Supabase client downloads in parallel (preloaded above) but runs here, so the app skeleton paints first on slow networks. --><script src="offline-data.js?v=3"></script><script src="offline-actions.js?v=1"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // Follow state per signed-in account ("account:target" → following?) and accounts with a follow write in flight.
 const followKnown=new Map(),followBusy=new Set();let followTaps=0;
@@ -606,6 +607,8 @@ function loadLocalAccount() {
 function clearLocalAccount() {
   try { localStorage.removeItem(ACCOUNT_KEY); } catch {}
 }
+const startupLocalAccount=loadLocalAccount();
+if(startupLocalAccount?.profile)window._mwCachedProfile=startupLocalAccount.profile;
 
 let user=null,mode='feed',echoPost=null,reportPost=null,reportUser=null,deferredPrompt=null,stories=[],storyIndex=0;
 const $=id=>document.getElementById(id);
@@ -613,8 +616,8 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const nameOf=()=>user?.user_metadata?.display_name||user?.email?.split('@')[0]||'Msafiri';
 const logged=()=>!!user;
 const avatarHTML=(p,cls='avatar')=>p?.avatar_url?`<div class="${cls}"><img loading="lazy" decoding="async" src="${esc(window.MilkyWayMedia.image(p.avatar_url,160))}"></div>`:`<div class="${cls}">${esc((p?.display_name||'M').trim().split(/\s+/).map(x=>x[0]).join('').slice(0,2).toUpperCase())}</div>`;
-// Real-time sync: feeds, chats, counts and presence refresh every second; a tick is skipped while the previous one is still running.
-const MW_SYNC_MS=1000;/* Background sync adapts to the device: every second while in use on a good connection, every 4 s on 2G/3G or Data Saver, every 6 s after 45 s without input, and not at all while offline. Realtime channels still deliver changes instantly. */let mwLastInput=Date.now();['pointerdown','keydown','scroll','touchstart'].forEach(type=>addEventListener(type,()=>{mwLastInput=Date.now()},{passive:true,capture:true}));window.mwSyncPeriod=()=>{if(navigator.onLine===false||window.MilkyWayOffline?.offline)return Infinity;const c=navigator.connection;const slow=!!(c&&(c.saveData||/(^|-)2g$|^3g$/.test(c.effectiveType||'')));return Math.max(slow?4000:MW_SYNC_MS,Date.now()-mwLastInput>45000?6000:MW_SYNC_MS)};function mwEverySecond(task){let running=false,last=0;return setInterval(async()=>{if(running||document.visibilityState==='hidden')return;const now=Date.now();if(now-last<window.mwSyncPeriod()-150)return;last=now;running=true;try{await task()}catch(e){}finally{running=false}},MW_SYNC_MS)}
+// Realtime handles immediate changes; this adaptive poll refreshes feeds, chats, counts and presence as a fallback.
+const MW_SYNC_MS=2500;/* Background sync adapts to the device: at most every 2.5 s while active, every 8 s on 2G/3G or Data Saver, every 10 s after 45 s without input, and not at all while offline. Realtime channels still deliver changes instantly. */let mwLastInput=Date.now();['pointerdown','keydown','scroll','touchstart'].forEach(type=>addEventListener(type,()=>{mwLastInput=Date.now()},{passive:true,capture:true}));window.mwSyncPeriod=()=>{if(navigator.onLine===false||window.MilkyWayOffline?.offline)return Infinity;const c=navigator.connection;const slow=!!(c&&(c.saveData||/(^|-)2g$|^3g$/.test(c.effectiveType||'')));return Math.max(slow?8000:MW_SYNC_MS,Date.now()-mwLastInput>45000?10000:MW_SYNC_MS)};function mwEverySecond(task){let running=false,last=0;return setInterval(async()=>{if(running||document.visibilityState==='hidden')return;const now=Date.now();if(now-last<window.mwSyncPeriod()-150)return;last=now;running=true;try{await task()}catch(e){}finally{running=false}},1000)}
 function toast(message){if(!message)return;message=window.MilkyWayOffline?.friendly(message)||message;$('toast').textContent=window.MilkyWayI18n?.text(message)||message;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2400)}
 function ago(x){let s=(Date.now()-new Date(x).getTime())/1000;if(s<60)return'sasa hivi';if(s<3600)return Math.floor(s/60)+'m';if(s<86400)return Math.floor(s/3600)+'h';return Math.floor(s/86400)+'d'}
 function requireLogin(text='kutumia huduma hii'){if(logged())return true;openAuth('login');toast(window.MilkyWayI18n?.t('signInFirst')||'Ingia kwanza.');return false}
@@ -644,7 +647,7 @@ async function setWho(){
   if(accountPreferences?.owner!==accountId){accountPreferences=null;if(!guest)loadAccountPreferences();}
   $('whoami').textContent=guest?(window.MilkyWayI18n?.t('guest')||(I18N[mwLang()]||I18N.sw).guest):`${nameOf()} · ${user.email}`;
   if(guest){ $('accountTopBtn').textContent=mwLang()==='en'?'Log in':'Ingia'; setNavAvatar(null); updateAccountCard(); updateUnread(); return; }
-  let p = window._mwCachedProfile || null;
+  let p = window._mwCachedProfile?.id === accountId ? window._mwCachedProfile : null;
   if (!p) { try { p = await getProfile(user.id); } catch(e) {} }
   if (p) { saveLocalAccount(user, p); window._mwCachedProfile = p; }
   if(user?.id!==accountId)return;const name=(p&&p.display_name)||nameOf();
@@ -654,7 +657,6 @@ async function setWho(){
   updateAccountCard(); updateUnread();
 }
 async function getProfile(id){
-  if (id === user?.id && window._mwCachedProfile?.id === id) return window._mwCachedProfile;
   try {
     const {data} = await sb.from('mw_profiles').select('*').eq('id', id).maybeSingle();
     if (data && id === user?.id) { saveLocalAccount(user, data); window._mwCachedProfile = data; }
@@ -669,9 +671,10 @@ async function counts(id){const [{count:followers},{count:following},{count:post
 async function loadStories(){
  const box=$('stories'); if(!box)return;
  try{
-  const {data,error}=await sb.from('mw_stories').select('*').gt('expires_at',new Date().toISOString()).order('created_at',{ascending:false}).limit(60);
+  const cachedExpiry=new Date(Math.floor(Date.now()/60000)*60000).toISOString();
+  const {data,error}=await sb.from('mw_stories').select('*').gt('expires_at',cachedExpiry).order('created_at',{ascending:false}).limit(60);
   if(error)throw error;
-  const rows=data||[]; stories=rows;
+  const rows=(data||[]).filter(story=>Date.parse(story.expires_at)>Date.now()); stories=rows;
   const ids=[...new Set(rows.map(x=>x.user_id).filter(Boolean))]; let pm={};
   if(ids.length){const {data:p}=await sb.from('mw_profiles').select('id,display_name,username,avatar_url').in('id',ids);(p||[]).forEach(x=>pm[x.id]=x)}
   const grouped=[]; const seen=new Set();
@@ -740,6 +743,34 @@ async function loadFeed(){
   if(window.MilkyWayOffline?.offline||navigator.onLine===false)return;
   clearTimeout(loadFeed.retry);loadFeed.retry=setTimeout(()=>{if(!feed.querySelector('.post'))loadFeed()},8000)}
 }
+
+let cacheRenderTimer=null;
+addEventListener('mw-cache-updated',event=>{
+ const detail=event.detail;if(!detail)return;
+ const account=logged()?user.id:'guest';if(detail.account!==account)return;
+ let address;try{address=new URL(detail.url)}catch{return}
+ const table=address.pathname.split('/').pop();
+ if(['mw_posts','mw_profiles','mw_signals','mw_echoes','mw_saves','mw_follows'].includes(table)&&mode!=='saved'){
+  clearTimeout(cacheRenderTimer);
+  cacheRenderTimer=setTimeout(()=>{if(mode!=='saved')loadFeed()},120);
+ }
+ if(table==='mw_stories')loadStories();
+ if(table==='mw_profiles'&&logged()&&address.searchParams.get('id')?.includes(user.id)){
+  const accountId=user.id;
+  getProfile(accountId).then(profile=>{
+   if(user?.id!==accountId||!profile)return;
+   window._mwCachedProfile=profile;saveLocalAccount(user,profile);setWho();updateAccountCard();
+  }).catch(error=>console.warn('Cached profile refresh failed:',error.message));
+ }
+});
+addEventListener('mw-cache-invalidated',event=>{
+ const detail=event.detail;if(!detail||detail.account!==(logged()?user.id:'guest'))return;
+ let address;try{address=new URL(detail.url)}catch{return}
+ const table=address.pathname.split('/').pop();
+ if(['mw_posts','mw_profiles','mw_signals','mw_echoes','mw_saves','mw_follows'].includes(table)){
+  $('feed')?.replaceChildren();loadFeed();
+ }
+});
 
 async function editPost(postId){
  if(!requireLogin('kuhariri post'))return;
@@ -1013,8 +1044,10 @@ async function ensureProfile(){
   const {data:existing,error:readError}=await sb.from('mw_profiles').select('id,display_name').eq('id',user.id).maybeSingle();
   if(readError) throw new Error('Imeshindwa kusoma taarifa za akaunti: '+readError.message);
   if(existing){
-    window._mwCachedProfile=existing;
-    return existing;
+    const profile={...(window._mwCachedProfile?.id===user.id?window._mwCachedProfile:{}),...existing};
+    window._mwCachedProfile=profile;
+    saveLocalAccount(user,profile);
+    return profile;
   }
   const displayName=String(user.user_metadata?.display_name||user.email?.split('@')[0]||'Mtumiaji').trim();
   const {data:created,error:createError}=await sb.from('mw_profiles').upsert({id:user.id,display_name:displayName},{onConflict:'id',ignoreDuplicates:true}).select('id,display_name').maybeSingle();
@@ -1101,7 +1134,20 @@ $('deleteAccountBtn').onclick=async()=>{if(!logged())return;if(!await window.Mil
 
 // Profile
 async function openProfile(){if(!requireLogin('kuona profile'))return;openSheet('profileSheet');const cached=window._mwCachedProfile;if(cached){$('myName').textContent=cached.display_name||nameOf();$('accountName')&&($('accountName').textContent=cached.display_name||nameOf());}const p=await getProfile(user.id),c=await counts(user.id);const {data:mine}=await sb.from('mw_posts').select('*').eq('author_id',user.id).order('created_at',{ascending:false}).limit(20);const box=$('profilePosts');if(box)box.innerHTML=(mine||[]).map(x=>`<div class="post" style="margin:8px 0">${x.media_url?(x.media_type==='video'?`<video class="post-media" src="${esc(x.media_url)}" controls muted playsinline loop preload="metadata" data-mw-autoplay></video>`:`<img class="post-media" loading="lazy" decoding="async" src="${esc(window.MilkyWayMedia.image(x.media_url,720))}">`):''}<div class="post-body"><p>${esc(x.caption||'')}</p></div><div class="actions">${window.MilkyWayGifts?.buttonHtml(x.id,user.id)||''}</div></div>`).join('')||'<p class="muted">Hujaposti bado.</p>';$('profileName').value=p?.display_name||nameOf();$('profileUsername').value=p?.username||'';$('profileBio').value=p?.bio||'';$('myName').textContent=p?.display_name||nameOf();$('myEmail').textContent=user.email;$('myFollowers').textContent=c.followers;$('myFollowing').textContent=c.following;$('myPosts').textContent=c.posts;$('myAvatar').innerHTML=p?.avatar_url?`<img loading="lazy" decoding="async" src="${esc(window.MilkyWayMedia.image(p.avatar_url,160))}">`:esc((p?.display_name||nameOf()).slice(0,1).toUpperCase());$('adminLink').style.display=p?.is_admin?'block':'none';}
-$('saveProfileBtn').onclick=async()=>{if(!requireLogin('kuhifadhi profaili'))return;const display_name=$('profileName').value.trim()||'Msafiri',username=$('profileUsername').value.trim().replace(/^@/,'').toLowerCase(),bio=$('profileBio').value.trim(),file=$('avatarFile').files[0];$('profileMsg').textContent='Inahifadhi…';try{let avatar_url; if(file){avatar_url=await window.MilkyWayPremium.saveAvatar(file);$('avatarFile').value=''}const patch={display_name,bio,username:username||null};if(avatar_url)patch.avatar_url=avatar_url;const{data,error}=await sb.from('mw_profiles').update(patch).eq('id',user.id).select().single();if(error)throw error;await sb.auth.updateUser({data:{display_name}});user=(await sb.auth.getUser()).data.user;$('profileMsg').textContent='Imehifadhiwa.';setWho();await updateAccountCard();toast('Taarifa za profile zimehifadhiwa kikamilifu.');returnToSuperNovaAfterSave()}catch(e){$('profileMsg').textContent=e.message||'Imeshindikana.'}}
+$('saveProfileBtn').onclick=async()=>{
+ if(!requireLogin('kuhifadhi profaili'))return;
+ const display_name=$('profileName').value.trim()||'Msafiri',username=$('profileUsername').value.trim().replace(/^@/,'').toLowerCase(),bio=$('profileBio').value.trim(),file=$('avatarFile').files[0];
+ $('profileMsg').textContent='Inahifadhi…';
+ try{
+  let avatar_url;if(file){avatar_url=await window.MilkyWayPremium.saveAvatar(file);$('avatarFile').value=''}
+  const patch={display_name,bio,username:username||null};if(avatar_url)patch.avatar_url=avatar_url;
+  const{data,error}=await sb.from('mw_profiles').update(patch).eq('id',user.id).select().single();if(error)throw error;
+  await sb.auth.updateUser({data:{display_name}});user=(await sb.auth.getUser()).data.user;
+  await window.MilkyWayOffline?.invalidateTable?.('mw_profiles',user.id);
+  window._mwCachedProfile=data;saveLocalAccount(user,data);
+  $('profileMsg').textContent='Imehifadhiwa.';setWho();await updateAccountCard();toast('Taarifa za profile zimehifadhiwa kikamilifu.');returnToSuperNovaAfterSave();
+ }catch(e){$('profileMsg').textContent=e.message||'Imeshindikana.'}
+}
 $('changePasswordBtn').onclick=async()=>{if(!logged())return;const{error}=await sb.auth.resetPasswordForEmail(user.email,{redirectTo:AUTH_REDIRECT_URL});toast(error?error.message:'Link ya kubadilisha password imetumwa email.')}
 $('changeEmailBtn').onclick=async()=>{if(!logged())return;const next=await window.MilkyWayDialog.prompt({title:'Badilisha email',message:'Andika email mpya:',type:'email',placeholder:'jina@mfano.com',required:true,validate:v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim())?'':'Email si sahihi.',confirmText:'Hifadhi'});if(!next)return;const email=next.trim();if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){toast('Email si sahihi.');return}const{error}=await sb.auth.updateUser({email});toast(error?error.message:'Email imebadilishwa.');if(!error){$('profileMsg').textContent='Email mpya imehifadhiwa.';}}
 
@@ -1720,7 +1766,7 @@ let authUpdateGeneration=0;
 sb.auth.onAuthStateChange((event,session)=>{
   user=session?.user||null;
   const accountId=user?.id,attempt=++authUpdateGeneration;
-  if(event==='SIGNED_OUT'){clearLocalAccount();window.MilkyWayOffline?.clear();window.MilkyWayPrefetch?.clear();}
+  if(event==='SIGNED_OUT'){clearLocalAccount();window._mwCachedProfile=null;window.MilkyWayOffline?.clear();window.MilkyWayPrefetch?.clear();}
   if(!user){window.MilkyWayCalls?.disconnect();window.MilkyWayFiles?.release();closeSheet('threadSheet');closeSheet('msgSheet');$('threadList').replaceChildren();}
   if(event==='PASSWORD_RECOVERY')openSheet('resetModal');
   setTimeout(async()=>{
@@ -1747,7 +1793,7 @@ if(AUTH_LINK_ERROR){history.replaceState(null,'',location.pathname+location.sear
 <script src="gallery.js"></script>
 <script src="live-broadcast.js"></script>
 <script src="video-compress.js"></script><script src="engage.js"></script><script src="suggested.js"></script>
-<script src="release-shell.js"></script><script src="live-notifications.js"></script><script src="account-hub.js?v=trimmed-account-panel-v52"></script><script src="android-app.js"></script><script src="apk-link.js"></script><script src="native-push.js"></script><script src="share-target.js"></script><script src="media-prefetch.js?v=1"></script><script src="media-playback.js?v=2"></script><script src="settings-ui.js"></script><script src="post-tools.js"></script><script src="gift-catalog.js?v=63"></script><script src="gifts.js?v=68"></script><script src="final-layout.js?v=69"></script><script>/* Not needed to show the app: the Android update check and the Lipa Namba QR encoder load once the page is idle. */window.MilkyWayNetwork.later('qr-code.js?v=62').catch(()=>{});window.MilkyWayNetwork.later('app-update.js').catch(()=>{});</script>
+<script src="release-shell.js"></script><script src="live-notifications.js"></script><script src="account-hub.js?v=trimmed-account-panel-v52"></script><script src="android-app.js"></script><script src="apk-link.js"></script><script src="native-push.js"></script><script src="share-target.js"></script><script src="settings-ui.js"></script><script src="post-tools.js"></script><script src="gift-catalog.js?v=63"></script><script src="gifts.js?v=68"></script><script src="final-layout.js?v=69"></script><script>/* Media playback/prefetch and maintenance tools are non-critical to the first render. */window.MilkyWayNetwork.later('media-prefetch.js?v=2').catch(error=>console.warn('Media prefetch could not load.',error));window.MilkyWayNetwork.later('media-playback.js?v=3').catch(error=>console.warn('Media playback could not load.',error));window.MilkyWayNetwork.later('qr-code.js?v=62').catch(()=>{});window.MilkyWayNetwork.later('app-update.js').catch(()=>{});</script>
 <script>
 document.getElementById('topNotifyBtn')?.addEventListener('click', () => {
   const sheet = document.getElementById('notifySheet');

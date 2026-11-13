@@ -1,10 +1,10 @@
 // TikTok-style prefetching for the MilkyWay feed: while someone scrolls, the videos and pictures of the next posts
 // are downloaded quietly into device storage, so they start at once and keep playing when the connection drops.
-//   - fast connection: the next 10 posts; normal: the next 6; 2G/3G: the next 3 (videos skipped on Data Saver)
-//   - videos go into the "mw-feed-videos" cache; the MilkyWay service worker plays them from there (seeking included)
+//   - fast connection: the next 4 posts; normal: the next 2; 2G/3G: the next post (videos skipped on Data Saver)
+//   - small videos go into the "mw-feed-videos" cache; the service worker can play saved clips offline
 //   - pictures go through the service worker's picture cache, at the exact size the feed shows
-//   - at most 2 videos and 4 pictures download at a time; nothing downloads while offline or with little free space
-//   - the cache keeps the 40 most recent videos (about 600 MB at most); older ones are removed first
+//   - at most 2 videos download at a time; nothing downloads while offline or with little free space
+//   - the cache keeps at most 30 videos or 300 MB; older ones are removed first
 // Offline, posts that were saved play normally. A post that was never saved shows one quiet line under it
 // ("Not saved on this device yet…") instead of an error, and loads by itself when the connection is back.
 (() => {
@@ -13,12 +13,11 @@
   const INDEX = 'mw_prefetch_videos';
   const SAVED_INDEX = 'mw_offline_videos';
   const STORAGE = 'https://wpclkhgizbvxuvbhbwzs.supabase.co/storage/v1/object/public/';
-  // More aggressive prefetch so the feed keeps playing smoothly even if the connection drops (TikTok-style).
-  const AHEAD = { fast: 10, normal: 10, slow: 10 };
-  const VIDEO_LIMIT = { fast: 120, normal: 80, slow: 40 }; // MB per video
-  const MAX_VIDEOS = 80;
-  const MAX_BYTES = 1200 * 1024 * 1024;
-  const MIN_FREE = 300 * 1024 * 1024;
+  const AHEAD = { fast: 4, normal: 2, slow: 1 };
+  const VIDEO_LIMIT = { fast: 50, normal: 30, slow: 15 }; // MB per video
+  const MAX_VIDEOS = 30;
+  const MAX_BYTES = 300 * 1024 * 1024;
+  const MIN_FREE = 200 * 1024 * 1024;
   const POSTS = '#feed .post';
   const MEDIA = 'video.post-media,img.post-media,.mw-post-gallery video,.mw-post-gallery img';
   const order = ['en', 'sw', 'fr', 'zh', 'ar', 'pt', 'hi', 'de'];
@@ -85,7 +84,7 @@
     } catch { return true; }
   }
   function pumpImages() {
-    while (imageRunning < 6 && imageQueue.length && !offline()) {
+    while (imageRunning < 4 && imageQueue.length && !offline()) {
       const url = imageQueue.shift();
       if (imagesDone.has(url)) continue;
       imagesDone.add(url);imageRunning++;
@@ -100,7 +99,7 @@
     if (pumping) return;
     pumping = true;
     try {
-      while (active.size < 3 && videoQueue.length && !offline()) {
+      while (active.size < 2 && videoQueue.length && !offline()) {
         const url = videoQueue.shift();
         if (index.has(url) || active.has(url) || savedByPerson().has(url)) continue;
         if (!(await room())) { videoQueue = [];return; }

@@ -160,6 +160,19 @@ test('LiveKit call authorization passes its action through the API route query',
   assert.match(mediaAuthorize, /export default route\(\{ '': authorize, token: authorize, participants: authorize, sync: authorize, end: authorize \}\)/);
   assert.match(apiRoutes, /request\.query\?\.action/);
 });
+
+test('media enhancement scripts load after the shell and videos stay lazy outside the active view', () => {
+  const markup = source('milkyway/index.html');
+  const playback = source('milkyway/media-playback.js');
+  const prefetch = source('milkyway/media-prefetch.js');
+  const worker = source('milkyway/sw.js');
+  assert.match(markup, /MilkyWayNetwork\.later\('media-playback\.js\?v=3'\)/);
+  assert.match(playback, /video\.preload = 'none'/);
+  assert.match(playback, /ratios\.get\(video\) \|\| 0\) >= visibleRatio/);
+  assert.match(prefetch, /const AHEAD = \{ fast: 4, normal: 2, slow: 1 \}/);
+  assert.match(prefetch, /const MAX_BYTES = 300 \* 1024 \* 1024/);
+  assert.match(worker, /milkyway-v125-offline-swr-performance-v1/);
+});
 const ownerId = '11111111-1111-4111-8111-111111111111';
 const otherId = '22222222-2222-4222-8222-222222222222';
 const sessionId = '33333333-3333-4333-8333-333333333333';
@@ -494,16 +507,16 @@ function memoryIndexedDB() {
 
 test('offline data layer replays saved reads, answers empty lists offline and fires one reconnect refresh', async () => {
   const supabase = 'https://wpclkhgizbvxuvbhbwzs.supabase.co';
-  let online = true;const calls = [];const events = [];const listeners = {};
+  let online = true,postId='post-1';const calls = [];const events = [];const listeners = {};
   const network = async (input, init) => {
     const address = String(input);calls.push(address);
     if (!online) throw new TypeError('Failed to fetch');
     if (address.includes('mw-probe')) return new Response('{}', { status: 200 });
-    return new Response(JSON.stringify([{ id: 'post-1', account: init?.headers?.Authorization || '' }]), { status: 200, headers: { 'content-type': 'application/json', 'content-range': '0-0/1' } });
+    return new Response(JSON.stringify([{ id: postId, account: init?.headers?.Authorization || '' }]), { status: 200, headers: { 'content-type': 'application/json', 'content-range': '0-0/1' } });
   };
   const idb = memoryIndexedDB();
-  const window = { fetch: network, addEventListener: (name, listener) => { (listeners[name] ||= []).push(listener); }, dispatchEvent: event => events.push(event.type) };
-  const context = vm.createContext({ window, indexedDB: idb, navigator: { get onLine() { return online; } }, document: { documentElement: { dataset: {} }, addEventListener() {}, visibilityState: 'visible' }, location: { href: 'https://application.invalid/milkyway/', origin: 'https://application.invalid' }, localStorage: { getItem: () => 'en' }, Headers, Request, Response, URL, CustomEvent: class { constructor(type) { this.type = type; } }, setTimeout, clearTimeout, atob, JSON, Promise, Date, Map, String, Math });
+  const window = { fetch: network, addEventListener: (name, listener) => { (listeners[name] ||= []).push(listener); }, dispatchEvent: event => events.push(event) };
+  const context = vm.createContext({ window, indexedDB: idb, navigator: { get onLine() { return online; } }, document: { documentElement: { dataset: {} }, addEventListener() {}, visibilityState: 'visible' }, location: { href: 'https://application.invalid/milkyway/', origin: 'https://application.invalid' }, localStorage: { getItem: () => 'en' }, Headers, Request, Response, URL, CustomEvent: class { constructor(type, options) { this.type = type;this.detail = options?.detail; } }, setTimeout, clearTimeout, atob, JSON, Promise, Date, Map, String, Math });
   vm.runInContext(source('milkyway/offline-data.js'), context);
   const token = payload => `Bearer x.${Buffer.from(JSON.stringify(payload)).toString('base64url')}.y`;
   const feed = `${supabase}/rest/v1/mw_posts?select=*&order=created_at.desc&limit=40`;
@@ -512,9 +525,17 @@ test('offline data layer replays saved reads, answers empty lists offline and fi
   await new Promise(resolve => setTimeout(resolve, 20));
   assert.equal(idb.rows.size, 1);
 
+  postId='post-2';
+  const stale=await window.fetch(feed,{headers:{Authorization:token({sub:ownerId})}});
+  assert.equal((await stale.json())[0].id,'post-1');
+  await new Promise(resolve=>setTimeout(resolve,20));
+  const refreshed=await window.fetch(feed,{headers:{Authorization:token({sub:ownerId})}});
+  assert.equal((await refreshed.json())[0].id,'post-2');
+  assert.ok(events.some(event=>event.type==='mw-cache-updated'&&event.detail.account===ownerId&&event.detail.url===feed));
+
   online = false;
   const saved = await window.fetch(feed, { headers: { Authorization: token({ sub: ownerId }) } });
-  assert.equal(saved.headers.get('x-mw-offline'), 'saved');assert.equal((await saved.json())[0].id, 'post-1');
+  assert.equal(saved.headers.get('x-mw-offline'), 'saved');assert.equal((await saved.json())[0].id, 'post-2');
   // Another account never sees the first account's saved copy; it gets a calm empty list instead of an error.
   const other = await window.fetch(feed, { headers: { Authorization: token({ sub: otherId }) } });
   assert.equal(other.headers.get('x-mw-offline'), 'empty');assert.deepEqual(await other.json(), []);
@@ -530,8 +551,10 @@ test('offline data layer replays saved reads, answers empty lists offline and fi
   listeners.online.forEach(listener => listener());
   await new Promise(resolve => setTimeout(resolve, 500));
   assert.equal(context.window.MilkyWayOffline.offline, false);
-  assert.deepEqual(events.filter(type => type === 'mw-reconnected'), ['mw-reconnected']);
+  assert.deepEqual(events.filter(event => event.type === 'mw-reconnected').map(event => event.type), ['mw-reconnected']);
   assert.ok(calls.some(address => address.includes('mw-probe')));
+  await context.window.MilkyWayOffline.invalidateTable('mw_posts',ownerId);
+  assert.equal(idb.rows.size,0);
   await context.window.MilkyWayOffline.clear();
   assert.equal(idb.rows.size, 0);
 });

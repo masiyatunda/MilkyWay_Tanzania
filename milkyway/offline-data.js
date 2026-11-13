@@ -1,6 +1,7 @@
 // Offline data for MilkyWay: feed posts, profiles, stories, counts and other reads are saved on the device (IndexedDB).
 // Loaded before the Supabase client is created, so every read the app makes goes through here:
-//   - online: the network answers and the saved copy is refreshed; a slow answer falls back to the saved copy
+//   - online with a saved copy: render it immediately, then refresh storage and notify the UI only when data changes
+//   - online without a saved copy: wait briefly for the network, then let it populate the device cache
 //   - offline or failed: the saved copy answers at once (or an empty list), never a network error
 // When the connection drops, the app checks again quietly (2 s, 4 s, 8 s … up to 30 s, and on "online" / app focus)
 // and fires "mw-reconnected" once it is back, so the feed and account refresh by themselves.
@@ -50,7 +51,8 @@
   }));
   const read = key => run('readonly', store => store.get(key)).then(entry => entry && Date.now() - entry.savedAt < MAX_AGE ? entry : undefined).catch(() => undefined);
   let writes = 0;
-  const write = entry => run('readwrite', store => store.put(entry)).then(() => { if (++writes % 25 === 1) prune(); }).catch(() => {});
+  const write = (entry, generation = cacheGeneration) => run('readwrite', store => generation === cacheGeneration ? store.put(entry) : undefined).then(() => { if (++writes % 25 === 1) prune(); }).catch(() => {});
+  const remove = key => run('readwrite', store => store.delete(key)).catch(() => {});
   // Oldest entries go first once the store passes its limit.
   const prune = () => run('readwrite', store => {
     const count = store.count();
@@ -64,7 +66,9 @@
       };
     };
   });
-  const clear = () => { recent.clear();return run('readwrite', store => store.clear()); };
+  let cacheGeneration = 0;
+  const revalidating = new Map();
+  const clear = () => { cacheGeneration++;recent.clear();revalidating.clear();return run('readwrite', store => store.clear()); };
 
   // ---- Which requests are saved, and under which key.
   const headerOf = (input, init, name) => {
@@ -88,7 +92,7 @@
   let offline = navigator.onLine === false;
   let retry = null, delay = 2000, probing = false;
   const root = document.documentElement;
-  const announce = name => { try { window.dispatchEvent(new CustomEvent(name)); } catch {} };
+  const announce = (name, detail) => { try { window.dispatchEvent(new CustomEvent(name, { detail })); } catch {} };
   const setOffline = () => {
     if (!offline) { offline = true;root.dataset.mwOffline = '1';announce('mw-offline');backgroundSync(); }
     schedule();
@@ -141,18 +145,65 @@
     return new Response(method === 'HEAD' ? null : single ? 'null' : '[]', { status: 200, headers: { 'content-type': 'application/json', 'content-range': '*/0', 'x-mw-offline': 'empty' } });
   };
   const recent = new Map();
-  const keep = async (key, response, method) => {
+  function invalidateTable(table, account) {
+    if (!/^[a-z_]+$/.test(table) || !account) throw new TypeError('Invalid cache table or account.');
+    cacheGeneration++;
+    revalidating.clear();
+    const prefix = `${account} GET ${SUPABASE}/rest/v1/${table}?`;
+    for (const key of recent.keys()) if (key.startsWith(prefix)) recent.delete(key);
+    return run('readwrite', store => {
+      const cursor = store.index('savedAt').openCursor();
+      cursor.onsuccess = () => {
+        const row = cursor.result;
+        if (!row) return;
+        if (String(row.value.key).startsWith(prefix)) row.delete();
+        row.continue();
+      };
+      return cursor;
+    });
+  }
+  const keep = async (key, response, method, body, generation = cacheGeneration) => {
     try {
-      const body = method === 'HEAD' ? '' : await response.text();
-      // The app polls every few seconds; unchanged answers are not written again.
-      if (body.length > MAX_BODY || recent.get(key) === body) return;
-      recent.delete(key);recent.set(key, body);
+      body ??= method === 'HEAD' ? '' : await response.text();
+      if (generation !== cacheGeneration) return;
+      if (body.length > MAX_BODY) return;
+      const savedAt=Date.now(),previous=recent.get(key);
+      // Refresh unchanged records periodically without rewriting them on every background poll.
+      if (previous?.body === body && savedAt-previous.savedAt < 60000) return;
+      recent.delete(key);recent.set(key,{body,savedAt});
       if (recent.size > 300) recent.delete(recent.keys().next().value);
       const headers = {};
       for (const name of ['content-type', 'content-range', 'preference-applied']) { const value = response.headers.get(name);if (value) headers[name] = value; }
-      await write({ key, status: response.status, headers, body, savedAt: Date.now() });
+      await write({ key, status: response.status, headers, body, savedAt }, generation);
     } catch {}
   };
+
+  function revalidate(input, init, address, method, key, authorization, previous) {
+    if (revalidating.has(key)) return revalidating.get(key);
+    const generation = cacheGeneration;
+    const promise = native(input, { ...init, signal: null }).then(async response => {
+      setOnline();
+      if (response.ok) {
+        const body = method === 'HEAD' ? '' : await response.clone().text();
+        if (body.length <= MAX_BODY) {
+          await keep(key, response.clone(), method, body, generation);
+          if (previous && previous.body !== body && generation === cacheGeneration) {
+            announce('mw-cache-updated', { account: accountOf(authorization), url: address.href });
+          }
+        }
+      } else if ([401, 403, 404].includes(response.status) && generation === cacheGeneration) {
+        recent.delete(key);
+        await remove(key);
+        announce('mw-cache-invalidated', { account: accountOf(authorization), url: address.href });
+      }
+      return response;
+    }).catch(error => {
+      if (!aborted(input, init, error)) setOffline();
+      throw error;
+    }).finally(() => { if (revalidating.get(key) === promise) revalidating.delete(key); });
+    revalidating.set(key, promise);
+    return promise;
+  }
 
   async function cachedFetch(input, init, address, method) {
     const authorization = headerOf(input, init, 'authorization');
@@ -163,22 +214,17 @@
       const entry = await saved;
       if (entry) { if (!offline) setOffline(); else schedule();return replay(entry, method); }
     }
-    const network = native(input, init).then(response => {
-      setOnline();
-      if (response.ok) keep(key, response.clone(), method);
-      return response;
-    });
+    const entry = await saved;
+    if (init?.signal?.aborted || input instanceof Request && input.signal?.aborted) throw new DOMException('The operation was aborted.', 'AbortError');
+    if (entry) {
+      revalidate(input, init, address, method, key, authorization, entry).catch(() => {});
+      return replay(entry, method);
+    }
     try {
-      const entry = await saved;
-      const response = entry ? await timeout(network, offline || slowNetwork() ? SLOW_TIMEOUT : TIMEOUT) : await network;
-      if (response.status >= 500 && entry) return replay(entry, method);
-      return response;
+      return await timeout(revalidate(input, init, address, method, key, authorization, entry), offline || slowNetwork() ? SLOW_TIMEOUT : TIMEOUT);
     } catch (error) {
       if (aborted(input, init, error)) throw error;
-      network.catch(() => {});
       if (error?.message !== 'timeout') setOffline();
-      const entry = await saved;
-      if (entry) return replay(entry, method);
       const fallback = empty(address, method, accept);
       if (fallback) return fallback;
       throw error;
@@ -233,7 +279,7 @@
 
   window.MilkyWayOffline = {
     get offline() { return offline; },
-    isNetworkError, friendly, clear, probe, authStorage,
+    isNetworkError, friendly, clear, invalidateTable, probe, authStorage,
     text: key => word(key),
   };
 })();

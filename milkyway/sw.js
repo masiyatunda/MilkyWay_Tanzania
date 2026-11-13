@@ -1,4 +1,4 @@
-const CACHE='milkyway-v124-live-reconnect-safe-area-v1';
+const CACHE='milkyway-v125-offline-swr-performance-v1';
 const ASSETS=[ './mw-bundle-core.css?v=1','./mw-bundle-live.css?v=8','./mw-bundle-overlays.css?v=1','./mw-bundle-theme-final.css?v=1','./','./index.html','./mobile-galaxy.css?v=1','./live-room.css?v=10','./live-room.js?v=13','./galaxy.css?v=2','./galaxy-live.css','./galaxy-nebula.svg','./galaxy-starfield.svg','./premium.css','./theme.css','./engage.css','./engage.js','./video-compress.js','./suggested.css','./suggested.js','./chat-settings.css','./chat-settings.js','./compact-buttons.css?v=2','./brand/milkyway-emblem-96.png','./brand/milkyway-watermark.png','./brand/milkyway-logo-web.png','./favicon.ico','./premium.js','./translations.js','./dm-files.js','./ui-language.js','./locale-loader.js?v=1','./manifest.json','./icon-192.png','./icon-512.png'];
 ASSETS.push('./language-dropdown.js','./language-dropdown.css');
 ASSETS.push('./mw-dialog.js','./mw-dialog.css','./studio.css');
@@ -6,7 +6,7 @@ ASSETS.push('./live-globe.css','./cosmos.css','./brand/earth-texture.jpg','./sha
 // The Live backdrop is saved the first time Live opens, so a first install on a slow network downloads less.
 ASSETS.push('./media-images.js','./backgrounds/app-background.webp');
 ASSETS.push('./live-notifications.js');
-ASSETS.push('./account-hub.js','./account-hub.css','./media-playback.js?v=2');
+ASSETS.push('./account-hub.js','./account-hub.css','./media-playback.js?v=3');
 ASSETS.push('./chat.js','./chat.css','./chat-doodle.svg','./group-settings.js','./group-settings.css');
 ASSETS.push('./android-app.js','./android-app.css','./profile-galaxy-watermark.svg');
 ASSETS.push('./settings-ui.js','./settings-ui.css','./account-header.css','./edge-layout.css');
@@ -21,9 +21,9 @@ ASSETS.push('./post-tools.js','./post-tools.css','./final-layout.js','./final-la
 ASSETS.push('./native-push.js','./share-target.js','./app-update.js','./live-themes.css?v=2');
 // Versioned to match the tags in index.html so phones never pair a new page with old gift code.
 // Offline data layer: saved feed, profiles and counts on the device, quiet reconnecting.
-ASSETS.push('./offline-data.js?v=2');
+ASSETS.push('./offline-data.js?v=3');
 // Feed prefetching and optimistic actions (likes, saves, follows, comments queued while offline).
-ASSETS.push('./media-prefetch.js?v=1','./offline-actions.js?v=1');
+ASSETS.push('./media-prefetch.js?v=2','./offline-actions.js?v=1');
 ASSETS.push('./gift-catalog.js?v=63','./qr-code.js?v=62','./gifts.js?v=66','./gifts.css?v=65');
 // Shared caching (see /sw-cache.js): app shell and media load from the device, pages fall back to it when the network is slow.
 // The test harness loads this file without importScripts, so caching is skipped there.
