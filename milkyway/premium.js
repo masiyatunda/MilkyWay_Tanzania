@@ -591,7 +591,7 @@
   window.addEventListener('mw-reconnected', () => { updateNetwork();loadAdvertisements(); });updateNetwork();
   function viewport() { document.documentElement.style.setProperty('--mw-viewport', `${window.visualViewport?.height || window.innerHeight}px`);document.documentElement.style.setProperty('--mw-viewport-top', `${window.visualViewport?.offsetTop || 0}px`); }
   window.visualViewport?.addEventListener('resize', viewport);window.visualViewport?.addEventListener('scroll', viewport);window.addEventListener('resize', viewport);viewport();
-  document.addEventListener('click', event => { document.querySelectorAll('.mw-message-menu[open]').forEach(menu => { if (!menu.contains(event.target) || event.target.closest('button')) menu.open = false; }); });
+  document.addEventListener('click', event => { document.querySelectorAll('.mw-message-menu[open]').forEach(menu => { if (!menu.contains(event.target)) menu.open = false; }); });
   document.addEventListener('keydown', event => { if (event.key === 'Escape') document.querySelectorAll('.mw-message-menu[open]').forEach(menu => { menu.open = false; }); });
   document.addEventListener('play', event => { if (event.target instanceof HTMLVideoElement && !event.target.closest('#mwLivePage,.mw-call-panel')) document.querySelectorAll('.post video,.mw-ad-slot video').forEach(video => { if (video !== event.target) video.pause(); }); }, true);
   // Posts published from this release onward are branded automatically; older posts can opt in from the author's post menu.
@@ -712,6 +712,11 @@
       if (actions) {
         const menu = document.createElement('details');menu.className = 'mw-message-menu';
         const summary = document.createElement('summary');summary.textContent = '•••';summary.setAttribute('aria-label', translate('postActions'));
+        summary.addEventListener('click', event => {
+          event.preventDefault();
+          event.stopPropagation();
+          menu.open = !menu.open;
+        });
         // The options open as a popover above the ••• button, so the action bar itself never changes size.
         const items = document.createElement('div');items.className = 'mw-message-menu-items';menu.append(summary, items);
         for (const button of actions.querySelectorAll('[data-report],[data-edit],[data-delete]')) {

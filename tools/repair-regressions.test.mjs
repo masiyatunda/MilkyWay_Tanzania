@@ -161,6 +161,13 @@ test('LiveKit call authorization passes its action through the API route query',
   assert.match(apiRoutes, /request\.query\?\.action/);
 });
 
+test('post action menus toggle explicitly and remain open for menu actions', () => {
+  const premium = source('milkyway/premium.js');
+  assert.match(premium, /summary\.addEventListener\('click', event => \{[\s\S]*event\.preventDefault\(\);[\s\S]*event\.stopPropagation\(\);[\s\S]*menu\.open = !menu\.open;/);
+  assert.match(premium, /if \(!menu\.contains\(event\.target\)\) menu\.open = false/);
+  assert.doesNotMatch(premium, /event\.target\.closest\('button'\).*menu\.open = false/);
+});
+
 test('media enhancement scripts load after the shell and videos stay lazy outside the active view', () => {
   const markup = source('milkyway/index.html');
   const playback = source('milkyway/media-playback.js');
