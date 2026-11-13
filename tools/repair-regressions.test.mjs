@@ -168,6 +168,18 @@ test('post action menus toggle explicitly and remain open for menu actions', () 
   assert.doesNotMatch(premium, /event\.target\.closest\('button'\).*menu\.open = false/);
 });
 
+test('post action menus fit and scroll inside narrow mobile viewports', () => {
+  const styles = source('milkyway/post-tools.css');
+  const markup = source('milkyway/index.html');
+  const worker = source('milkyway/sw.js');
+  assert.match(styles, /#feed>\.post:has\([^}]*mw-message-menu\[open\][\s\S]*overflow:visible!important;[\s\S]*z-index:20!important;/);
+  assert.match(styles, /width:min\(280px,calc\(100vw - 24px\)\)/);
+  assert.match(styles, /max-height:min\(60dvh,420px,calc\(100dvh - 24px\)\)/);
+  assert.match(styles, /overflow-y:auto;[\s\S]*white-space:normal;[\s\S]*overflow-wrap:anywhere;/);
+  assert.match(markup, /mw-bundle-core\.css\?v=2/);
+  assert.match(worker, /milkyway-v126-mobile-post-menu-v1/);
+});
+
 test('media enhancement scripts load after the shell and videos stay lazy outside the active view', () => {
   const markup = source('milkyway/index.html');
   const playback = source('milkyway/media-playback.js');

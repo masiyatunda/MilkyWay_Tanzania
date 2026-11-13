@@ -1896,6 +1896,30 @@ html[data-mw-appearance="light"] :is(.permission-card, .mw-permission-card, .per
   #feed .post .actions>.mw-message-menu>summary{min-width:40px;min-height:40px;height:40px;padding:0 6px}
 }
 
+@media(max-width:600px){
+  #feed>.post:has(>.mw-media-frame[data-kind="video"]):has(.mw-message-menu[open]){
+    overflow:visible!important;
+    z-index:20!important;
+  }
+  #feed .post .actions .mw-message-menu-items{
+    box-sizing:border-box;
+    width:min(280px,calc(100vw - 24px));
+    min-width:min(200px,calc(100vw - 24px));
+    max-width:calc(100vw - 24px);
+    max-height:min(60dvh,420px,calc(100dvh - 24px));
+    overflow-x:hidden;
+    overflow-y:auto;
+    overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;
+  }
+  #feed .post .actions .mw-message-menu-items>button{
+    box-sizing:border-box;
+    white-space:normal;
+    overflow-wrap:anywhere;
+    line-height:1.35;
+  }
+}
+
 /* Inline comments under the post (Facebook style); the posts above and below stay visible */
 #feed .post>.mw-inline-comments{display:flex;flex-direction:column;flex:none;padding:0 12px 12px;border-top:1px solid var(--line);animation:mwCommentsIn .18s ease-out}
 #feed .post>.mw-inline-comments>header{padding:10px 0 6px}
