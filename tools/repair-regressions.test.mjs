@@ -4,6 +4,11 @@ import { stripTypeScriptTypes } from 'node:module';
 import { test } from 'node:test';
 import vm from 'node:vm';
 
+test('LiveKit fallback uses the published Unpkg UMD bundle path', () => {
+  const markup = source('milkyway/index.html');
+  assert.match(markup, /https:\/\/unpkg\.com\/livekit-client@2\/dist\/livekit-client\.umd\.js/);
+});
+
 test.skip('MilkyWay LIVE stage uses the brand logo watermark and responsive stage chrome', () => {
   const markup = readFileSync(new URL('../milkyway/index.html', import.meta.url), 'utf8');
   const styles = readFileSync(new URL('../milkyway/live-immersive-v77.css', import.meta.url), 'utf8');
